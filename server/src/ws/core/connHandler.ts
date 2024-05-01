@@ -1,0 +1,49 @@
+import { Server, Socket } from "socket.io";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { logger } from "../../config/logger";
+import { wsQueue } from "../../config/bull";
+
+const init = (
+  io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
+  socket: Socket
+) => {
+  socket.on("disconnecting", async () => {
+    try {
+      //@ts-ignore
+      const user = socket.request?.user;
+      const currentRoom = Array.from(socket.rooms)[1];
+
+      if (!currentRoom) {
+        logger.info(`Disconnection socket wasn't in a room`);
+        return;
+      }
+
+      wsQueue.add("clean_up", {
+        userId: user.userId,
+        roomId: currentRoom ?? "",
+      });
+
+      io.to(currentRoom).emit("participant-left", {
+        roomId: currentRoom,
+        //@ts-ignore
+        participantId: user.userId,
+      });
+
+      socket.leave(currentRoom);
+
+      logger.info(`Disconnecting socket is in room, ${currentRoom}`);
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on("disconnect", () => {
+    try {
+      logger.debug(`Peer disconnected, (${socket.id}) `);
+    } catch (error) {
+      throw error;
+    }
+  });
+};
+
+export { init };
