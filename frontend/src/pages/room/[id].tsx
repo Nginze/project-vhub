@@ -53,7 +53,13 @@ const Room: React.FC<RoomProps> = () => {
     return <div>Room not found</div>;
   }
 
-  return room ? <TwoDViewComponent /> : <div>Loading</div>;
+  return room ? (
+    <TwoDViewComponent />
+  ) : (
+    <div className="w-screen h-screen flex items-center justify-center">
+      Loading...
+    </div>
+  );
 };
 
 export default Room;

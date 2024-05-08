@@ -29,12 +29,13 @@ export class Preloader extends Phaser.Scene {
       "map",
       `${this.assetsPath}/maps/${this.room.mapKey}.json`
     );
+
     this.load.image(
-      "modern-tileset",
+      "modern-extra-tileset-16",
       `${this.assetsPath}/tilesets/modern-extra-tileset-16.png`
     );
     this.load.image(
-      "modern-tileset-extra",
+      "modern-tileset-16",
       `${this.assetsPath}/tilesets/modern-tileset-16.png`
     );
   }

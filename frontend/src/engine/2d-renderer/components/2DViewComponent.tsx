@@ -8,6 +8,7 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
 
   useEffect(() => {
     async function initPhaser() {
+
       // Lazy load phaser library and initialize phaser canvas
       const Phaser = await import("phaser");
       const { RoomScene } = await import("../scenes/RoomScene");
@@ -20,12 +21,16 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
         title: "2D-view",
         width: 1920,
         height: 967,
+        
         pixelArt: true,
         physics: {
           default: "arcade",
           arcade: {
             debug: true,
           },
+        },
+        dom: {
+          createContainer: true,
         },
         parent: "2d-view-content",
         scene: [Preloader, RoomScene],
@@ -39,7 +44,7 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
           ],
         },
         scale: {
-          zoom: 2.5,
+          zoom: 1.5,
         },
       });
     }

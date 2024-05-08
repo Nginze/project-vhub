@@ -3,6 +3,7 @@ import { RoomScene } from "../scenes/RoomScene";
 import { useRendererStore } from "@/store/RendererStore";
 import { Room } from "../../../../../shared/types";
 import { api } from "@/api";
+import { GameObjects } from "phaser";
 
 export const subscribeToRendererEvents = (
   conn: Socket,
@@ -109,11 +110,14 @@ export const registerSpriteAnimations = (scene: RoomScene) => {
               frames: scene.anims.generateFrameNumbers(textureKey, frames),
               frameRate: 15 * 0.6,
               repeat: -1,
+
+              yoyo: true,
             });
           }
         } else if (type === "idle") {
           const animationKey = `${character}_${type}_anim_${direction}`;
           const textureKey = `${character}_${type}_anim`;
+          //@ts-ignore
           const frames = anims[type][direction];
 
           scene.anims.create({
@@ -121,16 +125,18 @@ export const registerSpriteAnimations = (scene: RoomScene) => {
             frames: scene.anims.generateFrameNumbers(textureKey, frames),
             frameRate: 15 * 0.6,
             repeat: -1,
+            yoyo: true,
           });
         } else if (type == "run") {
           const animationKey = `${character}_${type}_${direction}`;
           const textureKey = `${character}_${type}`;
+          //@ts-ignore
           const frames = anims[type][direction];
 
           scene.anims.create({
             key: animationKey,
             frames: scene.anims.generateFrameNumbers(textureKey, frames),
-            frameRate: 15 * 0.6,
+            frameRate: 25 * 0.6,
             repeat: -1,
           });
         } else if (type == "phone") {
@@ -142,6 +148,7 @@ export const registerSpriteAnimations = (scene: RoomScene) => {
             frames: scene.anims.generateFrameNumbers(textureKey),
             frameRate: 15 * 0.6,
             repeat: -1,
+            yoyo: true,
           });
         }
       });
@@ -165,12 +172,25 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         1
       );
 
-      sprite?.anims.play(`${sprite.texture.key}_idle_anim_down`);
+      // // add playerName to playerContainer
+      // const playerName = scene.add
+      //   .text(0, 0, participant.userName)
+      //   // .setAlign("center")
+      //   // .setFontFamily("Arial")
+      //   // .setFontSize(7)
+      //   .setColor("#000000");
+
+      // const container = scene.add.container(0, 0, [sprite, playerName]);
+
+      sprite?.anims.play(
+        `${sprite.texture.key.split("_")[0]}_idle_anim_${participant.dir}`
+      );
 
       if (user.userId === participant.userId) {
         console.log("That is me!!");
+
         me = sprite;
-        scene.cameras.main.startFollow(me, true);
+        scene.cameras.main.startFollow(sprite, true);
         scene.cameras.main.setFollowOffset(-me.width, -me.height);
       }
 
@@ -191,6 +211,22 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
   if (!scene.gridEngine) {
     return;
   }
+
+  map.layers.forEach((layer, index) => {
+    const mapLayer = map.createLayer(
+      index,
+      ["modern-tileset-16", "modern-extra-tileset-16"],
+      0,
+      0
+    );
+
+    if (layer.name === "Interactive") {
+      console.log("Interactive layer found");
+      scene.interactiveLayers.add(mapLayer);
+    }
+  });
+
+  scene.physics.add.collider(me, scene.interactiveLayers);
 
   // initialize grid engine
   scene.gridEngine.create(map, gridEngineConfig);
@@ -241,6 +277,10 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     const roomId = useRendererStore.getState().currentRoomId as string;
     const user = useRendererStore.getState().user;
 
+    const dir = scene.gridEngine?.getFacingDirection(user.userId!!);
+    const posX = scene.gridEngine?.getPosition(user.userId!!).x;
+    const posY = scene.gridEngine?.getPosition(user.userId!!).y;
+
     sprite?.anims.stop();
     sprite?.anims.play(
       `${sprite.texture.key.split("_")[0]}_idle_anim_${direction}`
@@ -253,6 +293,18 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         posX: scene.gridEngine?.getPosition(user.userId!!).x,
         posY: scene.gridEngine?.getPosition(user.userId!!).y,
       });
+
+      Promise.all([
+        api.put(
+          `/room/room-status/update/${user.userId}?roomId=${room.roomId}&state=pos_x&value=${posX}`
+        ),
+        api.put(
+          `/room/room-status/update/${user.userId}?roomId=${room.roomId}&state=pos_y&value=${posY}`
+        ),
+        api.put(
+          `/room/room-status/update/${user.userId}?roomId=${room.roomId}&state=dir&value=${dir}`
+        ),
+      ]).then(() => {});
     }
   });
 
@@ -267,6 +319,10 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
       const roomId = useRendererStore.getState().currentRoomId as string;
       const user = useRendererStore.getState().user;
 
+      const dir = scene.gridEngine?.getFacingDirection(user.userId!!);
+      const posX = scene.gridEngine?.getPosition(user.userId!!).x;
+      const posY = scene.gridEngine?.getPosition(user.userId!!).y;
+
       sprite?.setFrame(`${sprite.texture.key}`);
       sprite?.anims.play(
         `${sprite.texture.key.split("_")[0]}_idle_anim_${direction}`
@@ -279,6 +335,101 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
           posX: scene.gridEngine?.getPosition(user.userId!!).x,
           posY: scene.gridEngine?.getPosition(user.userId!!).y,
         });
+
+        Promise.all([
+          api.put(
+            `/room/room-status/update/${user.userId}?roomId=${room.roomId}&state=pos_x&value=${posX}`
+          ),
+          api.put(
+            `/room/room-status/update/${user.userId}?roomId=${room.roomId}&state=pos_y&value=${posY}`
+          ),
+          api.put(
+            `/room/room-status/update/${user.userId}?roomId=${room.roomId}&state=dir&value=${direction}`
+          ),
+        ]).then(() => {});
       }
     });
 };
+
+export const updateActionCollider = (scene: RoomScene) => {
+  if (!scene.gridEngine || !scene.userActionCollider) {
+    return;
+  }
+
+  const userId = useRendererStore.getState().user.userId as string;
+  const facingDirection = scene.gridEngine.getFacingDirection(userId!!);
+  const me = scene.gridEngine.getSprite(userId as string) as GameObjects.Sprite;
+
+  switch (facingDirection) {
+    case "down": {
+      scene.userActionCollider.setX(me.x);
+      scene.userActionCollider.setY(me.y + 30);
+      break;
+    }
+
+    case "up": {
+      scene.userActionCollider.setX(me.x);
+      scene.userActionCollider.setY(me.y - 13);
+      break;
+    }
+
+    case "left": {
+      scene.userActionCollider.setX(me.x - 16);
+      scene.userActionCollider.setY(me.y + 10);
+      break;
+    }
+
+    case "right": {
+      scene.userActionCollider.setX(me.x + 16);
+      scene.userActionCollider.setY(me.y + 10);
+      break;
+    }
+
+    default: {
+      // will never happen
+      break;
+    }
+  }
+};
+
+export const createInteractiveGameObject = (
+  scene: RoomScene,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  isDebug: boolean = true,
+  name: string,
+  origin: { x: 0; y: 0 } = { x: 0, y: 0 }
+) => {
+  const customCollider = new GameObjects.Rectangle(
+    scene,
+    x,
+    y,
+    width,
+    height
+  ).setOrigin(origin.x, origin.y);
+
+  customCollider.name = name;
+
+  if (isDebug) {
+    customCollider.setFillStyle(0x741b47);
+  }
+
+  scene.physics.add.existing(customCollider);
+  //@ts-ignore
+  customCollider.body.setAllowGravity(false);
+  //@ts-ignore
+  customCollider.body.setImmovable(true);
+
+  return customCollider;
+};
+
+export type Keyboard = {
+  W: Phaser.Input.Keyboard.Key;
+  S: Phaser.Input.Keyboard.Key;
+  A: Phaser.Input.Keyboard.Key;
+  D: Phaser.Input.Keyboard.Key;
+};
+
+export type NavKeys = Keyboard & Phaser.Types.Input.Keyboard.CursorKeys;

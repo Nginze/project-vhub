@@ -3,10 +3,14 @@ import GridEngine from "grid-engine";
 import { Room, UserData } from "../../../../../shared/types";
 import { Socket } from "socket.io-client";
 import {
+  Keyboard,
+  createInteractiveGameObject,
   registerSpriteAnimations,
   registerSprites,
   subscribeToRendererEvents,
+  updateActionCollider,
 } from "../utils";
+import { GameObjects } from "phaser";
 
 export class RoomScene extends Phaser.Scene {
   constructor() {
@@ -18,6 +22,8 @@ export class RoomScene extends Phaser.Scene {
   private room: Room = useRendererStore.getState().room as Room;
   private roomStatus: any = useRendererStore.getState().roomStatus;
   private user: UserData = useRendererStore.getState().user;
+  public userActionCollider: GameObjects.Rectangle = null as any;
+  public interactiveLayers: GameObjects.Group = null as any;
 
   create() {
     this.conn.emit("room:join", {
@@ -33,65 +39,80 @@ export class RoomScene extends Phaser.Scene {
     });
 
     const map = this.make.tilemap({ key: "map" });
-    map.addTilesetImage("modern-tileset");
-    map.addTilesetImage("modern-tileset-extra");
+    this.interactiveLayers = this.add.group();
 
-    map.layers.forEach((layer, index) => {
-      map.createLayer(index, ["modern-tileset", "modern-tileset-extra"], 0, 0);
-    });
+    map.addTilesetImage("modern-tileset-16");
+    map.addTilesetImage("modern-extra-tileset-16");
 
-    registerSprites(this.conn, this, map);
     registerSpriteAnimations(this);
+    registerSprites(this.conn, this, map);
     subscribeToRendererEvents(this.conn, this, map);
+
+    const me = this.gridEngine?.getSprite(this.user.userId as string);
+
+    if (!me) {
+      return;
+    }
+
+    this.userActionCollider = createInteractiveGameObject(
+      this,
+      me?.x,
+      me?.y,
+      16,
+      16,
+      true,
+      "user-action-collider"
+    );
+
+    this.userActionCollider.update = () => {
+      updateActionCollider(this);
+    };
+
+    this.physics.add.overlap(
+      this.userActionCollider,
+      this.interactiveLayers,
+      (a, b) => {
+        const tile = [a, b].find((obj) => obj !== this.userActionCollider);
+        // console.log(tile);
+        if (tile?.index > 0 && !tile?.wasHandled) {
+          switch (tile?.layer.name) {
+            case "Interactive":
+              //outline the tile to make it clear that it's interactive
+              //show prompt tooltip to interact with the tile
+              console.log("Interactive tile", tile);
+
+              break;
+
+            default:
+              break;
+          }
+        }
+      }
+    );
   }
 
   update() {
-    const cursors = this.input!.keyboard!.createCursorKeys();
+    const cursors = {
+      ...this.input!.keyboard!.createCursorKeys(),
+      ...(this.input!.keyboard!.addKeys("W,S,A,D") as Keyboard),
+    };
+
     const userId = this.user.userId as string;
 
-    if (cursors.left.isDown) {
+    this.userActionCollider.update();
+
+    if (cursors.left.isDown || cursors.A.isDown) {
       //@ts-ignore
       this.gridEngine?.move(userId, "left");
-    } else if (cursors.right.isDown) {
+    } else if (cursors.right.isDown || cursors.D.isDown) {
       //@ts-ignore
       this.gridEngine?.move(userId, "right");
-    } else if (cursors.up.isDown) {
+    } else if (cursors.up.isDown || cursors.W.isDown) {
       //@ts-ignore
       this.gridEngine?.move(userId, "up");
-    } else if (cursors.down.isDown) {
+    } else if (cursors.down.isDown || cursors.S.isDown) {
       //@ts-ignore
       this.gridEngine?.move(userId, "down");
     }
-
-    // if (this.gridEngine) {
-    // }
-  }
-
-  createHeroWalkingAnimation(direction: string, frames: any[]) {
-    const frameRate = 15;
-    this.anims.create({
-      key: direction,
-      frames,
-      frameRate: 0.6 * frameRate,
-      repeat: -1,
-      yoyo: true,
-    });
   }
 }
-
-// this.createHeroWalkingAnimation(
-//   "up",
-//   this.anims.generateFrameNumbers("adam", { start: 9, end: 11 })
-// );
-// this.createHeroWalkingAnimation(
-//   "down",
-//   this.anims.generateFrameNumbers("adam", { start: 0, end: 2 })
-// );
-// this.createHeroWalkingAnimation(
-//   "left",
-//   this.anims.generateFrameNumbers("adam", { start: 3, end: 5 })
-// );
-// this.createHeroWalkingAnimation(
-//   "right",
-//   this.anims.generateFrameNumbers("adam", { start: 6, end: 8 })
-// );
