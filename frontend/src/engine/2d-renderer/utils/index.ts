@@ -664,10 +664,10 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         .dom(0, -20)
         .createFromHTML(
           `
-  <div style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.6); padding: 2px 3.6px; border-radius: 4.8px;">
-    <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
-    ${participant.userName}
-  </div>
+          <div style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
+            <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
+            ${participant.userName}
+          </div>
           `
         )
         .setOrigin(0.225);
@@ -847,7 +847,7 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
 
       sprite?.setFrame(`${sprite.texture.key}`);
       sprite?.anims.play(
-        `${sprite.texture.key.split("_")[0]}_idle_anim_${direction}`
+        `${sprite.texture.key.split("_")[0]}_idle_${direction}`
       );
 
       if (charId === user.userId) {
@@ -905,6 +905,89 @@ export const registerUserActionCollider = (scene: RoomScene) => {
   scene.userActionCollider.update = () => {
     updateActionCollider(scene);
   };
+};
+
+export const registerUserProximityCollider = (scene: RoomScene) => {
+  if (!scene.gridEngine || !scene.user) {
+    console.log("user Proximit Collider not ready");
+    return;
+  }
+
+  const myContainer = scene.gridEngine.getContainer(
+    scene.user.userId as string
+  );
+
+  if (!myContainer) {
+    console.log(
+      "myContainer not found: Registering user proximity collider failed"
+    );
+    return;
+  }
+
+  scene.userProximityCollider = createInteractiveGameObject(
+    scene,
+    myContainer.x,
+    myContainer.y,
+    256,
+    256,
+    true,
+    "user-proximity-collider",
+    { x: myContainer.originX - 0.05, y: myContainer.originY - 0.05 }
+  ) as GameObjects.Rectangle;
+
+  scene.userProximityCollider.setDataEnabled();
+  scene.userProximityCollider.fillColor = 0x00ff00;
+
+  scene.userProximityCollider.update = () => {
+    updateProximityCollider(scene);
+  };
+};
+
+export const updateProximityCollider = (scene: RoomScene) => {
+  if (!scene.gridEngine || !scene.userProximityCollider) {
+    return;
+  }
+
+  const myContainer = scene.gridEngine.getContainer(
+    scene.user.userId as string
+  );
+  const userId = useRendererStore.getState().user.userId as string;
+  const facingDirection = scene.gridEngine.getFacingDirection(userId!!);
+
+  const me = scene.gridEngine.getContainer(
+    userId as string
+  ) as GameObjects.Container;
+
+  switch (facingDirection) {
+    case Direction.DOWN: {
+      scene.userProximityCollider.setX(me.x);
+      scene.userProximityCollider.setY(me.y);
+      break;
+    }
+
+    case Direction.UP: {
+      scene.userProximityCollider.setX(me.x);
+      scene.userProximityCollider.setY(me.y);
+      break;
+    }
+
+    case Direction.LEFT: {
+      scene.userProximityCollider.setX(me.x);
+      scene.userProximityCollider.setY(me.y);
+      break;
+    }
+
+    case Direction.RIGHT: {
+      scene.userProximityCollider.setX(me.x);
+      scene.userProximityCollider.setY(me.y);
+      break;
+    }
+
+    default: {
+      // will never happen
+      break;
+    }
+  }
 };
 
 export const registerItems = (scene: RoomScene) => {
@@ -1026,8 +1109,6 @@ export const registerKeys = (scene: RoomScene) => {
   // scene.input.keyboard.disableGlobalCapture();
 };
 
-export const registerPhysics = (scene: RoomScene) => {};
-
 export const updateActionCollider = (scene: RoomScene) => {
   if (!scene.gridEngine || !scene.userActionCollider) {
     return;
@@ -1090,7 +1171,7 @@ export const createInteractiveGameObject = (
   height: number,
   isDebug: boolean = true,
   name: string,
-  origin: { x: 0; y: 0 } = { x: 0, y: 0 }
+  origin: { x: number; y: number } = { x: 0, y: 0 }
 ) => {
   if (!scene) {
     return;

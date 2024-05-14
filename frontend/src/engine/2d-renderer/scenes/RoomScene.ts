@@ -3,15 +3,14 @@ import GridEngine, { Direction } from "grid-engine";
 import { Room, UserData } from "../../../../../shared/types";
 import { Socket } from "socket.io-client";
 import {
-  Keyboard,
   NavKeys,
   registerItems,
   registerKeys,
   registerRendererEvents,
-  registerSpriteAnimations,
   registerSpriteAnimations32,
   registerSprites,
   registerUserActionCollider,
+  registerUserProximityCollider,
 } from "../utils";
 import { GameObjects } from "phaser";
 
@@ -30,6 +29,7 @@ export class RoomScene extends Phaser.Scene {
   public gridEngine: GridEngine | null = null;
   public postFxPlugin: any = null;
   public userActionCollider: GameObjects.Rectangle = null as any;
+  public userProximityCollider: GameObjects.Rectangle = null as any;
   public map: Phaser.Tilemaps.Tilemap | undefined;
 
   // Game Controls & Keys
@@ -63,6 +63,7 @@ export class RoomScene extends Phaser.Scene {
     registerSprites(this.conn, this, this.map);
     registerRendererEvents(this.conn, this, this.map);
     registerUserActionCollider(this);
+    registerUserProximityCollider(this);
     registerItems(this);
   }
 
@@ -75,6 +76,7 @@ export class RoomScene extends Phaser.Scene {
     const myUserId = this.user.userId as string;
 
     this.userActionCollider.update();
+    this.userProximityCollider.update();
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {
       this.gridEngine.move(myUserId, Direction.LEFT);
