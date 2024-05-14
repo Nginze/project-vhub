@@ -1,3 +1,4 @@
+import { MyContextMenu } from "@/components/global/MyContextMenu";
 import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { TwoDViewComponent } from "@/engine/2d-renderer/components/2DViewComponent";
@@ -54,7 +55,9 @@ const Room: React.FC<RoomProps> = () => {
   }
 
   return room ? (
-    <TwoDViewComponent />
+    <>
+      <TwoDViewComponent />
+    </>
   ) : (
     <div className="w-screen h-screen flex items-center justify-center">
       Loading...

@@ -10,14 +10,17 @@ export class Preloader extends Phaser.Scene {
   private room: Room = useRendererStore.getState().room as Room;
 
   preload() {
-    // Here we load all assets we need for the 2d game view
-    // Maps are probably gonna be served statically from public
-    // Same with characters but possiblity of a character builder so idk how that will pan out
-    // But one thing is for sure we are going to create keys and paths for each loadable entity in the renderer
-    // That will be referenced here in the preloader
+    // fx plugin
+    this.load.plugin(
+      "rexoutlinepipelineplugin",
+      "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexoutlinepipelineplugin.min.js",
+      true
+    );
 
+    // load world assets
     this.loadMap();
-    this.loadSprites();
+    this.loadCharacters32();
+    this.loadItems();
   }
 
   create() {
@@ -29,7 +32,6 @@ export class Preloader extends Phaser.Scene {
       "map",
       `${this.assetsPath}/maps/${this.room.mapKey}.json`
     );
-
     this.load.image(
       "modern-extra-tileset-16",
       `${this.assetsPath}/tilesets/modern-extra-tileset-16.png`
@@ -38,8 +40,15 @@ export class Preloader extends Phaser.Scene {
       "modern-tileset-16",
       `${this.assetsPath}/tilesets/modern-tileset-16.png`
     );
+    this.load.image("tiles_wall", "/assets/tilesets/FloorAndGround.png");
+    this.load.image(
+      "office",
+      "/assets/tilesets/Modern_Office_Black_Shadow.png"
+    );
+    this.load.image("basement", "/assets/tilesets/Basement.png");
+    this.load.image("generic", "/assets/tilesets/Generic.png");
   }
-  loadSprites() {
+  loadCharacters() {
     const characters = ["Adam", "Alex", "Amelia", "Bob"];
     const spriteTypes = ["dir", "idle", "phone", "run", "sit"];
 
@@ -82,5 +91,55 @@ export class Preloader extends Phaser.Scene {
         }
       });
     });
+  }
+
+  loadCharacters32() {
+    this.load.spritesheet("adam", "/assets/sprites/characters/new32/adam.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    });
+    this.load.spritesheet("ash", "/assets/sprites/characters/new32/ash.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    });
+    this.load.spritesheet("lucy", "/assets/sprites/characters/new32/lucy.png", {
+      frameWidth: 32,
+      frameHeight: 48,
+    });
+    this.load.spritesheet(
+      "nancy",
+      "/assets/sprites/characters/new32/nancy.png",
+      {
+        frameWidth: 32,
+        frameHeight: 48,
+      }
+    );
+  }
+
+  loadItems() {
+    this.load.spritesheet("chairs", "/assets/sprites/items/chair.png", {
+      frameWidth: 32,
+      frameHeight: 64,
+    });
+    this.load.spritesheet("computers", "/assets/sprites/items/computer.png", {
+      frameWidth: 96,
+      frameHeight: 64,
+    });
+    this.load.spritesheet(
+      "whiteboards",
+      "/assets/sprites/items/whiteboard.png",
+      {
+        frameWidth: 64,
+        frameHeight: 64,
+      }
+    );
+    this.load.spritesheet(
+      "vendingmachines",
+      "/assets/sprites/items/vendingmachine.png",
+      {
+        frameWidth: 48,
+        frameHeight: 72,
+      }
+    );
   }
 }

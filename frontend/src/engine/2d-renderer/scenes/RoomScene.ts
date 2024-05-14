@@ -1,14 +1,17 @@
 import { useRendererStore } from "@/store/RendererStore";
-import GridEngine from "grid-engine";
+import GridEngine, { Direction } from "grid-engine";
 import { Room, UserData } from "../../../../../shared/types";
 import { Socket } from "socket.io-client";
 import {
   Keyboard,
-  createInteractiveGameObject,
+  NavKeys,
+  registerItems,
+  registerKeys,
+  registerRendererEvents,
   registerSpriteAnimations,
+  registerSpriteAnimations32,
   registerSprites,
-  subscribeToRendererEvents,
-  updateActionCollider,
+  registerUserActionCollider,
 } from "../utils";
 import { GameObjects } from "phaser";
 
@@ -17,13 +20,22 @@ export class RoomScene extends Phaser.Scene {
     super("room-scene");
   }
 
+  // App State
+  public conn: Socket = useRendererStore.getState().conn as Socket;
+  public room: Room = useRendererStore.getState().room as Room;
+  public roomStatus: any = useRendererStore.getState().roomStatus;
+  public user: UserData = useRendererStore.getState().user;
+
+  // Colliders and Layers
   public gridEngine: GridEngine | null = null;
-  private conn: Socket = useRendererStore.getState().conn as Socket;
-  private room: Room = useRendererStore.getState().room as Room;
-  private roomStatus: any = useRendererStore.getState().roomStatus;
-  private user: UserData = useRendererStore.getState().user;
+  public postFxPlugin: any = null;
   public userActionCollider: GameObjects.Rectangle = null as any;
-  public interactiveLayers: GameObjects.Group = null as any;
+  public map: Phaser.Tilemaps.Tilemap | undefined;
+
+  // Game Controls & Keys
+  public cursors: NavKeys | undefined;
+  public keyE: Phaser.Input.Keyboard.Key | undefined;
+  public keyR: Phaser.Input.Keyboard.Key | undefined;
 
   create() {
     this.conn.emit("room:join", {
@@ -37,82 +49,64 @@ export class RoomScene extends Phaser.Scene {
         skin: this.roomStatus.skin,
       },
     });
+    this.postFxPlugin = this.plugins.get("rexoutlinepipelineplugin");
 
-    const map = this.make.tilemap({ key: "map" });
-    this.interactiveLayers = this.add.group();
+    this.map = this.make.tilemap({ key: "map" });
 
-    map.addTilesetImage("modern-tileset-16");
-    map.addTilesetImage("modern-extra-tileset-16");
+    this.map.addTilesetImage("FloorAndGround", "tiles_wall");
+    // this.map.addTilesetImage("office");
+    // this.map.addTilesetImage("basement");
+    // this.map.addTilesetImage("generic");
 
-    registerSpriteAnimations(this);
-    registerSprites(this.conn, this, map);
-    subscribeToRendererEvents(this.conn, this, map);
-
-    const me = this.gridEngine?.getSprite(this.user.userId as string);
-
-    if (!me) {
-      return;
-    }
-
-    this.userActionCollider = createInteractiveGameObject(
-      this,
-      me?.x,
-      me?.y,
-      16,
-      16,
-      true,
-      "user-action-collider"
-    );
-
-    this.userActionCollider.update = () => {
-      updateActionCollider(this);
-    };
-
-    this.physics.add.overlap(
-      this.userActionCollider,
-      this.interactiveLayers,
-      (a, b) => {
-        const tile = [a, b].find((obj) => obj !== this.userActionCollider);
-        // console.log(tile);
-        if (tile?.index > 0 && !tile?.wasHandled) {
-          switch (tile?.layer.name) {
-            case "Interactive":
-              //outline the tile to make it clear that it's interactive
-              //show prompt tooltip to interact with the tile
-              console.log("Interactive tile", tile);
-
-              break;
-
-            default:
-              break;
-          }
-        }
-      }
-    );
+    registerKeys(this);
+    registerSpriteAnimations32(this);
+    registerSprites(this.conn, this, this.map);
+    registerRendererEvents(this.conn, this, this.map);
+    registerUserActionCollider(this);
+    registerItems(this);
   }
 
   update() {
-    const cursors = {
-      ...this.input!.keyboard!.createCursorKeys(),
-      ...(this.input!.keyboard!.addKeys("W,S,A,D") as Keyboard),
-    };
+    if (!this.gridEngine || !this.cursors || !this.user) {
+      console.log("Scene: Not ready yet");
+      return;
+    }
 
-    const userId = this.user.userId as string;
+    const myUserId = this.user.userId as string;
 
     this.userActionCollider.update();
 
-    if (cursors.left.isDown || cursors.A.isDown) {
-      //@ts-ignore
-      this.gridEngine?.move(userId, "left");
-    } else if (cursors.right.isDown || cursors.D.isDown) {
-      //@ts-ignore
-      this.gridEngine?.move(userId, "right");
-    } else if (cursors.up.isDown || cursors.W.isDown) {
-      //@ts-ignore
-      this.gridEngine?.move(userId, "up");
-    } else if (cursors.down.isDown || cursors.S.isDown) {
-      //@ts-ignore
-      this.gridEngine?.move(userId, "down");
+    if (this.cursors.left.isDown || this.cursors.A.isDown) {
+      this.gridEngine.move(myUserId, Direction.LEFT);
+    } else if (this.cursors.right.isDown || this.cursors.D.isDown) {
+      this.gridEngine.move(myUserId, Direction.RIGHT);
+    } else if (this.cursors.up.isDown || this.cursors.W.isDown) {
+      this.gridEngine.move(myUserId, Direction.UP);
+    } else if (this.cursors.down.isDown || this.cursors.S.isDown) {
+      this.gridEngine.move(myUserId, Direction.DOWN);
     }
+  }
+
+  addObjectFromTiled(
+    group: Phaser.Physics.Arcade.StaticGroup,
+    object: Phaser.Types.Tilemaps.TiledObject,
+    key: string,
+    tilesetName: string
+  ) {
+    if (!this.map) {
+      return;
+    }
+
+    const actualX = object.x! + object.width! * 0.5;
+    const actualY = object.y! - object.height! * 0.5;
+    const obj = group
+      .get(
+        actualX,
+        actualY,
+        key,
+        object.gid! - this.map.getTileset(tilesetName)!.firstgid
+      )
+      .setDepth(actualY);
+    return obj;
   }
 }

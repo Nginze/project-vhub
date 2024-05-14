@@ -4,8 +4,14 @@ import { useRendererStore } from "@/store/RendererStore";
 import { Room } from "../../../../../shared/types";
 import { api } from "@/api";
 import { GameObjects } from "phaser";
+import { Direction } from "grid-engine";
+import Chair from "../items/Chair";
+import Computer from "../items/Computer";
+import Whiteboard from "../items/WhiteBoard";
+import VendingMachine from "../items/VendingMachine";
+import Item from "../items/Item";
 
-export const subscribeToRendererEvents = (
+export const registerRendererEvents = (
   conn: Socket,
   scene: RoomScene,
   map: any
@@ -23,12 +29,11 @@ export const subscribeToRendererEvents = (
     const sprite = scene.physics.add.sprite(
       d.user.posX,
       d.user.posY,
-      d.user.skin,
-      1
+      d.user.skin.toLowerCase()
     );
 
     sprite?.anims.play(
-      `${sprite.texture.key.split("_")[0]}_idle_anim_${d.user.dir}`
+      `${sprite.texture.key.split("_")[0].toLowerCase()}_idle_${d.user.dir}`
     );
 
     scene.gridEngine.addCharacter({
@@ -156,8 +161,492 @@ export const registerSpriteAnimations = (scene: RoomScene) => {
   });
 };
 
+export const registerSpriteAnimations32 = (scene: RoomScene) => {
+  const animsFrameRate = 15;
+
+  scene.anims.create({
+    key: "nancy_idle_right",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 0,
+      end: 5,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "nancy_idle_up",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 6,
+      end: 11,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "nancy_idle_left",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 12,
+      end: 17,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "nancy_idle_down",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 18,
+      end: 23,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "nancy_run_right",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 24,
+      end: 29,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "nancy_run_up",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 30,
+      end: 35,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "nancy_run_left",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 36,
+      end: 41,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "nancy_run_down",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 42,
+      end: 47,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "nancy_sit_down",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 48,
+      end: 48,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "nancy_sit_left",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 49,
+      end: 49,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "nancy_sit_right",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 50,
+      end: 50,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "nancy_sit_up",
+    frames: scene.anims.generateFrameNames("nancy", {
+      start: 51,
+      end: 51,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_idle_right",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 0,
+      end: 5,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "lucy_idle_up",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 6,
+      end: 11,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "lucy_idle_left",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 12,
+      end: 17,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "lucy_idle_down",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 18,
+      end: 23,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "lucy_run_right",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 24,
+      end: 29,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_run_up",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 30,
+      end: 35,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_run_left",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 36,
+      end: 41,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_run_down",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 42,
+      end: 47,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_sit_down",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 48,
+      end: 48,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_sit_left",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 49,
+      end: 49,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_sit_right",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 50,
+      end: 50,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "lucy_sit_up",
+    frames: scene.anims.generateFrameNames("lucy", {
+      start: 51,
+      end: 51,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_idle_right",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 0,
+      end: 5,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "ash_idle_up",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 6,
+      end: 11,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "ash_idle_left",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 12,
+      end: 17,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "ash_idle_down",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 18,
+      end: 23,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "ash_run_right",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 24,
+      end: 29,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_run_up",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 30,
+      end: 35,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_run_left",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 36,
+      end: 41,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_run_down",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 42,
+      end: 47,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_sit_down",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 48,
+      end: 48,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_sit_left",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 49,
+      end: 49,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_sit_right",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 50,
+      end: 50,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "ash_sit_up",
+    frames: scene.anims.generateFrameNames("ash", {
+      start: 51,
+      end: 51,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_idle_right",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 0,
+      end: 5,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "adam_idle_up",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 6,
+      end: 11,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "adam_idle_left",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 12,
+      end: 17,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "adam_idle_down",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 18,
+      end: 23,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate * 0.6,
+  });
+
+  scene.anims.create({
+    key: "adam_run_right",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 24,
+      end: 29,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_run_up",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 30,
+      end: 35,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_run_left",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 36,
+      end: 41,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_run_down",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 42,
+      end: 47,
+    }),
+    repeat: -1,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_sit_down",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 48,
+      end: 48,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_sit_left",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 49,
+      end: 49,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_sit_right",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 50,
+      end: 50,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+
+  scene.anims.create({
+    key: "adam_sit_up",
+    frames: scene.anims.generateFrameNames("adam", {
+      start: 51,
+      end: 51,
+    }),
+    repeat: 0,
+    frameRate: animsFrameRate,
+  });
+};
+
 export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
-  let me: any;
+  let me: Phaser.GameObjects.Sprite;
   const room = useRendererStore.getState().room as Room & {
     participants: any[];
   };
@@ -166,38 +655,77 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
   const characters = room.participants.map(
     (participant: any, index: number) => {
       let sprite = scene.physics.add.sprite(
-        participant.posX,
-        participant.posY,
-        participant.skin,
-        1
+        0,
+        0,
+        participant.skin.toLowerCase()
       );
 
-      // // add playerName to playerContainer
-      // const playerName = scene.add
-      //   .text(0, 0, participant.userName)
-      //   // .setAlign("center")
-      //   // .setFontFamily("Arial")
-      //   // .setFontSize(7)
-      //   .setColor("#000000");
+      const playerName = scene.add
+        .dom(0, -20)
+        .createFromHTML(
+          `
+  <div style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.6); padding: 2px 3.6px; border-radius: 4.8px;">
+    <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
+    ${participant.userName}
+  </div>
+          `
+        )
+        .setOrigin(0.225);
 
-      // const container = scene.add.container(0, 0, [sprite, playerName]);
+      // const playerIcon = scene.add
+      //   .dom(8, -20)
+      //   .createFromHTML(
+      //     `<div style="position: relative; background: white; padding: 2px 4px; border-radius: 3px; text-align: center; font-size: 10px;">
+      //       <span role="img" aria-label="emoji">👋</span>
+      //       <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
+      //     </div>`
+      //   )
+      //   .setOrigin(0.5, 0.5);
+
+      const playerContainer = scene.add.container(
+        participant.posX,
+        participant.posY,
+        [sprite, playerName]
+      );
 
       sprite?.anims.play(
-        `${sprite.texture.key.split("_")[0]}_idle_anim_${participant.dir}`
+        `${sprite.texture.key.split("_")[0].toLowerCase()}_idle_${
+          participant.dir
+        }`
       );
 
       if (user.userId === participant.userId) {
-        console.log("That is me!!");
-
         me = sprite;
-        scene.cameras.main.startFollow(sprite, true);
+        me.setInteractive();
+
+        // scene.cameras.main.zoom = 1.5;
+        scene.cameras.main.startFollow(playerContainer, true);
         scene.cameras.main.setFollowOffset(-me.width, -me.height);
+
+        me.on("pointerdown", (pointer: any) => {
+          const ctxTrigger = document.querySelector("#ctx-menu-trigger");
+          const event = new MouseEvent("contextmenu", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            button: 2,
+            buttons: 2,
+            clientX: pointer.x,
+            clientY: pointer.y,
+          });
+          ctxTrigger!.dispatchEvent(event);
+          console.log("me clicked");
+        });
       }
 
       return {
         id: participant.userId,
         sprite,
-        startPosition: { x: participant.posX, y: participant.posY },
+        container: playerContainer,
+        startPosition: {
+          x: participant.posX,
+          y: participant.posY,
+        },
       };
     }
   );
@@ -206,27 +734,19 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     characters,
   };
 
-  console.log(characters);
-
   if (!scene.gridEngine) {
     return;
   }
 
   map.layers.forEach((layer, index) => {
-    const mapLayer = map.createLayer(
-      index,
-      ["modern-tileset-16", "modern-extra-tileset-16"],
-      0,
-      0
-    );
-
-    if (layer.name === "Interactive") {
-      console.log("Interactive layer found");
-      scene.interactiveLayers.add(mapLayer);
-    }
+    map.createLayer(index, ["FloorAndGround"], 0, 0);
+    // if (layer.name === "Interactive") {
+    //   console.log("Interactive layer found");
+    //   scene.interactiveLayers.add(mapLayer);
+    // }
   });
 
-  scene.physics.add.collider(me, scene.interactiveLayers);
+  // scene.physics.add.collider(me, scene.interactiveLayers);
 
   // initialize grid engine
   scene.gridEngine.create(map, gridEngineConfig);
@@ -240,7 +760,9 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     const sprite = scene.gridEngine.getSprite(charId);
     const roomId = useRendererStore.getState().currentRoomId as string;
     const user = useRendererStore.getState().user;
-    sprite?.anims.play(`${sprite.texture.key.split("_")[0]}_run_${direction}`);
+    sprite?.anims.play(
+      `${sprite.texture.key.split("_")[0].toLowerCase()}_run_${direction}`
+    );
 
     const dir = scene.gridEngine?.getFacingDirection(user.userId!!);
     const posX = scene.gridEngine?.getPosition(user.userId!!).x;
@@ -283,7 +805,7 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
 
     sprite?.anims.stop();
     sprite?.anims.play(
-      `${sprite.texture.key.split("_")[0]}_idle_anim_${direction}`
+      `${sprite.texture.key.split("_")[0].toLowerCase()}_idle_${direction}`
     );
 
     if (charId === user.userId) {
@@ -351,6 +873,161 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     });
 };
 
+export const registerUserActionCollider = (scene: RoomScene) => {
+  if (!scene.gridEngine || !scene.user) {
+    console.log("user Action Collider not ready");
+    return;
+  }
+
+  const myContainer = scene.gridEngine.getContainer(
+    scene.user.userId as string
+  );
+
+  if (!myContainer) {
+    console.log(
+      "myContainer not found: Registering user action collider failed"
+    );
+    return;
+  }
+
+  scene.userActionCollider = createInteractiveGameObject(
+    scene,
+    myContainer.x,
+    myContainer.y,
+    32,
+    32,
+    true,
+    "user-action-collider"
+  ) as GameObjects.Rectangle;
+
+  scene.userActionCollider.setDataEnabled();
+
+  scene.userActionCollider.update = () => {
+    updateActionCollider(scene);
+  };
+};
+
+export const registerItems = (scene: RoomScene) => {
+  if (!scene.map) {
+    return;
+  }
+
+  const set = useRendererStore.getState().set;
+
+  // create chairs from object layer
+  const chairs = scene.physics.add.staticGroup({ classType: Chair });
+  const chairLayer = scene.map.getObjectLayer("Chair");
+  chairLayer!.objects.forEach((chairObj: any) => {
+    const item = scene.addObjectFromTiled(
+      chairs,
+      chairObj,
+      "chairs",
+      "chair"
+    ) as Chair;
+    console.log(item);
+    // item.itemDirection = chairObj.properties[0].value;
+  });
+
+  // create computers from object layer
+  const computers = scene.physics.add.staticGroup({ classType: Computer });
+  const computerLayer = scene.map.getObjectLayer("Computer");
+  computerLayer!.objects.forEach((obj, i) => {
+    const item = scene.addObjectFromTiled(
+      computers,
+      obj,
+      "computers",
+      "computer"
+    ) as Computer;
+    item.setDepth(item.y + item.height * 0.27);
+    const id = `${i}`;
+    item.id = id;
+    set((state) => ({ computerStore: { ...state.computerStore, [id]: item } }));
+  });
+
+  // create whiteboards from object layer
+  const whiteboards = scene.physics.add.staticGroup({ classType: Whiteboard });
+  const whiteboardLayer = scene.map.getObjectLayer("Whiteboard");
+  whiteboardLayer!.objects.forEach((obj, i) => {
+    const item = scene.addObjectFromTiled(
+      whiteboards,
+      obj,
+      "whiteboards",
+      "whiteboard"
+    ) as Whiteboard;
+    const id = `${i}`;
+    item.id = id;
+    set((state) => ({
+      whiteboardStore: { ...state.whiteboardStore, [id]: item },
+    }));
+  });
+
+  // create vending machines from object layer
+  const vendingMachines = scene.physics.add.staticGroup({
+    classType: VendingMachine,
+  });
+  const vendingMachineLayer = scene.map.getObjectLayer("VendingMachine");
+  vendingMachineLayer?.objects.forEach((obj, i) => {
+    scene.addObjectFromTiled(
+      vendingMachines,
+      obj,
+      "vendingmachines",
+      "vendingmachine"
+    );
+  });
+
+  scene.physics.add.collider(
+    scene.userActionCollider,
+    [chairs, computers, vendingMachines, whiteboards],
+    (a, b) => {
+      const selectedItem = [a, b].find(
+        (obj) => obj !== scene.userActionCollider
+      ) as Item;
+      if (selectedItem === scene.userActionCollider.data.get("selectedItem")) {
+        return;
+      }
+
+      scene.userActionCollider.data.set("selectedItem", selectedItem);
+      selectedItem.setHighlight(scene.postFxPlugin);
+      selectedItem.setDialogBox("Press [X] to interact");
+      // switch (selectedItem.itemType) {
+      //   case ItemType.CHAIR:
+      //     selectedItem.setHighlight(scene.postFxPlugin);
+      //     selectedItem.setDialogBox("Press X to interact");
+      //     break;
+      //   case ItemType.COMPUTER:
+      //     selectedItem.setHighlight(scene.postFxPlugin);
+      //     selectedItem.setDialogBox("Press X to interact");
+      //     break;
+      //   case ItemType.WHITEBOARD:
+      //     selectedItem.setHighlight(scene.postFxPlugin);
+      //     selectedItem.setDialogBox("Press X to interact");
+      //     break;
+      //   default:
+      //     break;
+      // }
+    }
+  );
+};
+
+export const registerKeys = (scene: RoomScene) => {
+  if (!scene || !scene.input || !scene.input.keyboard) {
+    console.log("scene or scene.input.keyboard is null");
+    return;
+  }
+
+  scene.cursors = {
+    ...scene.input.keyboard.createCursorKeys(),
+    ...(scene.input.keyboard.addKeys("W,S,A,D") as Keyboard),
+  };
+
+  scene.keyE = scene.input.keyboard.addKey("E");
+  scene.keyR = scene.input.keyboard.addKey("R");
+
+  // scene.input.keyboard.disableGlobalCapture();
+};
+
+export const registerPhysics = (scene: RoomScene) => {};
+
 export const updateActionCollider = (scene: RoomScene) => {
   if (!scene.gridEngine || !scene.userActionCollider) {
     return;
@@ -358,29 +1035,31 @@ export const updateActionCollider = (scene: RoomScene) => {
 
   const userId = useRendererStore.getState().user.userId as string;
   const facingDirection = scene.gridEngine.getFacingDirection(userId!!);
-  const me = scene.gridEngine.getSprite(userId as string) as GameObjects.Sprite;
+  const me = scene.gridEngine.getContainer(
+    userId as string
+  ) as GameObjects.Container;
 
   switch (facingDirection) {
-    case "down": {
+    case Direction.DOWN: {
       scene.userActionCollider.setX(me.x);
-      scene.userActionCollider.setY(me.y + 30);
+      scene.userActionCollider.setY(me.y + 48);
       break;
     }
 
-    case "up": {
+    case Direction.UP: {
       scene.userActionCollider.setX(me.x);
-      scene.userActionCollider.setY(me.y - 13);
+      scene.userActionCollider.setY(me.y - 32);
       break;
     }
 
-    case "left": {
-      scene.userActionCollider.setX(me.x - 16);
+    case Direction.LEFT: {
+      scene.userActionCollider.setX(me.x - 32);
       scene.userActionCollider.setY(me.y + 10);
       break;
     }
 
-    case "right": {
-      scene.userActionCollider.setX(me.x + 16);
+    case Direction.RIGHT: {
+      scene.userActionCollider.setX(me.x + 32);
       scene.userActionCollider.setY(me.y + 10);
       break;
     }
@@ -388,6 +1067,17 @@ export const updateActionCollider = (scene: RoomScene) => {
     default: {
       // will never happen
       break;
+    }
+  }
+
+  const selectedItem = scene.userActionCollider.data.get(
+    "selectedItem"
+  ) as Item;
+  if (selectedItem) {
+    if (!scene.physics.overlap(scene.userActionCollider, selectedItem)) {
+      selectedItem.removeHiglight(scene.postFxPlugin);
+      selectedItem.clearDialogBox();
+      scene.userActionCollider.data.remove("selectedItem");
     }
   }
 };
@@ -402,6 +1092,10 @@ export const createInteractiveGameObject = (
   name: string,
   origin: { x: 0; y: 0 } = { x: 0, y: 0 }
 ) => {
+  if (!scene) {
+    return;
+  }
+
   const customCollider = new GameObjects.Rectangle(
     scene,
     x,
@@ -417,6 +1111,7 @@ export const createInteractiveGameObject = (
   }
 
   scene.physics.add.existing(customCollider);
+
   //@ts-ignore
   customCollider.body.setAllowGravity(false);
   //@ts-ignore
@@ -431,5 +1126,12 @@ export type Keyboard = {
   A: Phaser.Input.Keyboard.Key;
   D: Phaser.Input.Keyboard.Key;
 };
+
+export enum ItemType {
+  CHAIR,
+  COMPUTER,
+  WHITEBOARD,
+  VENDINGMACHINE,
+}
 
 export type NavKeys = Keyboard & Phaser.Types.Input.Keyboard.CursorKeys;

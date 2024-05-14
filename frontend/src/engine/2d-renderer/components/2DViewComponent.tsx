@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import phaserReact from "phaser3-react";
+import { MyContextMenu } from "@/components/global/MyContextMenu";
 
 type TwoDViewComponentProps = {};
 
@@ -8,7 +10,6 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
 
   useEffect(() => {
     async function initPhaser() {
-
       // Lazy load phaser library and initialize phaser canvas
       const Phaser = await import("phaser");
       const { RoomScene } = await import("../scenes/RoomScene");
@@ -19,19 +20,29 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
       gameRef.current = new Phaser.Game({
         type: Phaser.AUTO,
         title: "2D-view",
-        width: 1920,
-        height: 967,
-        
+        backgroundColor: "#93cbee",
         pixelArt: true,
+        scale: {
+          mode: Phaser.Scale.ScaleModes.RESIZE,
+          width: window.innerWidth,
+          height: window.innerHeight,
+          autoCenter: Phaser.Scale.CENTER_BOTH,
+          autoRound: true,
+          zoom: 5,
+        },
+        render: {
+          antialias: false,
+        },
         physics: {
           default: "arcade",
           arcade: {
-            debug: true,
+            debug: process.env.NODE_ENV === "development",
           },
         },
         dom: {
           createContainer: true,
         },
+        autoFocus: true,
         parent: "2d-view-content",
         scene: [Preloader, RoomScene],
         plugins: {
@@ -42,9 +53,6 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
               mapping: "gridEngine",
             },
           ],
-        },
-        scale: {
-          zoom: 1.5,
         },
       });
     }
@@ -69,6 +77,8 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
       id="2d-view-content"
       key="2d-view-content"
       className="flex items-center justify-center"
-    ></div>
+    >
+      <MyContextMenu />
+    </div>
   );
 };
