@@ -909,7 +909,7 @@ export const registerUserActionCollider = (scene: RoomScene) => {
 
 export const registerUserProximityCollider = (scene: RoomScene) => {
   if (!scene.gridEngine || !scene.user) {
-    console.log("user Proximit Collider not ready");
+    console.log("user Proximity Collider not ready");
     return;
   }
 

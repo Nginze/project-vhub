@@ -1,3 +1,4 @@
+import { AppIFrame } from "@/components/global/AppIFrame";
 import { MyContextMenu } from "@/components/global/MyContextMenu";
 import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
@@ -55,9 +56,10 @@ const Room: React.FC<RoomProps> = () => {
   }
 
   return room ? (
-    <>
+    <div className="flex flex-row items-center">
+      <AppIFrame />
       <TwoDViewComponent />
-    </>
+    </div>
   ) : (
     <div className="w-screen h-screen flex items-center justify-center">
       Loading...

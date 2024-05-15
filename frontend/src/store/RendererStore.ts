@@ -12,6 +12,7 @@ export const useRendererStore = create(
       conn: null as unknown as Socket,
       user: null as unknown as UserData,
       currentRoomId: "",
+      currentWhiteboardSrc: "https://wbo.ophir.dev/boards/adasdf",
       room: {},
       roomStatus: {},
       computerStore: {} as Record<string, Computer>,
