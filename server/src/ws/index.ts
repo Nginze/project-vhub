@@ -2,6 +2,8 @@ import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import * as connHandler from "./core/connHandler";
 import * as roomHandler from "./core/roomHandler";
+import * as chatHandler from "./core/chatHandler";
+import * as rtcHandler from "./core/rtcHandler";
 import { wsAuthMiddleware } from "./middleware/wsAuth";
 import { logger } from "../config/logger";
 import { setUserOnline } from "./helpers";
@@ -21,6 +23,8 @@ export const setupWs = (
 
       connHandler.init(io, socket);
       roomHandler.init(io, socket);
+      chatHandler.init(io, socket);
+      rtcHandler.init(io, socket);
     });
   } catch (error) {
     logger.error(error);
