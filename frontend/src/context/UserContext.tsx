@@ -2,7 +2,7 @@ import { createContext, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { UserData } from "../../../shared/types/index";
 import { api } from "../api";
-import { useRendererStore } from "@/store/RendererStore";
+import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 
 type Props = {
   children: React.ReactNode;

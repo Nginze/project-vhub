@@ -4,9 +4,11 @@ import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { TwoDViewComponent } from "@/engine/2d-renderer/components/2DViewComponent";
 import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
-import { useRendererStore } from "@/store/RendererStore";
+import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef } from "react";
+import { RoomLayout } from "@/components/room/RoomLayout";
+import { RoomControls } from "@/components/room/RoomControls";
 
 type RoomProps = {};
 
@@ -56,10 +58,15 @@ const Room: React.FC<RoomProps> = () => {
   }
 
   return room ? (
-    <div className="flex flex-row items-center">
-      <AppIFrame />
-      <TwoDViewComponent />
-    </div>
+    <RoomLayout
+      canvas={
+        <div className="flex flex-row items-center">
+          {/* <AppIFrame /> */}
+          <TwoDViewComponent />
+        </div>
+      }
+      footer={<RoomControls />}
+    />
   ) : (
     <div className="w-screen h-screen flex items-center justify-center">
       Loading...

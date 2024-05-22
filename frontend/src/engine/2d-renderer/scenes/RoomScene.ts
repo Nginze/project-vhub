@@ -1,4 +1,4 @@
-import { useRendererStore } from "@/store/RendererStore";
+import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import GridEngine, { Direction } from "grid-engine";
 import { Room, UserData } from "../../../../../shared/types";
 import { Socket } from "socket.io-client";

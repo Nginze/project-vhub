@@ -1,4 +1,4 @@
-import { useRendererStore } from "@/store/RendererStore";
+import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { useRouter } from "next/router";
 import React, {
   createContext,

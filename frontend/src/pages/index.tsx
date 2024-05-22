@@ -1,15 +1,14 @@
+import { LandingPage } from "@/components/global/LandingPage";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const Home: NextPage = () => {
-  const router = useRouter();
-
-  // redirect to home always
-  useEffect(() => {
-    router.push("/room/room-1");
-  }, []);
-  return <></>;
+  return (
+    <main>
+      <LandingPage />
+    </main>
+  );
 };
 
 export default Home;

@@ -10,17 +10,15 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
 
   useEffect(() => {
     async function initPhaser() {
-      // Lazy load phaser library and initialize phaser canvas
       const Phaser = await import("phaser");
       const { RoomScene } = await import("../scenes/RoomScene");
       const { Preloader } = await import("../scenes/PreloaderScene");
       const { default: GridEngine } = await import("grid-engine");
 
-      // Initialize Phaser Canvas
       gameRef.current = new Phaser.Game({
         type: Phaser.AUTO,
         title: "2D-view",
-        backgroundColor: "#93cbee",
+        backgroundColor: "#000000",
         pixelArt: true,
         scale: {
           mode: Phaser.Scale.ScaleModes.RESIZE,
@@ -29,9 +27,6 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
           autoCenter: Phaser.Scale.CENTER_BOTH,
           autoRound: true,
           zoom: 5,
-        },
-        render: {
-          antialias: false,
         },
         physics: {
           default: "arcade",
@@ -73,11 +68,7 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
   }, []);
 
   return (
-    <div
-      id="2d-view-content"
-      key="2d-view-content"
-      className="flex items-center justify-center"
-    >
+    <div id="2d-view-content" key="2d-view-content">
       <MyContextMenu />
     </div>
   );

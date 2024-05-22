@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { RoomScene } from "../scenes/RoomScene";
-import { useRendererStore } from "@/store/RendererStore";
+import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { Room } from "../../../../../shared/types";
 import { api } from "@/api";
 import { GameObjects } from "phaser";
