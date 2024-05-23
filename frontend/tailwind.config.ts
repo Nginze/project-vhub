@@ -22,8 +22,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        body: ["var(--font-inter)"],
-        logo: ["var(--font-lexend-deca)"],
+        body: "var(--font-inter)",
+        logo: "var(--font-lexend-deca)",
       },
       colors: {
         border: "hsl(var(--border))",

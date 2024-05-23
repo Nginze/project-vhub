@@ -60,11 +60,13 @@ export const RoomControls: React.FC<RoomControlsProps> = () => {
         <div className="flex items-center gap-5">
           <AppSheet content={<RoomSheet />}>
             <RoomMediaControlButton
+              tooltipText="Participants"
               iconOn={<UsersRound />}
               iconOff={<UsersRound />}
             />
           </AppSheet>
           <RoomMediaControlButton
+            tooltipText="Settings"
             iconOn={<Settings />}
             iconOff={<Settings />}
           />

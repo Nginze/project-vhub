@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils";
-import React from "react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { TooltipArrow } from "@radix-ui/react-tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 
-type RoomMediaControlButtonProps = {
+type SetupButtonProps = {
   iconOn: React.ReactNode;
   iconOff: React.ReactNode;
   onClick?: () => void;
@@ -15,22 +14,23 @@ type RoomMediaControlButtonProps = {
   tooltipText?: string;
 };
 
-export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
+export const SetupButton: React.FC<SetupButtonProps> = ({
   iconOn,
   iconOff,
   bgColor,
+  bgColorActive,
   hoverColor,
-  textColor,
-  tooltipText,
   onClick,
+  tooltipText,
+  textColor,
 }) => {
-  const [isOn, setIsOn] = React.useState(false);
+  const [isOn, setIsOn] = useState(false);
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
           onClick={onClick}
-          className="flex items-center overflow-hidden bg-white rounded-full px-0 py-0 w-auto h-auto hover:text-white"
+          className="flex items-center overflow-hidden bg-white bg-opacity-55 rounded-full px-0 py-0 w-auto h-auto hover:text-white"
         >
           {isOn ? (
             <div

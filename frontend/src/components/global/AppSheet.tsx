@@ -11,7 +11,9 @@ export const AppSheet: React.FC<AppSheetProps> = ({ children, content }) => {
     <>
       <Sheet>
         <SheetTrigger>{children}</SheetTrigger>
-        <SheetContent>{content}</SheetContent>
+        <SheetContent className="bg-[#202225] text-white">
+          {content}
+        </SheetContent>
       </Sheet>
     </>
   );
