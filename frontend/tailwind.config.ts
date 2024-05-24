@@ -22,10 +22,23 @@ const config = {
     },
     extend: {
       fontFamily: {
-        body: "var(--font-inter)",
-        logo: "var(--font-lexend-deca)",
+        body: ["Inter"],
+        logo: ["Lexend Deca"],
       },
       colors: {
+        // Backgrounds
+        void: "#202225",
+        deep: "#2a2c31",
+        dark: "#2f3136",
+        light: "#36393f",
+        veryLight: "#484b51",
+
+        // Foregrounds
+        appRed: "#f04747",
+        appGreen: "#43b581",
+        appPrimary: "#7289da",
+
+        // Default Shadcn colors
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

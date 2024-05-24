@@ -3,7 +3,6 @@ import Item from "./Item";
 
 export default class Chair extends Item {
   itemDirection?: string;
-
   constructor(
     scene: Phaser.Scene,
     x: number,
