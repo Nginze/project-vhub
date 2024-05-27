@@ -17,9 +17,9 @@ export const registerRendererEvents = (
   scene: RoomScene,
   map: any
 ) => {
-  conn.on("new-user-joined-room", (d: any) => {
-    console.log("event: new-user-joined-room", "data: ", d);
-    
+  conn.on(WS_MESSAGE.WS_NEW_USER_JOINED_ROOM, (d: any) => {
+    console.log("[LOGGING]: new-user-joined-room", "data: ", d);
+
     if (!scene.gridEngine) {
       return;
     }
@@ -34,6 +34,35 @@ export const registerRendererEvents = (
       d.user.skin.toLowerCase()
     );
 
+    const playerName = scene.add
+      .dom(0, -20)
+      .createFromHTML(
+        `
+          <div id="${d.userId}_indicator" style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
+            <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
+            ${d.userName}
+          </div>
+          `
+      )
+      .setOrigin(0.225);
+
+    const playerIcon = scene.add
+      .dom(8, -20)
+      .createFromHTML(
+        `<div id="${d.userId}_icon" style="position: relative; background: white; padding: 2px 4px; border-radius: 3px; text-align: center; font-size: 10px;">
+          <span role="img" aria-label="emoji">👋</span>
+          <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
+        </div>`
+      )
+      .setOrigin(0.5, 0.5)
+      .setVisible(false);
+
+    const playerContainer = scene.add.container(d.user.posX, d.user.posY, [
+      sprite,
+      playerName,
+      playerIcon,
+    ]);
+
     sprite?.anims.play(
       `${sprite.texture.key.split("_")[0].toLowerCase()}_idle_${d.user.dir}`
     );
@@ -41,33 +70,35 @@ export const registerRendererEvents = (
     scene.gridEngine.addCharacter({
       id: d.user.userId,
       sprite,
+      container: playerContainer,
       startPosition: { x: d.user.posX, y: d.user.posY },
     });
   });
 
-  conn.on("participant-left", (d: any) => {
-    console.log("event: participant-left", "data: ", d);
+  conn.on(WS_MESSAGE.WS_PARTICIPANT_LEFT, (d: any) => {
+    console.log("[LOGGING]: participant-left", "data: ", d);
+
     if (!scene.gridEngine) {
       return;
     }
 
-    const sprite = scene.gridEngine.getSprite(d.participantId);
+    const container = scene.gridEngine.getContainer(d.participantId);
     scene.gridEngine.removeCharacter(d.participantId);
-    sprite?.destroy();
+    container?.destroy();
   });
 
-  conn.on("participant-moved", (d: any) => {
-    console.log("event: participant-moved", "data: ", d);
+  conn.on(WS_MESSAGE.WS_PARTICIPANT_MOVED, (d: any) => {
+    console.log("[LOGGING]: Participant-moved", "data: ", d);
 
     if (!scene.gridEngine) {
       return;
     }
 
-    const sprite = scene.gridEngine.getSprite(d.participantId);
     const user = useRendererStore.getState().user;
 
     if (d.participantId !== user.userId) {
       scene.gridEngine.moveTo(d.participantId, { x: d.posX, y: d.posY });
+      scene.gridEngine.turnTowards(d.participantId, d.dir);
     }
   });
 
@@ -690,15 +721,16 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         )
         .setOrigin(0.225);
 
-      // const playerIcon = scene.add
-      //   .dom(8, -20)
-      //   .createFromHTML(
-      //     `<div style="position: relative; background: white; padding: 2px 4px; border-radius: 3px; text-align: center; font-size: 10px;">
-      //       <span role="img" aria-label="emoji">👋</span>
-      //       <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
-      //     </div>`
-      //   )
-      //   .setOrigin(0.5, 0.5);
+      const playerIcon = scene.add
+        .dom(8, -20)
+        .createFromHTML(
+          `<div id="${participant.userId}_icon" style="position: relative; background: white; padding: 2px 4px; border-radius: 3px; text-align: center; font-size: 10px;">
+            <span role="img" aria-label="emoji">👋</span>
+            <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
+          </div>`
+        )
+        .setOrigin(0.5, 0.5)
+        .setVisible(false);
 
       const playerContainer = scene.add.container(
         participant.posX,
@@ -787,7 +819,7 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     const posY = scene.gridEngine?.getPosition(user.userId!!).y;
 
     if (charId === user.userId) {
-      conn.emit("room:move", {
+      conn.emit(WS_MESSAGE.WS_ROOM_MOVE, {
         roomId: room.roomId,
         dir: scene.gridEngine?.getFacingDirection(user.userId!!),
         posX: scene.gridEngine?.getPosition(user.userId!!).x,
@@ -827,7 +859,7 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     );
 
     if (charId === user.userId) {
-      conn.emit("room:move", {
+      conn.emit(WS_MESSAGE.WS_ROOM_MOVE, {
         roomId: room.roomId,
         dir: scene.gridEngine?.getFacingDirection(user.userId!!),
         posX: scene.gridEngine?.getPosition(user.userId!!).x,
@@ -869,7 +901,7 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
       );
 
       if (charId === user.userId) {
-        conn.emit("room:move", {
+        conn.emit(WS_MESSAGE.WS_ROOM_MOVE, {
           roomId: room.roomId,
           dir: scene.gridEngine?.getFacingDirection(user.userId!!),
           posX: scene.gridEngine?.getPosition(user.userId!!).x,

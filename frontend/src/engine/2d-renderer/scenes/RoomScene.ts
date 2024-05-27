@@ -49,6 +49,7 @@ export class RoomScene extends Phaser.Scene {
         skin: this.roomStatus.skin,
       },
     });
+
     this.postFxPlugin = this.plugins.get("rexoutlinepipelineplugin");
 
     this.map = this.make.tilemap({ key: "map" });
@@ -77,6 +78,7 @@ export class RoomScene extends Phaser.Scene {
 
     this.userActionCollider.update();
     this.userProximityCollider.update();
+
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {
       this.gridEngine.move(myUserId, Direction.LEFT);

@@ -11,7 +11,9 @@ const init = (
   socket: Socket
 ) => {
   socket.on(WS_MESSAGE.RTC_WS_CREATE_ROOM, ({ roomId }) => {
+
     logger.debug("Create Room");
+
     try {
       sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_CREATE_ROOM, {
         op: RTC_MESSAGE.RTC_MS_RECV_CREATE_ROOM,
@@ -20,6 +22,7 @@ const init = (
     } catch (error) {
       throw error;
     }
+
   });
 
   socket.on(
@@ -27,8 +30,8 @@ const init = (
     ({ roomId, roomMeta: { isAutospeaker, isCreator } }) => {
       logger.debug("Join Room");
       try {
-        const user = getUser(socket);
-        socket.join(roomId);
+        // const user = getUser(socket);
+        // socket.join(roomId);
 
         sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_SPEAKER, {
           op:
@@ -38,19 +41,19 @@ const init = (
           d: { peerId: socket.id, roomId },
         });
 
-        const joinEvent = {
-          op: "new-user-joined-room",
-          peerId: socket.id,
-          d: {
-            roomId,
-            user: {
-              ...user,
-              isspeaker: isAutospeaker || isCreator,
-            },
-          },
-        };
+        // const joinEvent = {
+        //   op: "new-user-joined-room",
+        //   peerId: socket.id,
+        //   d: {
+        //     roomId,
+        //     user: {
+        //       ...user,
+        //       isspeaker: isAutospeaker || isCreator,
+        //     },
+        //   },
+        // };
 
-        broadcastExcludeSender(io, joinEvent);
+        // broadcastExcludeSender(io, joinEvent);
       } catch (error) {
         throw error;
       }

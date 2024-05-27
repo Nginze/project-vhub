@@ -12,8 +12,11 @@ export enum WS_MESSAGE {
   // Room messages
   WS_ROOM_JOIN = "room:join",
   WS_ROOM_MOVE = "room:move",
-  WS_USER_SPEAKING = "user-speaking",
-  WS_USER_STOPPED_SPEAKING = "user-stopped-speaking",
+  WS_USER_SPEAKING = "room:user-speaking",
+  WS_USER_STOPPED_SPEAKING = "room:user-stopped-speaking",
+  WS_NEW_USER_JOINED_ROOM = "room:new-user-joined-room",
+  WS_PARTICIPANT_MOVED = "room:participant-moved",
+  WS_PARTICIPANT_LEFT = "room:participant-left",
 
   // RTC SEND messages
   RTC_WS_CREATE_ROOM = "rtc:create_room",

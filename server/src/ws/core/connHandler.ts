@@ -27,7 +27,7 @@ const init = (
         roomId: currentRoom ?? "",
       });
 
-      io.to(currentRoom).emit("participant-left", {
+      io.to(currentRoom).emit(WS_MESSAGE.WS_PARTICIPANT_LEFT, {
         roomId: currentRoom,
         //@ts-ignore
         participantId: user.userId,
