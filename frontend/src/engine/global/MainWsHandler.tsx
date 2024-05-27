@@ -13,10 +13,7 @@ export const MainWsHandler: React.FC<MainWsHandlerProps> = ({ children }) => {
       return;
     }
 
-    return () => {
-      conn.off("you-joined-room");
-      conn.off("new-participant");
-    };
+    return () => {};
   }, [conn]);
 
   return <>{children}</>;

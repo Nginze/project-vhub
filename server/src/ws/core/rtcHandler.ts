@@ -3,16 +3,18 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { sendQueue } from "../../config/bull";
 import { broadcastExcludeSender } from "../helpers/";
 import { getPeerId, getUser } from "../helpers/";
+import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
+import { logger } from "../../config/logger";
 
 const init = (
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
   socket: Socket
 ) => {
-  socket.on("rtc:create_room", ({ roomId }) => {
-    console.log("create room");
+  socket.on(WS_MESSAGE.RTC_WS_CREATE_ROOM, ({ roomId }) => {
+    logger.debug("Create Room");
     try {
-      sendQueue.add("create_room", {
-        op: "create-room",
+      sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_CREATE_ROOM, {
+        op: RTC_MESSAGE.RTC_MS_RECV_CREATE_ROOM,
         d: { roomId, peerId: socket.id },
       });
     } catch (error) {
@@ -21,16 +23,18 @@ const init = (
   });
 
   socket.on(
-    "rtc:join_room",
+    WS_MESSAGE.RTC_WS_JOIN_ROOM,
     ({ roomId, roomMeta: { isAutospeaker, isCreator } }) => {
-      console.log("join room");
+      logger.debug("Join Room");
       try {
         const user = getUser(socket);
         socket.join(roomId);
 
-        sendQueue.add("join_room", {
+        sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_SPEAKER, {
           op:
-            isAutospeaker || isCreator ? "join-as-speaker" : "join-as-new-peer",
+            isAutospeaker || isCreator
+              ? RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_SPEAKER
+              : RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_NEW_PEER,
           d: { peerId: socket.id, roomId },
         });
 
@@ -53,11 +57,11 @@ const init = (
     }
   );
 
-  socket.on("rtc:connect_transport", (d, cb) => {
-    console.log("connect_transport");
+  socket.on(WS_MESSAGE.RTC_WS_CONNECT_TRANSPORT, (d, cb) => {
+    logger.debug("Connect Transport");
     try {
-      sendQueue.add("connect_transport", {
-        op: "connect-transport",
+      sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_CONNECT_TRANSPORT, {
+        op: RTC_MESSAGE.RTC_MS_RECV_CONNECT_TRANSPORT,
         d: { ...d, peerId: socket.id },
       });
       cb();
@@ -66,11 +70,11 @@ const init = (
     }
   });
 
-  socket.on("rtc:send_track", (d) => {
-    console.log("send_track");
+  socket.on(WS_MESSAGE.RTC_WS_SEND_TRACK, (d) => {
+    logger.debug("Send Track");
     try {
-      sendQueue.add("send_track", {
-        op: "send-track",
+      sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_SEND_TRACK, {
+        op: RTC_MESSAGE.RTC_MS_RECV_SEND_TRACK,
         d: { ...d, peerId: socket.id },
       });
     } catch (error) {
@@ -78,25 +82,29 @@ const init = (
     }
   });
 
-  socket.on("rtc:get_recv_tracks", async ({ roomId, rtpCapabilities }) => {
-    console.log("get_recv_tracks");
-    try {
-      sendQueue.add("get_recv-tracks", {
-        op: "get-recv-tracks",
-        d: { roomId, peerId: socket.id, rtpCapabilities },
-      });
-    } catch (error) {
-      throw error;
+  socket.on(
+    WS_MESSAGE.RTC_WS_GET_RECV_TRACKS,
+    async ({ roomId, rtpCapabilities }) => {
+      logger.debug("Get Recv Tracks");
+      try {
+        sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_GET_RECV_TRACKS, {
+          op: RTC_MESSAGE.RTC_MS_RECV_GET_RECV_TRACKS,
+          d: { roomId, peerId: socket.id, rtpCapabilities },
+        });
+      } catch (error) {
+        throw error;
+      }
     }
-  });
+  );
 
-  socket.on("rtc:add_speaker", async ({ roomId, userId }) => {
+  socket.on(WS_MESSAGE.RTC_WS_ADD_SPEAKER, async ({ roomId, userId }) => {
     try {
+      logger.debug("Add Speaker");
       const peerId = (await getPeerId(userId)) as string;
 
       // connect users voice to voice server
-      sendQueue.add("add_speaker", {
-        op: "add-speaker",
+      sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_ADD_SPEAKER, {
+        op: RTC_MESSAGE.RTC_MS_RECV_ADD_SPEAKER,
         d: { roomId, peerId },
       });
 
@@ -111,13 +119,14 @@ const init = (
     }
   });
 
-  socket.on("rtc:remove_speaker", async ({ roomId, userId }) => {
+  socket.on(WS_MESSAGE.RTC_WS_REMOVE_SPEAKER, async ({ roomId, userId }) => {
     try {
+      logger.debug("Remove Speaker");
       const peerId = (await getPeerId(userId)) as string;
 
       // disconnect users voice from voice server
-      sendQueue.add("remove_speaker", {
-        op: "remove-speaker",
+      sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_REMOVE_SPEAKER, {
+        op: RTC_MESSAGE.RTC_MS_RECV_REMOVE_SPEAKER,
         d: { roomId, peerId },
       });
 

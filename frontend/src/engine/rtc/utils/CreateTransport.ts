@@ -1,5 +1,6 @@
 import { TransportOptions } from "mediasoup-client/lib/types";
 import { useVoiceStore } from "../store/VoiceStore";
+import { RTC_MESSAGE, WS_MESSAGE } from "@/engine/2d-renderer/events";
 // import { useRTCStore } from "../store/useRTCStore";
 // import { useProducerStore } from "../store/useProducerStore";
 
@@ -10,10 +11,12 @@ export async function createTransport(
   direction: "recv" | "send",
   transportOptions: TransportOptions
 ) {
-  console.log(`create ${direction} transport`);
+  console.log(`[LOGGING]: Creating my ${direction} transport`);
+
   const { device, set, roomId } = useVoiceStore.getState();
 
-  console.log("transport options", transportOptions);
+  console.log("[LOGGING]: Transport options (from MS)", transportOptions);
+
   const transport =
     direction === "recv"
       ? await device!.createRecvTransport(transportOptions)
@@ -21,7 +24,7 @@ export async function createTransport(
 
   transport.on("connect", ({ dtlsParameters }, callback, errback) => {
     conn.emit(
-      `rtc:connect_transport`,
+      WS_MESSAGE.RTC_WS_CONNECT_TRANSPORT,
       {
         roomId,
         transportId: transportOptions.id,
@@ -40,7 +43,7 @@ export async function createTransport(
     transport.on(
       "produce",
       ({ kind, rtpParameters, appData }, callback, errback) => {
-        console.log("transport produce event", appData.mediaTag);
+        console.log("[LOGGING]: Transport produce event", appData.mediaTag);
         // we may want to start out paused (if the checkboxes in the ui
         // aren't checked, for each media type. not very clean code, here
         // but, you know, this isn't a real application.)
@@ -54,12 +57,13 @@ export async function createTransport(
         // up a server-side producer object, and get back a
         // producer.id. call callback() on success or errback() on
         // failure.
-        conn.once("@send-track-done", (d: any) => {
-          console.log("@send-track-done");
+        conn.once(RTC_MESSAGE.RTC_MS_SEND_SEND_TRACK_DONE, (d: any) => {
+          console.log("[LOGGING]: @send-track-done");
           callback({ id: d.id });
         });
+
         conn.emit(
-          "rtc:send_track",
+          WS_MESSAGE.RTC_WS_SEND_TRACK,
           {
             roomId,
             peerId: userid,
@@ -79,11 +83,10 @@ export async function createTransport(
 
   // for this simple demo, any time a transport transitions to closed,
   // failed, or disconnected, leave the room and reset
-  //
+
   transport.on("connectionstatechange", (state) => {
-    // useRTCStore.getState().set({ rtcStatus: state });
     console.log(
-      `${direction} transport ${transport.id} connectionstatechange ${state}`
+      `[LOGGING]: ${direction} transport ${transport.id} connectionstatechange ${state}`
     );
   });
 

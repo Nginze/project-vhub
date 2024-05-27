@@ -16,10 +16,10 @@ import { createTransport } from "./utils/CreateTransport";
 import { joinRoom } from "./utils/JoinRoom";
 import { receiveVoice } from "./utils/ReceiveVoice";
 import { sendVoice } from "./utils/SendVoice";
-// import { useRTCStore } from "./store/useRTCStore";
 import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { AudioRenderer } from "./components/AudioRenderer";
+import { RTC_MESSAGE } from "../2d-renderer/events";
 
 interface Props {}
 
@@ -58,11 +58,10 @@ export function closeVoiceConnections(_roomId: string | null) {
   const { roomId, mic, nullify } = useVoiceStore.getState();
   if (_roomId === null || _roomId === roomId) {
     if (mic) {
-      console.log("stopping mic");
+      console.log("[LOGGING]: Stopping Microphone");
       mic.stop();
     }
-
-    console.log("nulling transports");
+    console.log("[LOGGING]: Nullify All Transports");
     nullify();
   }
 }
@@ -77,121 +76,163 @@ const WebrtcApp: React.FC<Props> = () => {
       return;
     }
 
-    conn.on("room-created", async (d: RecvDTO) => {
+    conn.on(RTC_MESSAGE.RTC_MS_SEND_ROOM_CREATED, async (d: RecvDTO) => {
+      console.log(
+        "[LOGGING]: Room created on ms server routing to roomId",
+        d.roomId
+      );
       await router.push(`/room/${d.roomId}`);
       //   useRTCStore.getState().set({ createRoomLoading: false });
     });
 
-    conn.on("new-peer-speaker", async (d: RecvDTO) => {
+    conn.on(RTC_MESSAGE.RTC_MS_SEND_NEW_PEER_SPEAKER, async (d: RecvDTO) => {
+      console.log("[LOGGING]: Received new speaker params");
       const { roomId, recvTransport } = useVoiceStore.getState();
-      console.log("received new speaker params");
+
       if (recvTransport && roomId === d.roomId) {
         await consumeAudio(d.consumerParameters, d.peerId);
       }
     });
 
-    conn.on("you-are-now-a-speaker", async (d: RecvDTO) => {
-      if (d.roomId !== useVoiceStore.getState().roomId) {
-        return;
-      }
-      try {
-        await createTransport(
-          conn,
-          d.roomId,
-          user.userId,
-          "send",
-          d.sendTransportOptions as TransportOptions
+    conn.on(
+      RTC_MESSAGE.RTC_MS_SEND_YOU_ARE_NOW_A_SPEAKER,
+      async (d: RecvDTO) => {
+        if (d.roomId !== useVoiceStore.getState().roomId) {
+          return;
+        }
+
+        console.log("[LOGGING]: Setting up your producer transport");
+
+        try {
+          await createTransport(
+            conn,
+            d.roomId,
+            user.userId as string,
+            "send",
+            d.sendTransportOptions as TransportOptions
+          );
+        } catch (err) {
+          console.log(err);
+          return;
+        }
+
+        console.log(
+          "[LOGGING]: Producing on producer transport (sending voice to MS)"
         );
-      } catch (err) {
-        console.log(err);
-        return;
-      }
-      console.log("sending voice");
-      try {
-        await sendVoice();
-      } catch (err) {
-        console.log(err);
-      }
-    });
 
-    conn.on("you-joined-as-a-peer", async (d: RecvDTO) => {
-      console.log("you-joined as a peer");
-      closeVoiceConnections(null);
-      useVoiceStore.getState().set({ roomId: d.roomId });
-
-      console.log("creating a device");
-      try {
-        await joinRoom(d.routerRtpCapabilities as RtpCapabilities);
-      } catch (err) {
-        console.log("error creating a device | ", err);
-        return;
+        try {
+          await sendVoice();
+        } catch (err) {
+          console.log(err);
+        }
       }
-      try {
+    );
+
+    conn.on(
+      RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_PEER,
+      async (d: RecvDTO) => {
+        console.log("[LOGGING]: You joined as a peer");
+
+        // Close all connections and add user to room
+        closeVoiceConnections(null);
+        useVoiceStore.getState().set({ roomId: d.roomId });
+
+        console.log("[LOGGING]: Creating a MS device");
+
+        // Create MS device
+        try {
+          await joinRoom(d.routerRtpCapabilities as RtpCapabilities);
+        } catch (err) {
+          console.log("[LOGGING]: Error creating a device | ", err);
+          return;
+        }
+
+        // Create MS transport (for receiving only)
+        try {
+          await createTransport(
+            conn,
+            d.roomId,
+            d.userId as string,
+            "recv",
+            d.recvTransportOptions as TransportOptions
+          );
+        } catch (err) {
+          console.log("[ERROR]: Error creating recv transport | ", err);
+          return;
+        }
+
+        // Start consuming audio tracks of participants
+        receiveVoice(conn, () => {}, user.userId as string);
+      }
+    );
+
+    conn.on(
+      RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER,
+      async (d: RecvDTO) => {
+        console.log("[LOGGING]: You joined as a peer");
+
+        // Close all connections and add user to room
+        closeVoiceConnections(null);
+        useVoiceStore.getState().set({ roomId: d.roomId });
+
+        console.log("[LOGGING]: Creating a device");
+
+        // Create MS device
+        try {
+          await joinRoom(d.routerRtpCapabilities as RtpCapabilities);
+        } catch (err) {
+          console.log("[ERROR]: Error creating a device | ", err);
+          return;
+        }
+
+        // Create MS transport (for send only)
+        try {
+          await createTransport(
+            conn,
+            d.roomId,
+            d.userId as string,
+            "send",
+            d.sendTransportOptions as TransportOptions
+          );
+        } catch (err) {
+          console.log("[ERROR]: Error creating send transport | ", err);
+          return;
+        }
+
+        console.log(
+          "[LOGGING]: Producing on producer transport (sending voice to MS)"
+        );
+
+        // Send Voice on MS producer transport
+        try {
+          await sendVoice();
+        } catch (err) {
+          console.log("error sending voice | ", err);
+          return;
+        }
+
+        // Create transport for receiving audio
         await createTransport(
           conn,
           d.roomId,
-          d.userId as string,
+          user.userId as string,
           "recv",
           d.recvTransportOptions as TransportOptions
         );
-      } catch (err) {
-        console.log("error creating recv transport | ", err);
-        return;
+
+        // Consume audio of everyone in the room
+        receiveVoice(conn, () => {}, user.userId as string);
       }
-      receiveVoice(conn, () => {}, user.userId);
-    });
-
-    conn.on("you-joined-as-a-speaker", async (d: RecvDTO) => {
-      console.log(d);
-      closeVoiceConnections(null);
-      useVoiceStore.getState().set({ roomId: d.roomId });
-
-      console.log("creating a device");
-      try {
-        await joinRoom(d.routerRtpCapabilities as RtpCapabilities);
-      } catch (err) {
-        console.log("error creating a device | ", err);
-        return;
-      }
-      try {
-        await createTransport(
-          conn,
-          d.roomId,
-          d.userId as string,
-          "send",
-          d.sendTransportOptions as TransportOptions
-        );
-      } catch (err) {
-        console.log("error creating send transport | ", err);
-        return;
-      }
-      console.log("sending voice");
-
-      try {
-        await sendVoice();
-      } catch (err) {
-        console.log("error sending voice | ", err);
-        return;
-      }
-
-      await createTransport(
-        conn,
-        d.roomId,
-        user.userId,
-        "recv",
-        d.recvTransportOptions as TransportOptions
-      );
-
-      receiveVoice(conn, () => {}, user.userId);
-    });
+    );
 
     return () => {
-      conn.off("new-peer-speaker");
-      conn.off("you-are-now-a-speaker");
-      conn.off("you-joined-as-a-peer");
-      conn.off("you-joined-as-a-speaker");
+      conn.off(RTC_MESSAGE.RTC_MS_SEND_NEW_PEER_SPEAKER);
+      conn.off(RTC_MESSAGE.RTC_MS_SEND_YOU_ARE_NOW_A_SPEAKER);
+      conn.off(RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_PEER);
+      conn.off(RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER);
     };
   }, [conn, userLoading]);
+
   return (
     <>
       <AudioRenderer />

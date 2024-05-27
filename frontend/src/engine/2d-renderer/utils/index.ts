@@ -10,6 +10,7 @@ import Computer from "../items/Computer";
 import Whiteboard from "../items/WhiteBoard";
 import VendingMachine from "../items/VendingMachine";
 import Item from "../items/Item";
+import { WS_MESSAGE } from "../events";
 
 export const registerRendererEvents = (
   conn: Socket,
@@ -66,6 +67,22 @@ export const registerRendererEvents = (
 
     if (d.participantId !== user.userId) {
       scene.gridEngine.moveTo(d.participantId, { x: d.posX, y: d.posY });
+    }
+  });
+
+  conn.on(WS_MESSAGE.WS_USER_SPEAKING, (d: any) => {
+    console.log("[LOGGING]: User speaking", d.participantId);
+    const element = document.getElementById(`${d.participantId}_indicator`);
+    if (element) {
+      element.style.border = "2px solid green";
+    }
+  });
+
+  conn.on(WS_MESSAGE.WS_USER_STOPPED_SPEAKING, (d: any) => {
+    console.log("[LOGGING]: User stopped speaking", d.participantId);
+    const element = document.getElementById(`${d.participantId}_indicator`);
+    if (element) {
+      element.style.border = "";
     }
   });
 };
@@ -664,7 +681,7 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         .dom(0, -20)
         .createFromHTML(
           `
-          <div style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
+          <div id="${user.userId}_indicator" style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
             <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
             ${participant.userName}
           </div>

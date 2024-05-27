@@ -8,6 +8,7 @@ import { MainWsHandler } from "@/engine/global/MainWsHandler";
 import UserProvider from "@/context/UserContext";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import WebrtcApp from "@/engine/rtc/WebRTCApp";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <MainWsHandler>
                 <Component {...pageProps} />;
               </MainWsHandler>
+              <WebrtcApp />
             </WebSocketProvider>
           </UserProvider>
           <ReactQueryDevtools initialIsOpen={false} />

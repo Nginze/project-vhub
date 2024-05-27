@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef } from "react";
 import { RoomLayout } from "@/components/room/RoomLayout";
 import { RoomControls } from "@/components/room/RoomControls";
+import { WS_MESSAGE } from "@/engine/2d-renderer/events";
 
 type RoomProps = {};
 
@@ -43,14 +44,13 @@ const Room: React.FC<RoomProps> = () => {
     }
 
     // should be for rtc server
-
-    // conn.emit("room:join", {
-    //   roomId,
-    //   roomMeta: {
-    //     isAutospeaker: room!.autoSpeaker,
-    //     isCreator: room!.creatorId === user.userId,
-    //   },
-    // });
+    conn.emit(WS_MESSAGE.RTC_WS_JOIN_ROOM, {
+      roomId,
+      roomMeta: {
+        isAutospeaker: true,
+        isCreator: room!.creatorId === user.userId,
+      },
+    });
   }, [roomId, room, conn]);
 
   if (room == "404") {

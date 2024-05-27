@@ -11,13 +11,8 @@ export const sendVoice = async () => {
   // eslint-disable-next-line init-declarations
   let micStream: MediaStream;
   try {
-    // const { selectedMicDevice } = useSettingStore.getState();
-    // console.log(selectedMicDevice);
     micStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
-      //   audio: {
-      //     deviceId: { exact: selectedMicDevice },
-      //   },
     });
   } catch (err) {
     set({ mic: null, micStream: null });
@@ -28,7 +23,7 @@ export const sendVoice = async () => {
   const audioTracks = micStream.getAudioTracks();
 
   if (audioTracks.length) {
-    console.log("creating producer...");
+    console.log("[LOGGING]: Creating producer...");
     const track = audioTracks[0];
     track.enabled = false;
     useProducerStore.getState().add(

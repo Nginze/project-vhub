@@ -13,6 +13,7 @@ import {
   RtpParameters,
 } from "mediasoup/node/lib/RtpParameters";
 import { startBull } from "../utils/startBull";
+import { RTC_MESSAGE } from "../../../shared/events/";
 
 export async function main() {
   let workers: Array<{ worker: Worker; router: Router }> = [];
@@ -39,15 +40,18 @@ export async function main() {
   };
 
   const handler = {
-    "create-room": async ({ roomId, peerId }, send) => {
+    [RTC_MESSAGE.RTC_MS_RECV_CREATE_ROOM]: async ({ roomId, peerId }, send) => {
       if (!(roomId in rooms)) {
         rooms[roomId] = createRoom();
       }
 
-      send({ op: "room-created", d: { roomId }, peerId });
+      send({ op: RTC_MESSAGE.RTC_MS_SEND_ROOM_CREATED, d: { roomId }, peerId });
     },
 
-    "join-as-speaker": async ({ roomId, peerId }, send) => {
+    [RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_SPEAKER]: async (
+      { roomId, peerId },
+      send
+    ) => {
       if (!(roomId in rooms)) {
         rooms[roomId] = createRoom();
       }
@@ -70,7 +74,7 @@ export async function main() {
       };
 
       send({
-        op: "you-joined-as-a-speaker",
+        op: RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER,
         peerId,
         d: {
           roomId,
@@ -80,7 +84,10 @@ export async function main() {
         },
       });
     },
-    "join-as-new-peer": async ({ roomId, peerId }, send) => {
+    [RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_NEW_PEER]: async (
+      { roomId, peerId },
+      send
+    ) => {
       if (!(roomId in rooms)) {
         rooms[roomId] = createRoom();
       }
@@ -99,7 +106,7 @@ export async function main() {
         producer: null,
       };
       send({
-        op: "you-joined-as-a-peer",
+        op: RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_PEER,
         peerId,
         d: {
           roomId,
@@ -108,7 +115,7 @@ export async function main() {
         },
       });
     },
-    "add-speaker": async ({ roomId, peerId }, send) => {
+    [RTC_MESSAGE.RTC_MS_RECV_ADD_SPEAKER]: async ({ roomId, peerId }, send) => {
       if (!rooms[roomId]?.state[peerId]) {
         return;
       }
@@ -118,7 +125,7 @@ export async function main() {
       rooms[roomId].state[peerId].sendTransport?.close();
       rooms[roomId].state[peerId].sendTransport = sendTransport;
       send({
-        op: "you-are-now-a-speaker",
+        op: RTC_MESSAGE.RTC_MS_SEND_YOU_ARE_NOW_A_SPEAKER,
         peerId,
         d: {
           sendTransportOptions: transportToOptions(sendTransport),
@@ -126,14 +133,17 @@ export async function main() {
         },
       });
     },
-    "remove-speaker": async ({ roomId, peerId }) => {
+    [RTC_MESSAGE.RTC_MS_RECV_REMOVE_SPEAKER]: async ({ roomId, peerId }) => {
       if (roomId in rooms) {
         const peer = rooms[roomId].state[peerId];
         peer?.producer?.close();
         peer?.sendTransport?.close();
       }
     },
-    "close-peer": async ({ roomId, peerId, userId }, send) => {
+    [RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER]: async (
+      { roomId, peerId, userId },
+      send
+    ) => {
       if (roomId in rooms) {
         if (peerId in rooms[roomId].state) {
           closePeer(rooms[roomId].state[peerId]);
@@ -145,11 +155,11 @@ export async function main() {
       }
       send({
         peerId: peerId,
-        op: "user-left-room",
+        op: RTC_MESSAGE.RTC_MS_SEND_USER_LEFT_ROOM,
         d: { roomId, kicked: false, userId },
       });
     },
-    "destroy-room": async ({ roomId }) => {
+    [RTC_MESSAGE.RTC_MS_RECV_DESTROY_ROOM]: async ({ roomId }) => {
       console.log("destroying room", roomId);
       if (roomId in rooms) {
         for (const peer of Object.values(rooms[roomId].state)) {
@@ -158,7 +168,7 @@ export async function main() {
       }
       deleteRoom(roomId, rooms);
     },
-    "connect-transport": async (
+    [RTC_MESSAGE.RTC_MS_RECV_CONNECT_TRANSPORT]: async (
       { roomId, peerId, direction, dtlsParameters },
       send
     ) => {
@@ -188,7 +198,10 @@ export async function main() {
         d: { roomId },
       });
     },
-    "get-recv-tracks": async ({ roomId, peerId, rtpCapabilities }, send) => {
+    [RTC_MESSAGE.RTC_MS_RECV_GET_RECV_TRACKS]: async (
+      { roomId, peerId, rtpCapabilities },
+      send
+    ) => {
       console.log("getting recv tracks for ", roomId, peerId);
       const consumerParametersArr = [];
       if (!rooms[roomId]?.state[peerId]?.recvTransport) {
@@ -224,12 +237,12 @@ export async function main() {
         }
       }
       send({
-        op: "@get-recv-tracks-done",
+        op: RTC_MESSAGE.RTC_MS_SEND_GET_RECV_TRACKS_DONE,
         peerId,
         d: { consumerParametersArr, roomId },
       });
     },
-    "send-track": async (
+    [RTC_MESSAGE.RTC_MS_RECV_SEND_TRACK]: async (
       {
         roomId,
         transportId,
@@ -262,7 +275,7 @@ export async function main() {
           previousProducer.close();
           consumers.forEach((c) => c.close());
           send({
-            op: "close_consumer",
+            op: RTC_MESSAGE.RTC_MS_SEND_CLOSE_CONSUMER,
             d: { producerId: previousProducer!.id, roomId },
           });
         }
@@ -295,7 +308,7 @@ export async function main() {
 
             send({
               peerId: theirPeerId,
-              op: "new-peer-speaker",
+              op: RTC_MESSAGE.RTC_MS_SEND_NEW_PEER_SPEAKER,
               d: { roomId, ...consumer },
             });
           } catch (err) {
@@ -322,7 +335,7 @@ export async function main() {
           },
         });
         send({
-          op: "error",
+          op: RTC_MESSAGE.RTC_MS_SEND_ERROR,
           peerId,
           d: "error connecting to voice server | " + err,
         });

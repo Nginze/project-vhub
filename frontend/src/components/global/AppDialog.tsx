@@ -1,5 +1,6 @@
 import React from "react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { cn } from "@/lib/utils";
 
 type Props = {
   children: React.ReactNode;
@@ -7,6 +8,7 @@ type Props = {
   defaultOpen?: boolean;
   open?: boolean;
   setOpenChange?: any;
+  width?: any;
 };
 
 const AppDialog = ({
@@ -15,11 +17,14 @@ const AppDialog = ({
   defaultOpen,
   open,
   setOpenChange,
+  width,
 }: Props) => {
   return (
     <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={setOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[400px]">{content}</DialogContent>
+      <DialogContent className={cn("sm:max-w-[800px] bg-void", width)}>
+        {content}
+      </DialogContent>
     </Dialog>
   );
 };

@@ -4,7 +4,9 @@ import { useVoiceStore } from "../store/VoiceStore";
 export const consumeAudio = async (consumerParameters: any, peerId: string) => {
   const { recvTransport } = useVoiceStore.getState();
   if (!recvTransport) {
-    console.log("skipping consumeAudio because recvTransport is null");
+    console.log(
+      "[LOGGING]: Skipping audio consume because recv transport no setup / is null"
+    );
     return false;
   }
 
@@ -16,7 +18,9 @@ export const consumeAudio = async (consumerParameters: any, peerId: string) => {
       mediaTag: "cam-audio",
     },
   });
-  console.log("finished creating consumer");
+
+  console.log("[LOGGING]: Finished creating consumer");
+
   useConsumerStore.getState().add(consumer, peerId);
 
   return true;

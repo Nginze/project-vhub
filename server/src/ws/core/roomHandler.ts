@@ -2,13 +2,14 @@ import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { logger } from "../../config/logger";
 import { broadcastExcludeSender, getUser } from "../helpers";
+import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
 
 const init = (
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
   socket: Socket
 ) => {
   socket.on(
-    "room:join",
+    WS_MESSAGE.WS_ROOM_JOIN,
     async ({
       roomId,
       roomMeta: { isAutospeaker, isCreator, posX, posY, skin, dir },
@@ -57,11 +58,25 @@ const init = (
     }
   );
 
-  socket.on("room:move", (d) => {
+  socket.on(WS_MESSAGE.WS_ROOM_MOVE, (d) => {
     io.to(d.roomId).emit("participant-moved", {
       //@ts-ignore
       participantId: socket.request.user.userId,
       ...d,
+    });
+  });
+
+  socket.on(WS_MESSAGE.WS_USER_SPEAKING, (d) => {
+    io.to(d.roomId).emit(WS_MESSAGE.WS_USER_SPEAKING, {
+      //@ts-ignore
+      participantId: d.userId,
+    });
+  });
+
+  socket.on(WS_MESSAGE.WS_USER_STOPPED_SPEAKING, (d) => {
+    io.to(d.roomId).emit(WS_MESSAGE.WS_USER_STOPPED_SPEAKING, {
+      //@ts-ignore
+      participantId: d.userId,
     });
   });
 };
