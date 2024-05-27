@@ -19,6 +19,7 @@ export const registerRendererEvents = (
 ) => {
   conn.on("new-user-joined-room", (d: any) => {
     console.log("event: new-user-joined-room", "data: ", d);
+    
     if (!scene.gridEngine) {
       return;
     }
@@ -681,7 +682,7 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         .dom(0, -20)
         .createFromHTML(
           `
-          <div id="${user.userId}_indicator" style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
+          <div id="${participant.userId}_indicator" style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
             <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
             ${participant.userName}
           </div>

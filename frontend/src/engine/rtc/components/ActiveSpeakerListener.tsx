@@ -5,8 +5,6 @@ import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { WS_MESSAGE } from "@/engine/2d-renderer/events";
 
-
-
 interface Props {}
 
 export const ActiveSpeakerListener: React.FC<Props> = ({}) => {
@@ -16,21 +14,21 @@ export const ActiveSpeakerListener: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     if (!micStream || !conn || userLoading) {
-      console.log("[LOGGING]: No mic stream or conn")
+      console.log("[LOGGING]: No mic stream or conn");
       return;
     }
 
-    console.log("[LOGGING]: Creating hark")
+    console.log("[LOGGING]: Setting up harker");
 
     const harker = hark(micStream);
 
     harker.on("speaking", () => {
-      console.log("speaking")
+      console.log("[LOGGING]: Started speaking");
       conn.emit(WS_MESSAGE.WS_USER_SPEAKING, { userId: user.userId, roomId });
     });
 
     harker.on("stopped_speaking", () => {
-      console.log("not_2speaking")
+      console.log("[LOGGING]: Stopped speaking");
       conn.emit(WS_MESSAGE.WS_USER_STOPPED_SPEAKING, {
         userId: user.userId,
         roomId,
@@ -40,7 +38,6 @@ export const ActiveSpeakerListener: React.FC<Props> = ({}) => {
     return () => {
       harker.stop();
     };
-
   }, [micStream, conn]);
 
   return null;

@@ -14,6 +14,7 @@ export const sendVoice = async () => {
     micStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
     });
+
   } catch (err) {
     set({ mic: null, micStream: null });
     console.log(err);
@@ -25,7 +26,7 @@ export const sendVoice = async () => {
   if (audioTracks.length) {
     console.log("[LOGGING]: Creating producer...");
     const track = audioTracks[0];
-    track.enabled = false;
+    // track.enabled = false; // problem are 
     useProducerStore.getState().add(
       await sendTransport.produce({
         track,
