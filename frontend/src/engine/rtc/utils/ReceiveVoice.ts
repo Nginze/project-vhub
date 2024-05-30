@@ -21,8 +21,8 @@ export const receiveVoice = (
       );
 
       try {
-        for (const { peerId, consumerParameters } of consumerParametersArr) {
-          consumeAudio(consumerParameters, peerId);
+        for (const { userId, consumerParameters } of consumerParametersArr) {
+          consumeAudio(consumerParameters, userId);
         }
       } catch (err) {
         console.log(err);

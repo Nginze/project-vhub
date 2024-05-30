@@ -14,6 +14,7 @@ export const createConsumer = async (
   rtpCapabilities: RtpCapabilities,
   transport: Transport,
   peerId: string,
+  userId: string,
   peerConsuming: Peer
 ): Promise<Consumer> => {
   if (!router.canConsume({ producerId: producer.id, rtpCapabilities })) {
@@ -33,6 +34,7 @@ export const createConsumer = async (
 
   return {
     peerId: producer.appData.peerId as string,
+    userId,
     consumerParameters: {
       producerId: producer.id,
       id: consumer.id,
@@ -46,6 +48,7 @@ export const createConsumer = async (
 
 export interface Consumer {
   peerId: string;
+  userId: string;
   consumerParameters: {
     producerId: string;
     id: string;

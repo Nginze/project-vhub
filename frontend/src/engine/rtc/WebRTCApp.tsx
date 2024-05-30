@@ -35,6 +35,7 @@ export type RecvDTO = {
   rtpParameters?: RtpParameters;
   consumerParameters?: {
     producerId: string;
+    userId: string;
     id: string;
     kind: string;
     rtpParameters: RtpParameters;
@@ -89,8 +90,14 @@ const WebrtcApp: React.FC<Props> = () => {
       console.log("[LOGGING]: Received new speaker params");
       const { roomId, recvTransport } = useVoiceStore.getState();
 
+      console.log("Trouble D", d);
+
       if (recvTransport && roomId === d.roomId) {
-        await consumeAudio(d.consumerParameters, d.peerId);
+        console.log("[LOGGING]: Consuming audio of new speaker, ", d.userId);
+        await consumeAudio(
+          d.consumerParameters,
+          d.userId as string
+        );
       }
     });
 
@@ -152,7 +159,7 @@ const WebrtcApp: React.FC<Props> = () => {
           await createTransport(
             conn,
             d.roomId,
-            d.userId as string,
+            user.userId as string,
             "recv",
             d.recvTransportOptions as TransportOptions
           );
@@ -190,7 +197,7 @@ const WebrtcApp: React.FC<Props> = () => {
           await createTransport(
             conn,
             d.roomId,
-            d.userId as string,
+            user.userId as string,
             "send",
             d.sendTransportOptions as TransportOptions
           );

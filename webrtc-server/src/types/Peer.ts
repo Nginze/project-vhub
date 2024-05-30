@@ -5,4 +5,5 @@ export type Peer = {
   recvTransport: Transport | null;
   producer: Producer | null;
   consumers: Consumer[];
+  userId: string;
 };

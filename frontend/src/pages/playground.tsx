@@ -1,4 +1,5 @@
 import AppDialog from "@/components/global/AppDialog";
+import { HomeCharacterCustomizer } from "@/components/home/HomeCharacterCustomizer";
 import {
   CreateSpaceForm,
   CreateSpaceSelectMapTemplateForm,
@@ -15,6 +16,12 @@ const Playground: NextPage = () => {
       </AppDialog>
       <AppDialog width={"sm:max-w-[500px]"} content={<CreateSpaceForm />}>
         <button>Create space 2</button>
+      </AppDialog>
+      <AppDialog
+        width={"sm:max-w-[450px]"}
+        content={<HomeCharacterCustomizer />}
+      >
+        <button>Open character editor</button>
       </AppDialog>
     </main>
   );

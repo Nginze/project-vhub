@@ -10,6 +10,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { RoomLayout } from "@/components/room/RoomLayout";
 import { RoomControls } from "@/components/room/RoomControls";
 import { WS_MESSAGE } from "@/engine/2d-renderer/events";
+import { RoomSheet } from "@/components/room/RoomSheet";
 
 type RoomProps = {};
 
@@ -61,10 +62,10 @@ const Room: React.FC<RoomProps> = () => {
     <RoomLayout
       canvas={
         <div className="flex flex-row items-center">
-          {/* <AppIFrame /> */}
           <TwoDViewComponent />
         </div>
       }
+      sidebar={<RoomSheet />}
       footer={<RoomControls />}
     />
   ) : (

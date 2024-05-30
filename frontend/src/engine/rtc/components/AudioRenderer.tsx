@@ -39,7 +39,7 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
   return (
     <>
       {Object.keys(consumerMap).map((k) => {
-        const { consumer, volume: peerVolume } = consumerMap[k];
+        const { consumer, volume: peerVolume, audioGraph } = consumerMap[k];
         return (
           <AudioComponent
             key={consumer.id}
@@ -47,8 +47,10 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
             onRef={(a) => {
               setAudioRef(k, a);
               audioRefs.current.push([k, a]);
+
+              a.muted = true;
               a.srcObject = new MediaStream([consumer.track]);
-              console.log("about to play track from on ref");
+
               a.play().catch((err) => {
                 console.log(err);
                 setShowAutoPlayModal(true);

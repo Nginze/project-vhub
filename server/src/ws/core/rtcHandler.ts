@@ -11,49 +11,33 @@ const init = (
   socket: Socket
 ) => {
   socket.on(WS_MESSAGE.RTC_WS_CREATE_ROOM, ({ roomId }) => {
-
     logger.debug("Create Room");
+
+    const user = getUser(socket);
 
     try {
       sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_CREATE_ROOM, {
         op: RTC_MESSAGE.RTC_MS_RECV_CREATE_ROOM,
-        d: { roomId, peerId: socket.id },
+        d: { roomId, peerId: socket.id, userId: user.userId },
       });
     } catch (error) {
       throw error;
     }
-
   });
 
   socket.on(
     WS_MESSAGE.RTC_WS_JOIN_ROOM,
     ({ roomId, roomMeta: { isAutospeaker, isCreator } }) => {
       logger.debug("Join Room");
+      const user = getUser(socket);
       try {
-        // const user = getUser(socket);
-        // socket.join(roomId);
-
         sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_SPEAKER, {
           op:
             isAutospeaker || isCreator
               ? RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_SPEAKER
               : RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_NEW_PEER,
-          d: { peerId: socket.id, roomId },
+          d: { peerId: socket.id, userId: user.userId, roomId },
         });
-
-        // const joinEvent = {
-        //   op: "new-user-joined-room",
-        //   peerId: socket.id,
-        //   d: {
-        //     roomId,
-        //     user: {
-        //       ...user,
-        //       isspeaker: isAutospeaker || isCreator,
-        //     },
-        //   },
-        // };
-
-        // broadcastExcludeSender(io, joinEvent);
       } catch (error) {
         throw error;
       }
@@ -75,10 +59,11 @@ const init = (
 
   socket.on(WS_MESSAGE.RTC_WS_SEND_TRACK, (d) => {
     logger.debug("Send Track");
+    console.log(d);
     try {
       sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_SEND_TRACK, {
         op: RTC_MESSAGE.RTC_MS_RECV_SEND_TRACK,
-        d: { ...d, peerId: socket.id },
+        d: { ...d, userId: d.peerId, peerId: socket.id },
       });
     } catch (error) {
       throw error;
@@ -87,12 +72,17 @@ const init = (
 
   socket.on(
     WS_MESSAGE.RTC_WS_GET_RECV_TRACKS,
-    async ({ roomId, rtpCapabilities }) => {
+    async ({ roomId, peerId, rtpCapabilities }) => {
       logger.debug("Get Recv Tracks");
       try {
         sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_GET_RECV_TRACKS, {
           op: RTC_MESSAGE.RTC_MS_RECV_GET_RECV_TRACKS,
-          d: { roomId, peerId: socket.id, rtpCapabilities },
+          d: {
+            roomId,
+            peerId: socket.id,
+            userId: peerId,
+            rtpCapabilities,
+          },
         });
       } catch (error) {
         throw error;

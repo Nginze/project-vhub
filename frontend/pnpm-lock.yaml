@@ -65,12 +65,18 @@ dependencies:
   hark:
     specifier: ^1.2.3
     version: 1.2.3
+  howler:
+    specifier: github:playkostudios/howler.js
+    version: github.com/playkostudios/howler.js/1c03282dd8ea1d5de9ec2872f8f5e7bd2293c7f2
   lucide-react:
     specifier: ^0.373.0
     version: 0.373.0(react@18.2.0)
   mediasoup-client:
     specifier: ^3.7.7
     version: 3.7.7
+  mediastream-support:
+    specifier: link:@types/https:/github.com/playkostudios/howler.js/tree/mediastream-support
+    version: link:@types/https:/github.com/playkostudios/howler.js/tree/mediastream-support
   next:
     specifier: 14.1.4
     version: 14.1.4(@babel/core@7.24.5)(react-dom@18.2.0)(react@18.2.0)
@@ -95,6 +101,9 @@ dependencies:
   socket.io-client:
     specifier: ^4.7.5
     version: 4.7.5
+  standardized-audio-context:
+    specifier: ^25.3.72
+    version: 25.3.72
   tailwind-merge:
     specifier: ^2.3.0
     version: 2.3.0
@@ -1589,6 +1598,13 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
+
+  /@babel/runtime@7.24.6:
+    resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: false
 
   /@babel/template@7.24.0:
     resolution: {integrity: sha512-Bkf2q8lMB0AFpX0NFEqSbx1OkTHf0f+0j82mkw+ZpzBnkk7e9Ql0891vlfgi+kHwOk8tQjiQHpqh4LaSa0fKEA==}
@@ -4249,6 +4265,14 @@ packages:
   /at-least-node@1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
+    dev: false
+
+  /automation-events@7.0.5:
+    resolution: {integrity: sha512-Ni6vhZg0mKmVlew1kxWAzWL7QY1LYDdoYgp6yF9OHeskDrjyJp2SqoKoPQYeiMYjeIlbSpnxXm/JI55VcmX5Wg==}
+    engines: {node: '>=18.2.0'}
+    dependencies:
+      '@babel/runtime': 7.24.6
+      tslib: 2.6.2
     dev: false
 
   /autoprefixer@10.4.19(postcss@8.4.38):
@@ -10584,6 +10608,14 @@ packages:
     resolution: {integrity: sha512-oeVtt7eWQS+Na6F//S4kJ2K2VbRlS9D43mAlMyVpVWovy9o+jfgH8O9agzANzaiLjclA0oYzUXEM4PurhSUChw==}
     dev: false
 
+  /standardized-audio-context@25.3.72:
+    resolution: {integrity: sha512-Dvwu2NuqafQqWxUWoo6G9ze/cvVNlFDpmIOA8XjuItrfR0h/REjgjoYCT3Y7nbkUJKGoz8SqqVzR7JATQV4XeQ==}
+    dependencies:
+      '@babel/runtime': 7.24.6
+      automation-events: 7.0.5
+      tslib: 2.6.2
+    dev: false
+
   /static-eval@2.0.2:
     resolution: {integrity: sha512-N/D219Hcr2bPjLxPiV+TQE++Tsmrady7TqAJugLy7Xk1EumfDWS/f5dtBbkRCGE7wKKXuYockQoj8Rm2/pVKyg==}
     dependencies:
@@ -11979,4 +12011,10 @@ packages:
       '@types/react': 18.2.73
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  github.com/playkostudios/howler.js/1c03282dd8ea1d5de9ec2872f8f5e7bd2293c7f2:
+    resolution: {tarball: https://codeload.github.com/playkostudios/howler.js/tar.gz/1c03282dd8ea1d5de9ec2872f8f5e7bd2293c7f2}
+    name: howler
+    version: 2.2.4
     dev: false

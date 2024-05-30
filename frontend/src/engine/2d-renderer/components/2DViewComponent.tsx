@@ -22,11 +22,14 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
         pixelArt: true,
         scale: {
           mode: Phaser.Scale.ScaleModes.RESIZE,
-          width: window.innerWidth,
+          width: 20,
           height: window.innerHeight,
           autoCenter: Phaser.Scale.CENTER_BOTH,
           autoRound: true,
-          zoom: 5,
+          zoom: 2.5,
+          min: {
+            width: 20,
+          },
         },
         physics: {
           default: "arcade",

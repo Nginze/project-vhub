@@ -45,14 +45,14 @@ export const cleanUp = async (userId: string, roomId: string) => {
 
     if (roomId !== "") {
       //Delete the user's room status
-    //   await client.query(
-    //     `
-    //     DELETE FROM
-    //     room_status
-    //     WHERE user_id = $1 and room_id = $2
-    // `,
-    //     [userId, roomId]
-    //   );
+      await client.query(
+        `
+        DELETE FROM
+        room_status
+        WHERE user_id = $1 and room_id = $2
+    `,
+        [userId, roomId]
+      );
 
       // Update last active log of room
       await client.query(
@@ -115,4 +115,3 @@ export const getPeerId = async (userId: string) => {
   const peerId = await redis.get(userId);
   return peerId;
 };
-

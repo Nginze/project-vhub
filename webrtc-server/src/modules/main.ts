@@ -49,7 +49,7 @@ export async function main() {
     },
 
     [RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_SPEAKER]: async (
-      { roomId, peerId },
+      { roomId, userId, peerId },
       send
     ) => {
       if (!(roomId in rooms)) {
@@ -71,7 +71,10 @@ export async function main() {
         sendTransport,
         consumers: [],
         producer: null,
+        userId: userId as string,
       };
+
+      console.log(userId, "Joined as a speaker");
 
       send({
         op: RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER,
@@ -85,7 +88,7 @@ export async function main() {
       });
     },
     [RTC_MESSAGE.RTC_MS_RECV_JOIN_AS_NEW_PEER]: async (
-      { roomId, peerId },
+      { roomId, userId, peerId },
       send
     ) => {
       if (!(roomId in rooms)) {
@@ -104,7 +107,10 @@ export async function main() {
         sendTransport: null,
         consumers: [],
         producer: null,
+        userId: userId as string,
       };
+
+      console.log(userId, "Joined as a peer");
       send({
         op: RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_PEER,
         peerId,
@@ -202,7 +208,6 @@ export async function main() {
       { roomId, peerId, rtpCapabilities },
       send
     ) => {
-      console.log("getting recv tracks for ", roomId, peerId);
       const consumerParametersArr = [];
       if (!rooms[roomId]?.state[peerId]?.recvTransport) {
         return;
@@ -220,7 +225,7 @@ export async function main() {
           continue;
         }
         try {
-          const { producer } = peerState;
+          const { producer, userId } = peerState;
           consumerParametersArr.push(
             await createConsumer(
               router,
@@ -228,6 +233,7 @@ export async function main() {
               rtpCapabilities as RtpCapabilities,
               transport,
               peerId,
+              userId,
               state[theirPeerId]
             )
           );
@@ -247,6 +253,7 @@ export async function main() {
         roomId,
         transportId,
         peerId,
+        userId,
         kind,
         rtpParameters,
         rtpCapabilities,
@@ -258,6 +265,8 @@ export async function main() {
       if (!(roomId in rooms)) {
         return;
       }
+
+      console.log("sending track", userId);
 
       const { state } = rooms[roomId];
       const {
@@ -290,8 +299,12 @@ export async function main() {
         rooms[roomId].state[peerId].producer = producer;
         for (const theirPeerId of Object.keys(state)) {
           if (theirPeerId === peerId) {
+            console.log("Send track initialized by", state[theirPeerId].userId);
             continue;
           }
+
+          const myUserId = state[peerId].userId;
+
           const peerTransport = state[theirPeerId]?.recvTransport;
           if (!peerTransport) {
             continue;
@@ -303,6 +316,7 @@ export async function main() {
               rtpCapabilities as RtpCapabilities,
               peerTransport,
               peerId,
+              myUserId,
               state[theirPeerId]
             );
 
@@ -311,6 +325,8 @@ export async function main() {
               op: RTC_MESSAGE.RTC_MS_SEND_NEW_PEER_SPEAKER,
               d: { roomId, ...consumer },
             });
+
+            console.log("new peer speaker", { roomId, ...consumer });
           } catch (err) {
             console.log(err);
           }

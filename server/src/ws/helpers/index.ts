@@ -121,3 +121,16 @@ export const getUser = (socket: Socket) => {
   //@ts-ignore
   return socket.request.user;
 };
+
+export const setUserPosition = async (
+  roomId: string,
+  userId: string,
+  posData: any
+) => {
+  await redis.hset(roomId, userId, JSON.stringify(posData));
+};
+
+export const getUserPosition = async (roomId: string, userId: string) => {
+  const posData = await redis.hget(roomId, userId);
+  return JSON.parse(posData as string);
+};

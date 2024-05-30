@@ -1,8 +1,14 @@
 import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { logger } from "../../config/logger";
-import { broadcastExcludeSender, getUser } from "../helpers";
+import {
+  broadcastExcludeSender,
+  getUser,
+  getUserPosition,
+  setUserPosition,
+} from "../helpers";
 import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
+import { redis } from "../../config/redis";
 
 const init = (
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
@@ -47,7 +53,20 @@ const init = (
     }
   );
 
-  socket.on(WS_MESSAGE.WS_ROOM_MOVE, (d) => {
+  socket.on(WS_MESSAGE.WS_ROOM_MOVE, async (d) => {
+    const user = getUser(socket);
+
+    setUserPosition(d.roomId, user.userId, {
+      posX: d.posX,
+      posY: d.posY,
+      dir: d.dir,
+    });
+
+    console.log(
+      "THIS IS THE CURRENT POSITION CACHED",
+      await getUserPosition(d.roomId, d.userId)
+    );
+
     io.to(d.roomId).emit(WS_MESSAGE.WS_PARTICIPANT_MOVED, {
       //@ts-ignore
       participantId: socket.request.user.userId,

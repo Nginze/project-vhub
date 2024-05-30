@@ -48,6 +48,12 @@ export const parseCamel = <T>(obj: T): T => {
   return result;
 };
 
+export const generateSkinName = () => {
+  const skins = ["nancy", "lucy", "ash", "adam"];
+  const randomSkin = skins[Math.floor(Math.random() * skins.length)];
+  return randomSkin;
+};
+
 const snakeToCamel = (str: string): string => {
   return str.replace(/([-_][a-z])/g, (group) =>
     group.toUpperCase().replace("-", "").replace("_", "")

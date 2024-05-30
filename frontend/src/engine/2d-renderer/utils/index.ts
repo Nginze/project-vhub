@@ -28,33 +28,33 @@ export const registerRendererEvents = (
       return;
     }
 
-    const sprite = scene.physics.add.sprite(
-      d.user.posX,
-      d.user.posY,
-      d.user.skin.toLowerCase()
-    );
+    const sprite = scene.physics.add.sprite(0, 0, d.user.skin.toLowerCase());
 
     const playerName = scene.add
       .dom(0, -20)
       .createFromHTML(
         `
-          <div id="${d.userId}_indicator" style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
-            <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
-            ${d.userName}
+          <div id="${d.user.userId}_indicator" style="display: flex; align-items: center; justify-content:center; color: rgba(255, 255, 255, 0.8); font-size: 10px; font-family: Inter; font-weight: bold; background: rgba(0, 0, 0, 0.3); padding: 2px 10px; border-radius: 6px; width: 67px; overflow: hidden;">
+            <span id="${d.user.userId}_speaker" style="margin-right: 5px; display:none; animation: dimInOut 3s infinite;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            </span>
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              ${d.user.userName}
+            </div>
           </div>
           `
       )
       .setOrigin(0.225);
 
     const playerIcon = scene.add
-      .dom(8, -20)
+      .dom(5, -35)
       .createFromHTML(
-        `<div id="${d.userId}_icon" style="position: relative; background: white; padding: 2px 4px; border-radius: 3px; text-align: center; font-size: 10px;">
-          <span role="img" aria-label="emoji">👋</span>
-          <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
-        </div>`
+        `<div id="${d.user.userId}_icon" style="position: relative; background: white; padding: 4px 10px; border-radius: 3px; text-align: center; font-size: 16px;">
+            <span role="img" aria-label="emoji">👋</span>
+            <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
+          </div>`
       )
-      .setOrigin(0.5, 0.5)
+      .setOrigin(0.225)
       .setVisible(false);
 
     const playerContainer = scene.add.container(d.user.posX, d.user.posY, [
@@ -105,16 +105,20 @@ export const registerRendererEvents = (
   conn.on(WS_MESSAGE.WS_USER_SPEAKING, (d: any) => {
     console.log("[LOGGING]: User speaking", d.participantId);
     const element = document.getElementById(`${d.participantId}_indicator`);
-    if (element) {
-      element.style.border = "2px solid green";
+    const speakerIcon = document.getElementById(`${d.participantId}_speaker`);
+    if (element && speakerIcon) {
+      element.style.border = "1.3px solid #43b581";
+      speakerIcon.style.display = "inline"; // Show the speaker icon
     }
   });
 
   conn.on(WS_MESSAGE.WS_USER_STOPPED_SPEAKING, (d: any) => {
     console.log("[LOGGING]: User stopped speaking", d.participantId);
     const element = document.getElementById(`${d.participantId}_indicator`);
-    if (element) {
+    const speakerIcon = document.getElementById(`${d.participantId}_speaker`);
+    if (element && speakerIcon) {
       element.style.border = "";
+      speakerIcon.style.display = "none"; // Hide the speaker icon
     }
   });
 };
@@ -713,29 +717,33 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         .dom(0, -20)
         .createFromHTML(
           `
-          <div id="${participant.userId}_indicator" style="display: flex; align-items: center; color: white; font-size: 10px; font-family: Arial; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2.5px 4px; border-radius: 8px">
-            <span style="display: inline-block; width: 8px; height: 8px; background: lightgreen; border-radius: 50%; margin-right: 3.2px;"></span>
-            ${participant.userName}
+          <div id="${participant.userId}_indicator" style="display: flex; align-items: center; justify-content:center; color: rgba(255, 255, 255, 0.8); font-size: 10px; font-family: Inter; font-weight: bold; background: rgba(0, 0, 0, 0.3); padding: 2px 10px; border-radius: 6px; width: 67px; overflow: hidden;">
+            <span id="${participant.userId}_speaker" style="margin-right: 5px; display:none; animation: dimInOut 3s infinite;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            </span>
+            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              ${participant.userName}
+            </div>
           </div>
           `
         )
         .setOrigin(0.225);
 
       const playerIcon = scene.add
-        .dom(8, -20)
+        .dom(5, -35)
         .createFromHTML(
-          `<div id="${participant.userId}_icon" style="position: relative; background: white; padding: 2px 4px; border-radius: 3px; text-align: center; font-size: 10px;">
+          `<div id="${participant.userId}_icon" style="position: relative; background: white; padding: 4px 10px; border-radius: 3px; text-align: center; font-size: 16px;">
             <span role="img" aria-label="emoji">👋</span>
             <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
           </div>`
         )
-        .setOrigin(0.5, 0.5)
+        .setOrigin(0.225)
         .setVisible(false);
 
       const playerContainer = scene.add.container(
         participant.posX,
         participant.posY,
-        [sprite, playerName]
+        [sprite, playerName, playerIcon]
       );
 
       sprite?.anims.play(

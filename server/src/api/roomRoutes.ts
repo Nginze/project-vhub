@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { pool } from "../config/psql";
-import { parseCamel } from "../utils/";
+import { generateSkinName, parseCamel } from "../utils/";
 import createHttpError from "http-errors";
 import { Room, UserData } from "../../../shared/types";
+import { getUserPosition } from "../ws/helpers";
 
 export const router = Router();
 
@@ -68,9 +69,8 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     const { roomId } = req.params;
     const { userId } = req.query;
-    const { hasJoined } = req.query;
 
-    if (!roomId || !userId || hasJoined) {
+    if (!roomId || !userId) {
       return res
         .status(400)
         .json({ msg: "Bad request, incorrect credentials sent" });
@@ -104,6 +104,8 @@ router.get(
       return res.status(200).json("403");
     }
 
+    const posData = await getUserPosition(roomId, userId as string);
+
     const client = await pool.connect();
 
     try {
@@ -136,62 +138,34 @@ router.get(
         [roomId]
       );
 
-      // await client.query(
-      //   `
-      //     DELETE FROM room_status
-      //     WHERE user_id = $1
-      //     AND room_id = $2
-      //   `,
-      //   [userId, roomId]
-      // );
-
-      const { rows: roomStatus } = await client.query(
+      await client.query(
         `
-        SELECT * FROM room_status
-        WHERE room_id = $1 and user_id = $2
+          DELETE FROM room_status
+          WHERE user_id = $1
+          AND room_id = $2
         `,
-        [roomId, userId]
+        [userId, roomId]
       );
 
-
-      if (roomStatus[0]) {
-        await client.query(
-          `
-            UPDATE room_status
-            set raised_hand = false ,is_muted = true
-            WHERE user_id = $1 AND room_id = $2
-          `,
-          [userId, roomId]
-        );
-      } else {
-        await client.query(
-          `
+      await client.query(
+        `
           INSERT INTO room_status (room_id, user_id, is_speaker, is_mod, raised_hand, is_muted, pos_x, pos_y, skin, dir)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         `,
-          [
-            roomId,
-            userId,
-            parseCamel(room[0])?.autoSpeaker ||
-              parseCamel(room[0])?.creatorId == userId,
-            parseCamel(room[0])?.creatorId === userId,
-            false,
-            true,
-            3,
-            3,
-            "Alex",
-            "down",
-          ]
-        );
-      }
-
-      //   const { rows: categories } = await client.query(
-      //     `
-      //       SELECT category FROM room_category
-      //       WHERE room_id = $1
-      //     `,
-      //     [roomId]
-      //   );
+        [
+          roomId,
+          userId,
+          parseCamel(room[0])?.autoSpeaker ||
+            parseCamel(room[0])?.creatorId == userId,
+          parseCamel(room[0])?.creatorId === userId,
+          false,
+          true,
+          posData ? posData.posX : 3,
+          posData ? posData.posY : 3,
+          generateSkinName(),
+          posData ? posData.dir : "down",
+        ]
+      );
 
       const { rows: participants } = await client.query(
         `

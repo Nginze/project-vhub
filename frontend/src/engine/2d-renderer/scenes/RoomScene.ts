@@ -1,5 +1,5 @@
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
-import GridEngine, { Direction } from "grid-engine";
+import GridEngine, { Direction, Position } from "grid-engine";
 import { Room, UserData } from "../../../../../shared/types";
 import { Socket } from "socket.io-client";
 import {
@@ -13,6 +13,9 @@ import {
   registerUserProximityCollider,
 } from "../utils";
 import { GameObjects } from "phaser";
+import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
+import { clamp } from "framer-motion";
+import { use } from "matter";
 
 export class RoomScene extends Phaser.Scene {
   constructor() {
@@ -36,6 +39,9 @@ export class RoomScene extends Phaser.Scene {
   public cursors: NavKeys | undefined;
   public keyE: Phaser.Input.Keyboard.Key | undefined;
   public keyR: Phaser.Input.Keyboard.Key | undefined;
+
+  // Other constants
+  public earshotDistance = 8;
 
   create() {
     this.conn.emit("room:join", {
@@ -78,7 +84,7 @@ export class RoomScene extends Phaser.Scene {
 
     this.userActionCollider.update();
     this.userProximityCollider.update();
-
+    this.proximityUpdate();
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {
       this.gridEngine.move(myUserId, Direction.LEFT);
@@ -112,5 +118,96 @@ export class RoomScene extends Phaser.Scene {
       )
       .setDepth(actualY);
     return obj;
+  }
+
+  proximityUpdate() {
+    if (!this.gridEngine || !this.userActionCollider) {
+      return;
+    }
+
+    this.gridEngine.getAllCharacters().forEach((charId: string) => {
+      if (!this.gridEngine || charId == this.user.userId) {
+        return;
+      }
+
+      const myPosition = this.gridEngine.getPosition(
+        this.user.userId as string
+      );
+      const charPosition = this.gridEngine.getPosition(charId);
+
+      if (!charPosition || !myPosition) {
+        return;
+      }
+
+      const distance = Math.round(
+        Math.hypot(charPosition.x - myPosition.x, charPosition.y - myPosition.y)
+      );
+
+      if (distance <= this.earshotDistance) {
+        const pm = this.getAudioMod(distance, myPosition, charPosition);
+        this.updateAudio(pm.gain, pm.pan, charId);
+        //go into the consumer map and update gain and pan of audio ref and play the audio
+
+        return;
+      }
+
+      // mute stream or pause consumer or something
+      useConsumerStore.getState().setMute(charId, true);
+    });
+  }
+
+  getAudioMod(
+    distance: number,
+    myPos: Position,
+    otherPos: Position
+  ): { gain: number; pan: number } {
+    let gainValue = clamp(
+      0,
+      0.5,
+      ((this.earshotDistance - distance) * 0.5) / this.earshotDistance
+    );
+
+    const dx = otherPos.x - myPos.x;
+    const panValue = (1 * dx) / this.earshotDistance;
+
+    return {
+      gain: gainValue,
+      pan: panValue,
+    };
+  }
+
+  createAudioNodes(gainValue: number, panValue: number, userId: string) {
+    const stream = useConsumerStore.getState().initAudioGraph(userId);
+    const { setGain, setPan, setMute, setStream, playAudio } =
+      useConsumerStore.getState();
+
+    setGain(userId, gainValue);
+    setPan(userId, panValue);
+
+    setMute(userId, false);
+    setStream(userId, stream!);
+    playAudio(userId);
+  }
+
+  updateAudio(gainValue: number, panValue: number, userId: string) {
+    const { consumerMap, setGain, setPan, setMute } =
+      useConsumerStore.getState();
+
+    if (!(userId in consumerMap)) {
+      return;
+    }
+
+    const { audioGraph, audioRef } = consumerMap[userId];
+
+    if (!audioGraph) {
+      this.createAudioNodes(gainValue, panValue, userId);
+    }
+
+    if (audioRef?.muted) {
+      setMute(userId, false);
+    }
+
+    setGain(userId, gainValue);
+    setPan(userId, panValue);
   }
 }

@@ -23,9 +23,9 @@ export const Logo: React.FC<LogoProps> = ({
       {withText && (
         <span className="text-xl relative text-white font-logo font-semibold">
           Holoverse
-          <span className="text-green-500 text-[9px] -top-1.5 absolute">
+          {/* <span className="text-green-500 text-[9px] -top-1.5 absolute">
             Beta
-          </span>
+          </span> */}
         </span>
       )}
     </div>

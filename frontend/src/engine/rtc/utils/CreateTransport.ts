@@ -62,6 +62,8 @@ export async function createTransport(
           callback({ id: d.id });
         });
 
+
+        console.log("testing us erid", userid)
         conn.emit(
           WS_MESSAGE.RTC_WS_SEND_TRACK,
           {
