@@ -68,7 +68,6 @@ export class RoomScene extends Phaser.Scene {
     registerGridEngineEvents(this.conn, this);
     registerRendererEvents(this.conn, this, this.map);
     registerUserActionCollider(this);
-    registerUserProximityCollider(this);
     registerItems(this);
   }
 
@@ -79,9 +78,10 @@ export class RoomScene extends Phaser.Scene {
     }
 
     const myUserId = this.user.userId as string;
+    const myContainer = this.gridEngine.getContainer(myUserId);
 
-    this.userProximityCollider.update();
     this.userActionCollider.update();
+    myContainer?.update();
 
     this.proximityUpdateForMedia();
 
@@ -187,8 +187,6 @@ export class RoomScene extends Phaser.Scene {
       useConsumerStore.getState().setMute(charId, true);
     });
   }
-
-  proximityUpdateForWorld() {}
 
   getAudioMod(
     distance: number,

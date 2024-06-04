@@ -30,12 +30,12 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
       <TooltipTrigger asChild>
         <Button
           onClick={onClick}
-          className="flex items-center overflow-hidden bg-white/20  rounded-full px-0 py-0 w-auto h-auto hover:text-white"
+          className="flex items-center overflow-hidden bg-light  rounded-full px-0 py-0 w-auto h-auto hover:text-white shadow-appShadow"
         >
           {isOn ? (
             <div
               className={cn(
-                `p-3 text-black hover:text-white`,
+                `p-2 text-black hover:text-white`,
                 bgColor && bgColor,
                 hoverColor && hoverColor,
                 textColor && textColor
@@ -46,7 +46,7 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
           ) : (
             <div
               className={cn(
-                `p-3 text-black hover:text-white`,
+                `p-2 text-black hover:text-white`,
                 bgColor && bgColor,
                 hoverColor && hoverColor,
                 textColor && textColor

@@ -664,6 +664,14 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         [sprite, playerName, playerIcon]
       );
 
+      playerContainer.setDataEnabled();
+
+      playerContainer.setData("currentBehavior", PlayerBehaviour.IDLE);
+
+      playerContainer.update = () => {
+        updatePlayerContainer(scene);
+      };
+
       sprite?.anims.play(
         `${sprite.texture.key.split("_")[0].toLowerCase()}_idle_${
           participant.dir
@@ -978,6 +986,7 @@ export const registerItems = (scene: RoomScene) => {
       "chairs",
       "chair"
     ) as Chair;
+    item.itemDirection = chairObj.properties[0].value;
   });
 
   // create computers from object layer
@@ -1130,6 +1139,148 @@ export const registerMapObjects = (scene: RoomScene) => {
   scene.addGroupFromTiled("Basement", "basement", "Basement", true);
 };
 
+export const updatePlayerContainer = (scene: RoomScene) => {
+  if (!scene.cursors) {
+    return;
+  }
+
+  const selectedItem = scene.userActionCollider?.data.get(
+    "selectedItem"
+  ) as Item;
+
+  if (!selectedItem) {
+    return;
+  }
+
+  if (Phaser.Input.Keyboard.JustDown(scene.keyR!)) {
+    switch (selectedItem.itemType) {
+      case ItemType.COMPUTER:
+        const computer = selectedItem as Computer;
+        // computer.openDialog(this.playerId, network);
+        break;
+      case ItemType.WHITEBOARD:
+        const whiteboard = selectedItem as Whiteboard;
+        // whiteboard.openDialog(network);
+        break;
+      case ItemType.VENDINGMACHINE:
+        // hacky and hard-coded, but leaving it as is for now
+        // const url = "https://www.buymeacoffee.com/skyoffice";
+        // openURL(url);
+        break;
+    }
+  }
+
+  const myContainer = scene.gridEngine?.getContainer(
+    scene.user.userId as string
+  );
+
+  const mySprite = scene.gridEngine?.getSprite(scene.user.userId as string);
+
+  const currentBehaviour = myContainer?.getData(
+    "currentBehavior"
+  ) as PlayerBehaviour;
+
+  switch (currentBehaviour) {
+    case PlayerBehaviour.IDLE:
+      // if press E in front of selected chair
+      if (
+        Phaser.Input.Keyboard.JustDown(scene.keyE!) &&
+        selectedItem?.itemType === ItemType.CHAIR
+      ) {
+        const chairItem = selectedItem as Chair;
+        /**
+         * move player to the chair and play sit animation
+         * a delay is called to wait for player movement (from previous velocity) to end
+         * as the player tends to move one more frame before sitting down causing player
+         * not sitting at the center of the chair
+         */
+        scene.time.addEvent({
+          delay: 10,
+          callback: () => {
+            // update character velocity and position
+            if (chairItem.itemDirection) {
+              mySprite!
+                .setPosition(
+                  chairItem.x +
+                    sittingShiftData[
+                      chairItem.itemDirection as keyof typeof sittingShiftData
+                    ][0],
+                  chairItem.y +
+                    sittingShiftData[
+                      chairItem.itemDirection as keyof typeof sittingShiftData
+                    ][1]
+                )
+                .setDepth(
+                  chairItem.depth +
+                    sittingShiftData[
+                      chairItem.itemDirection as keyof typeof sittingShiftData
+                    ][2]
+                );
+              myContainer!.setPosition(
+                chairItem.x +
+                  sittingShiftData[
+                    chairItem.itemDirection as keyof typeof sittingShiftData
+                  ][0],
+                chairItem.y +
+                  sittingShiftData[
+                    chairItem.itemDirection as keyof typeof sittingShiftData
+                  ][1] -
+                  30
+              );
+            }
+
+            mySprite?.anims.play(
+              `${mySprite.texture.key.split("_")[0].toLowerCase()}_sit_${
+                chairItem.itemDirection
+              }`
+            );
+
+            scene.userActionCollider.setData("selectedItem", undefined);
+
+            if (chairItem.itemDirection === "up") {
+              scene.userActionCollider.setPosition(
+                myContainer!.x,
+                myContainer!.y - myContainer!.height
+              );
+            } else {
+              scene.userActionCollider.setPosition(0, 0);
+            }
+            // send new location and anim to server (Here)
+          },
+          loop: false,
+        });
+        // set up new dialog as player sits down
+        chairItem.clearDialogBox();
+        chairItem.setDialogBox(
+          "<span>Press <kbd class='key'>E</kbd> to Leave</span>"
+        );
+        myContainer?.setData("currentBehavior", PlayerBehaviour.SITTING);
+        myContainer?.setData("chairOnSit", chairItem);
+        return;
+      }
+
+      break;
+
+    case PlayerBehaviour.SITTING:
+      // back to idle if player press E while sitting
+      if (Phaser.Input.Keyboard.JustDown(scene.keyE!)) {
+        mySprite?.anims.play(
+          `${mySprite.texture.key.split("_")[0].toLowerCase()}_idle_${
+            Direction.UP
+          }`
+        );
+
+        myContainer?.setData("currentBehavior", PlayerBehaviour.IDLE);
+        const chairOnSit = myContainer?.getData("chairOnSit") as Chair;
+
+        chairOnSit?.clearDialogBox();
+        scene.userActionCollider.setPosition(myContainer!.x, myContainer!.y);
+        // network.updatePlayer(this.x, this.y, this.anims.currentAnim.key);
+      }
+      break;
+  }
+};
+
 export const updateActionCollider = (scene: RoomScene) => {
   if (!scene.gridEngine || !scene.userActionCollider) {
     return;
@@ -1234,4 +1385,18 @@ export enum ItemType {
   VENDINGMACHINE,
 }
 
+export enum PlayerBehaviour {
+  IDLE,
+  RUNNING,
+  SITTING,
+}
+
 export type NavKeys = Keyboard & Phaser.Types.Input.Keyboard.CursorKeys;
+
+// format: direction: [xShift, yShift, depthShift]
+export const sittingShiftData = {
+  up: [0, 3, -10],
+  down: [0, 3, 1],
+  left: [0, -8, 10],
+  right: [0, -8, 10],
+};

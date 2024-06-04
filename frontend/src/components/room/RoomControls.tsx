@@ -39,6 +39,8 @@ type RoomControlsProps = {
 };
 
 export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
+  const { user } = useContext(userContext);
+
   return (
     <div className="w-full py-4 flex items-center">
       <div className="w-full mx-10 flex items-center justify-between">
@@ -48,10 +50,10 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             7ed9d5d3-8f22-42ae-b86a-b179b84a41b0
           </span>
         </div>
-        <div className="flex items-center gap-5 px-5 py-3 bg-void rounded-full">
-          {/* <div className="flex items-center">
+        <div className="flex items-center gap-5 px-5 py-3 bg-void rounded-full shadow-appShadow">
+          <div className="flex items-center gap-3">
             <div>
-              <Avatar className="w-10 h-10 cursor-pointer">
+              <Avatar className="w-8 h-8 cursor-pointer">
                 <AvatarImage
                   className="object-cover"
                   src={user.avatarUrl as string}
@@ -60,18 +62,16 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
               </Avatar>
             </div>
             <div className="flex flex-col items-start">
-              <span className="text-[15px] opacity-70 font-body font-semibold">
+              <span className="text-[12px] opacity-70 font-body font-semibold">
                 {user.userName}
               </span>
-              <span className="text-[11px] font-semibold opacity-70">
-                Online
-              </span>
+              <span className="text-[11px] opacity-70">Online</span>
             </div>
-          </div> */}
-          {/* <Separator
+          </div>
+          <Separator
             orientation="vertical"
-            className="h-10 opacity-50  bg-veryLight"
-          /> */}
+            className="h-10 opacity-30  bg-veryLight"
+          />
           <RoomMediaControlButton
             iconOn={<HiMicrophone size={22} color="white" fill="white" />}
             iconOff={
@@ -104,7 +104,10 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             iconOff={<IoIosSettings size={24} color="white" />}
           />
 
-          <AppSheet content={<RoomSheet room={room} />}>
+          <AppSheet
+            content={<RoomSheet room={room} />}
+            title={<span>People</span>}
+          >
             <RoomMediaControlButton
               tooltipText="Settings"
               iconOn={<FaPeopleGroup size={24} color="white" />}
