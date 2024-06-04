@@ -62,11 +62,6 @@ const init = (
       dir: d.dir,
     });
 
-    console.log(
-      "THIS IS THE CURRENT POSITION CACHED",
-      await getUserPosition(d.roomId, d.userId)
-    );
-
     io.to(d.roomId).emit(WS_MESSAGE.WS_PARTICIPANT_MOVED, {
       //@ts-ignore
       participantId: socket.request.user.userId,

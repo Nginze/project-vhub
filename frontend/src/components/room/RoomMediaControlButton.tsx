@@ -30,7 +30,7 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
       <TooltipTrigger asChild>
         <Button
           onClick={onClick}
-          className="flex items-center overflow-hidden bg-white/20 rounded-full px-0 py-0 w-auto h-auto hover:text-white"
+          className="flex items-center overflow-hidden bg-white/20  rounded-full px-0 py-0 w-auto h-auto hover:text-white"
         >
           {isOn ? (
             <div

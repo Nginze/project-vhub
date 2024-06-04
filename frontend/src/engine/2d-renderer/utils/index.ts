@@ -4,7 +4,7 @@ import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { Room } from "../../../../../shared/types";
 import { api } from "@/api";
 import { GameObjects } from "phaser";
-import { Direction } from "grid-engine";
+import { Direction, PhaserTileLayer } from "grid-engine";
 import Chair from "../items/Chair";
 import Computer from "../items/Computer";
 import Whiteboard from "../items/WhiteBoard";
@@ -34,15 +34,16 @@ export const registerRendererEvents = (
       .dom(0, -20)
       .createFromHTML(
         `
-          <div id="${d.user.userId}_indicator" style="display: flex; align-items: center; justify-content:center; color: rgba(255, 255, 255, 0.8); font-size: 10px; font-family: Inter; font-weight: bold; background: rgba(0, 0, 0, 0.3); padding: 2px 10px; border-radius: 6px; width: 67px; overflow: hidden;">
-            <span id="${d.user.userId}_speaker" style="margin-right: 5px; display:none; animation: dimInOut 3s infinite;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-            </span>
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              ${d.user.userName}
-            </div>
-          </div>
-          `
+      <div id="${d.user.userId}_indicator" style="display: flex; align-items: center; justify-content:center; color: rgba(255, 255, 255, 0.8); font-size: 10px; font-family: Inter; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2px 9px; border-radius: 50px; width: 67px; overflow: hidden;">
+        <span id="${d.user.userId}_status_indicator" style="display: inline-block; width: 8px; height: 8px; background: #50C878; border-radius: 50%; margin-right: 3.9px;"></span>
+        <span id="${d.user.userId}_speaker" style="margin-right: 5px; display:none; animation: dimInOut 3s infinite;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </span>
+        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          ${d.user.userName}
+        </div>
+      </div>
+      `
       )
       .setOrigin(0.225);
 
@@ -106,9 +107,13 @@ export const registerRendererEvents = (
     console.log("[LOGGING]: User speaking", d.participantId);
     const element = document.getElementById(`${d.participantId}_indicator`);
     const speakerIcon = document.getElementById(`${d.participantId}_speaker`);
-    if (element && speakerIcon) {
+    const statusIndicator = document.getElementById(
+      `${d.participantId}_status_indicator`
+    ); // Get the status indicator span
+    if (element && speakerIcon && statusIndicator) {
       element.style.border = "1.3px solid #43b581";
       speakerIcon.style.display = "inline"; // Show the speaker icon
+      statusIndicator.style.display = "none"; // Hide the status indicator
     }
   });
 
@@ -116,101 +121,14 @@ export const registerRendererEvents = (
     console.log("[LOGGING]: User stopped speaking", d.participantId);
     const element = document.getElementById(`${d.participantId}_indicator`);
     const speakerIcon = document.getElementById(`${d.participantId}_speaker`);
-    if (element && speakerIcon) {
+    const statusIndicator = document.getElementById(
+      `${d.participantId}_status_indicator`
+    ); // Get the status indicator span
+    if (element && speakerIcon && statusIndicator) {
       element.style.border = "";
       speakerIcon.style.display = "none"; // Hide the speaker icon
+      statusIndicator.style.display = "inline"; // Show the status indicator
     }
-  });
-};
-
-export const registerSpriteAnimations = (scene: RoomScene) => {
-  const characters = ["Adam", "Alex", "Amelia", "Bob"];
-  const spriteTypes = ["idle", "phone", "run", "sit"];
-  const directions = ["up", "down", "left", "right"];
-
-  const anims = {
-    idle: {
-      right: { start: 0, end: 5 },
-      up: { start: 6, end: 11 },
-      left: { start: 12, end: 17 },
-      down: { start: 18, end: 23 },
-    },
-    run: {
-      right: { start: 0, end: 5 },
-      up: { start: 6, end: 11 },
-      left: { start: 12, end: 17 },
-      down: { start: 18, end: 23 },
-    },
-    sit: {
-      left_1: { start: 0, end: 5 },
-      left_2: { start: 0, end: 5 },
-      left_3: { start: 0, end: 5 },
-      right_1: { start: 6, end: 11 },
-      right_2: { start: 6, end: 11 },
-      right_3: { start: 6, end: 11 },
-    },
-  };
-
-  characters.forEach((character) => {
-    spriteTypes.forEach((type) => {
-      directions.forEach((direction) => {
-        if (type === "sit") {
-          for (let i = 0; i <= 2; i++) {
-            const animationKey = `${character}_${type}${
-              i > 0 ? i : ""
-            }_${direction}`;
-            const textureKey = `${character}_${type}${i > 1 ? i : ""}`;
-            const frames =
-              anims[type][`${direction}_${i}` as keyof typeof anims.sit];
-
-            scene.anims.create({
-              key: animationKey,
-              frames: scene.anims.generateFrameNumbers(textureKey, frames),
-              frameRate: 15 * 0.6,
-              repeat: -1,
-
-              yoyo: true,
-            });
-          }
-        } else if (type === "idle") {
-          const animationKey = `${character}_${type}_anim_${direction}`;
-          const textureKey = `${character}_${type}_anim`;
-          //@ts-ignore
-          const frames = anims[type][direction];
-
-          scene.anims.create({
-            key: animationKey,
-            frames: scene.anims.generateFrameNumbers(textureKey, frames),
-            frameRate: 15 * 0.6,
-            repeat: -1,
-            yoyo: true,
-          });
-        } else if (type == "run") {
-          const animationKey = `${character}_${type}_${direction}`;
-          const textureKey = `${character}_${type}`;
-          //@ts-ignore
-          const frames = anims[type][direction];
-
-          scene.anims.create({
-            key: animationKey,
-            frames: scene.anims.generateFrameNumbers(textureKey, frames),
-            frameRate: 25 * 0.6,
-            repeat: -1,
-          });
-        } else if (type == "phone") {
-          const animationKey = `${character}_${type}_${direction}`;
-          const textureKey = `${character}_${type}`;
-
-          scene.anims.create({
-            key: animationKey,
-            frames: scene.anims.generateFrameNumbers(textureKey),
-            frameRate: 15 * 0.6,
-            repeat: -1,
-            yoyo: true,
-          });
-        }
-      });
-    });
   });
 };
 
@@ -717,18 +635,18 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         .dom(0, -20)
         .createFromHTML(
           `
-          <div id="${participant.userId}_indicator" style="display: flex; align-items: center; justify-content:center; color: rgba(255, 255, 255, 0.8); font-size: 10px; font-family: Inter; font-weight: bold; background: rgba(0, 0, 0, 0.3); padding: 2px 10px; border-radius: 6px; width: 67px; overflow: hidden;">
-            <span id="${participant.userId}_speaker" style="margin-right: 5px; display:none; animation: dimInOut 3s infinite;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-            </span>
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              ${participant.userName}
-            </div>
-          </div>
-          `
+      <div id="${participant.userId}_indicator" style="display: flex; align-items: center; justify-content:center; color: rgba(255, 255, 255, 0.8); font-size: 10px; font-family: Inter; font-weight: bold; background: rgba(0, 0, 0, 0.4); padding: 2px 9px; border-radius: 50px; width: 67px; overflow: hidden;">
+        <span id="${participant.userId}_status_indicator" style="display: inline-block; width: 8px; height: 8px; background: #50C878; border-radius: 50%; margin-right: 3.9px;"></span>
+        <span id="${participant.userId}_speaker" style="margin-right: 5px; display:none; animation: dimInOut 3s infinite;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </span>
+        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          ${participant.userName}
+        </div>
+      </div>
+      `
         )
         .setOrigin(0.225);
-
       const playerIcon = scene.add
         .dom(5, -35)
         .createFromHTML(
@@ -756,7 +674,6 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
         me = sprite;
         me.setInteractive();
 
-        // scene.cameras.main.zoom = 1.5;
         scene.cameras.main.startFollow(playerContainer, true);
         scene.cameras.main.setFollowOffset(-me.width, -me.height);
 
@@ -796,18 +713,18 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     return;
   }
 
-  map.layers.forEach((layer, index) => {
-    map.createLayer(index, ["FloorAndGround"], 0, 0);
-    // if (layer.name === "Interactive") {
-    //   console.log("Interactive layer found");
-    //   scene.interactiveLayers.add(mapLayer);
-    // }
-  });
-
-  // scene.physics.add.collider(me, scene.interactiveLayers);
-
   // initialize grid engine
   scene.gridEngine.create(map, gridEngineConfig);
+};
+
+export const registerGridEngineEvents = (conn: Socket, scene: RoomScene) => {
+  if (!scene.gridEngine || !conn) {
+    return;
+  }
+
+  const room = useRendererStore.getState().room as Room & {
+    participants: any[];
+  };
 
   // subscribe to movement events
   scene.gridEngine.movementStarted().subscribe(({ charId, direction }: any) => {
@@ -816,22 +733,22 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     }
 
     const sprite = scene.gridEngine.getSprite(charId);
-    const roomId = useRendererStore.getState().currentRoomId as string;
     const user = useRendererStore.getState().user;
+
     sprite?.anims.play(
       `${sprite.texture.key.split("_")[0].toLowerCase()}_run_${direction}`
     );
 
-    const dir = scene.gridEngine?.getFacingDirection(user.userId!!);
-    const posX = scene.gridEngine?.getPosition(user.userId!!).x;
-    const posY = scene.gridEngine?.getPosition(user.userId!!).y;
+    const dir = scene.gridEngine.getFacingDirection(user.userId!!);
+    const posX = scene.gridEngine.getPosition(user.userId!!).x;
+    const posY = scene.gridEngine.getPosition(user.userId!!).y;
 
     if (charId === user.userId) {
       conn.emit(WS_MESSAGE.WS_ROOM_MOVE, {
         roomId: room.roomId,
-        dir: scene.gridEngine?.getFacingDirection(user.userId!!),
-        posX: scene.gridEngine?.getPosition(user.userId!!).x,
-        posY: scene.gridEngine?.getPosition(user.userId!!).y,
+        dir: scene.gridEngine.getFacingDirection(user.userId!!),
+        posX: scene.gridEngine.getPosition(user.userId!!).x,
+        posY: scene.gridEngine.getPosition(user.userId!!).y,
       });
 
       Promise.all([
@@ -854,7 +771,6 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
     }
 
     const sprite = scene.gridEngine.getSprite(charId);
-    const roomId = useRendererStore.getState().currentRoomId as string;
     const user = useRendererStore.getState().user;
 
     const dir = scene.gridEngine?.getFacingDirection(user.userId!!);
@@ -896,14 +812,12 @@ export const registerSprites = (conn: Socket, scene: RoomScene, map: any) => {
       }
 
       const sprite = scene.gridEngine.getSprite(charId);
-      const roomId = useRendererStore.getState().currentRoomId as string;
       const user = useRendererStore.getState().user;
 
       const dir = scene.gridEngine?.getFacingDirection(user.userId!!);
       const posX = scene.gridEngine?.getPosition(user.userId!!).x;
       const posY = scene.gridEngine?.getPosition(user.userId!!).y;
 
-      sprite?.setFrame(`${sprite.texture.key}`);
       sprite?.anims.play(
         `${sprite.texture.key.split("_")[0]}_idle_${direction}`
       );
@@ -994,7 +908,6 @@ export const registerUserProximityCollider = (scene: RoomScene) => {
   ) as GameObjects.Rectangle;
 
   scene.userProximityCollider.setDataEnabled();
-  scene.userProximityCollider.fillColor = 0x00ff00;
 
   scene.userProximityCollider.update = () => {
     updateProximityCollider(scene);
@@ -1065,8 +978,6 @@ export const registerItems = (scene: RoomScene) => {
       "chairs",
       "chair"
     ) as Chair;
-    console.log(item);
-    // item.itemDirection = chairObj.properties[0].value;
   });
 
   // create computers from object layer
@@ -1123,29 +1034,48 @@ export const registerItems = (scene: RoomScene) => {
       const selectedItem = [a, b].find(
         (obj) => obj !== scene.userActionCollider
       ) as Item;
-      if (selectedItem === scene.userActionCollider.data.get("selectedItem")) {
+
+      const currentItem = scene.userActionCollider.data.get("selectedItem");
+
+      if (
+        selectedItem === currentItem ||
+        currentItem?.depth >= selectedItem.depth
+      ) {
         return;
+      }
+
+      // If there's a current item and it's different from the selected item, deselect it
+      if (currentItem && currentItem !== selectedItem) {
+        currentItem.removeHiglight(scene.postFxPlugin);
+        currentItem.clearDialogBox();
       }
 
       scene.userActionCollider.data.set("selectedItem", selectedItem);
       selectedItem.setHighlight(scene.postFxPlugin);
-      selectedItem.setDialogBox("Press [X] to interact");
-      // switch (selectedItem.itemType) {
-      //   case ItemType.CHAIR:
-      //     selectedItem.setHighlight(scene.postFxPlugin);
-      //     selectedItem.setDialogBox("Press X to interact");
-      //     break;
-      //   case ItemType.COMPUTER:
-      //     selectedItem.setHighlight(scene.postFxPlugin);
-      //     selectedItem.setDialogBox("Press X to interact");
-      //     break;
-      //   case ItemType.WHITEBOARD:
-      //     selectedItem.setHighlight(scene.postFxPlugin);
-      //     selectedItem.setDialogBox("Press X to interact");
-      //     break;
-      //   default:
-      //     break;
-      // }
+      switch (selectedItem.itemType) {
+        case ItemType.CHAIR:
+          selectedItem.setDialogBox(
+            "<span>Press <kbd class='key'>E</kbd> to interact</span>"
+          );
+          break;
+        case ItemType.COMPUTER:
+          selectedItem.setDialogBox(
+            "<span>Press <kbd class='key'>R</kbd> to interact</span>"
+          );
+          break;
+        case ItemType.WHITEBOARD:
+          selectedItem.setDialogBox(
+            "<span>Press <kbd class='key'>R</kbd> to interact</span>"
+          );
+          break;
+        case ItemType.VENDINGMACHINE:
+          selectedItem.setDialogBox(
+            "<span>Press <kbd class='key'>R</kbd> to interact</span>"
+          );
+          break;
+        default:
+          break;
+      }
     }
   );
 };
@@ -1163,8 +1093,41 @@ export const registerKeys = (scene: RoomScene) => {
 
   scene.keyE = scene.input.keyboard.addKey("E");
   scene.keyR = scene.input.keyboard.addKey("R");
+};
 
-  // scene.input.keyboard.disableGlobalCapture();
+export const registerMapObjects = (scene: RoomScene) => {
+  if (!scene.map) {
+    return;
+  }
+
+  // import other static layer ground layer to Phaser
+  scene.map.addTilesetImage("FloorAndGround", "tiles_wall")!;
+
+  const groundLayer = scene.map.createLayer("Ground", "FloorAndGround");
+  // groundLayer?.setCollisionByProperty({ ge_collide: false });
+
+  // import other objects from Tiled map to Phaser
+  scene.addGroupFromTiled("Wall", "tiles_wall", "FloorAndGround", false);
+  scene.addGroupFromTiled(
+    "Objects",
+    "office",
+    "Modern_Office_Black_Shadow",
+    false
+  );
+  scene.addGroupFromTiled(
+    "ObjectsOnCollide",
+    "office",
+    "Modern_Office_Black_Shadow",
+    true
+  );
+  scene.addGroupFromTiled("GenericObjects", "generic", "Generic", false);
+  scene.addGroupFromTiled(
+    "GenericObjectsOnCollide",
+    "generic",
+    "Generic",
+    true
+  );
+  scene.addGroupFromTiled("Basement", "basement", "Basement", true);
 };
 
 export const updateActionCollider = (scene: RoomScene) => {
@@ -1209,13 +1172,11 @@ export const updateActionCollider = (scene: RoomScene) => {
     }
   }
 
-  const selectedItem = scene.userActionCollider.data.get(
-    "selectedItem"
-  ) as Item;
-  if (selectedItem) {
-    if (!scene.physics.overlap(scene.userActionCollider, selectedItem)) {
-      selectedItem.removeHiglight(scene.postFxPlugin);
-      selectedItem.clearDialogBox();
+  const currentItem = scene.userActionCollider.data.get("selectedItem") as Item;
+  if (currentItem) {
+    if (!scene.physics.overlap(scene.userActionCollider, currentItem)) {
+      currentItem.removeHiglight(scene.postFxPlugin);
+      currentItem.clearDialogBox();
       scene.userActionCollider.data.remove("selectedItem");
     }
   }

@@ -22,15 +22,11 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
         pixelArt: true,
         scale: {
           mode: Phaser.Scale.ScaleModes.RESIZE,
-          width: 20,
-          height: window.innerHeight,
           autoCenter: Phaser.Scale.CENTER_BOTH,
+          height: window.innerHeight,
           autoRound: true,
-          zoom: 2.5,
-          min: {
-            width: 20,
-          },
         },
+
         physics: {
           default: "arcade",
           arcade: {
@@ -71,7 +67,7 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
   }, []);
 
   return (
-    <div id="2d-view-content" key="2d-view-content">
+    <div id="2d-view-content" key="2d-view-content" className="w-full h-full">
       <MyContextMenu />
     </div>
   );

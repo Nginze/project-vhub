@@ -28,13 +28,17 @@ import {
   BiSolidVideo,
   BiSolidVideoOff,
 } from "react-icons/bi";
+import { FaPeopleGroup, FaPeopleLine } from "react-icons/fa6";
 import { VscReactions } from "react-icons/vsc";
+import { useRoomStore } from "@/global-store/RoomStore";
+import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
+import { useRouter } from "next/router";
 
-type RoomControlsProps = {};
+type RoomControlsProps = {
+  room: any;
+};
 
-export const RoomControls: React.FC<RoomControlsProps> = () => {
-  const { user } = useContext(userContext);
-
+export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
   return (
     <div className="w-full py-4 flex items-center">
       <div className="w-full mx-10 flex items-center justify-between">
@@ -44,13 +48,13 @@ export const RoomControls: React.FC<RoomControlsProps> = () => {
             7ed9d5d3-8f22-42ae-b86a-b179b84a41b0
           </span>
         </div>
-        <div className="flex items-center gap-5 bg-void opacity-95 px-10 py-3 rounded-3xl">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5 px-5 py-3 bg-void rounded-full">
+          {/* <div className="flex items-center">
             <div>
               <Avatar className="w-10 h-10 cursor-pointer">
                 <AvatarImage
                   className="object-cover"
-                  src="https://i.pinimg.com/736x/bd/46/35/bd463547b9ae986ba4d44d717828eb09.jpg"
+                  src={user.avatarUrl as string}
                 />
                 <AvatarFallback />
               </Avatar>
@@ -63,11 +67,11 @@ export const RoomControls: React.FC<RoomControlsProps> = () => {
                 Online
               </span>
             </div>
-          </div>
-          <Separator
+          </div> */}
+          {/* <Separator
             orientation="vertical"
             className="h-10 opacity-50  bg-veryLight"
-          />
+          /> */}
           <RoomMediaControlButton
             iconOn={<HiMicrophone size={22} color="white" fill="white" />}
             iconOff={
@@ -80,11 +84,6 @@ export const RoomControls: React.FC<RoomControlsProps> = () => {
             iconOff={<BiSolidVideoOff size={22} color="white" fill="white" />}
             tooltipText="Camera"
           />
-          {/* <RoomMediaControlButton
-            tooltipText="Screen Share"
-            iconOn={<MonitorUp />}
-            iconOff={<MonitorUp />}
-          /> */}
           <RoomMediaControlButton
             tooltipText="Emote"
             iconOn={<VscReactions size={24} color="white" />}
@@ -103,14 +102,15 @@ export const RoomControls: React.FC<RoomControlsProps> = () => {
             tooltipText="Settings"
             iconOn={<IoIosSettings size={24} color="white" />}
             iconOff={<IoIosSettings size={24} color="white" />}
-            bgColor="bg-light/50"
           />
-          <RoomMediaControlButton
-            tooltipText="Participants"
-            iconOn={<BsFillPeopleFill size={24} color="white" />}
-            iconOff={<BsFillPeopleFill size={24} color="white" />}
-            bgColor="bg-light/50"
-          />
+
+          <AppSheet content={<RoomSheet room={room} />}>
+            <RoomMediaControlButton
+              tooltipText="Settings"
+              iconOn={<FaPeopleGroup size={24} color="white" />}
+              iconOff={<FaPeopleGroup size={24} color="white" />}
+            />
+          </AppSheet>
         </div>
       </div>
     </div>

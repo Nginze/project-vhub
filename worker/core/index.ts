@@ -28,7 +28,7 @@ export const setupWsWorker = () => {
         if (job.name == "clean_up") {
           console.log("new ws job", job.data);
 
-          await cleanUp(userId, roomId);
+          await cleanUp(userId, roomId, job.data.timeStamp);
 
           const peerId = await getPeerId(userId!);
 

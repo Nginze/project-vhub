@@ -4,6 +4,7 @@ import { logger } from "../../config/logger";
 import { sendQueue, wsQueue } from "../../config/bull";
 import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
 import { setUserOffline } from "../helpers";
+import { timeStamp } from "console";
 
 const init = (
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
@@ -25,6 +26,7 @@ const init = (
       wsQueue.add("clean_up", {
         userId: user.userId,
         roomId: currentRoom ?? "",
+        timeStamp: Date.now(),
       });
 
       io.to(currentRoom).emit(WS_MESSAGE.WS_PARTICIPANT_LEFT, {

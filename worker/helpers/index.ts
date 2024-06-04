@@ -15,7 +15,11 @@ export const broadcastExcludeSender = (io: any, event: any) => {
   }
 };
 
-export const cleanUp = async (userId: string, roomId: string) => {
+export const cleanUp = async (
+  userId: string,
+  roomId: string,
+  timeStamp: number
+) => {
   const client = await pool.connect();
 
   console.log("cleaning up user's room session", userId);
@@ -44,15 +48,28 @@ export const cleanUp = async (userId: string, roomId: string) => {
     );
 
     if (roomId !== "") {
-      //Delete the user's room status
-      await client.query(
+      const { rows: roomStatus } = await client.query(
         `
+        SELECT * FROM room_status WHERE room_id = $1 and user_id = $2
+      `,
+        [roomId, userId]
+      );
+
+      const dbTimeStamp = new Date(roomStatus[0].created_at).getTime();
+      console.log(timeStamp, dbTimeStamp, timeStamp < dbTimeStamp);
+
+      // If the user's room status is older than the current room status (race-condition avoidance with main server)
+      if (dbTimeStamp < timeStamp) {
+        //Delete the user's room status
+        await client.query(
+          `
         DELETE FROM
         room_status
         WHERE user_id = $1 and room_id = $2
     `,
-        [userId, roomId]
-      );
+          [userId, roomId]
+        );
+      }
 
       // Update last active log of room
       await client.query(

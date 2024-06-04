@@ -32,64 +32,25 @@ export class Preloader extends Phaser.Scene {
       "map",
       `${this.assetsPath}/maps/${this.room.mapKey}.json`
     );
-    this.load.image(
-      "modern-extra-tileset-16",
-      `${this.assetsPath}/tilesets/modern-extra-tileset-16.png`
-    );
-    this.load.image(
-      "modern-tileset-16",
-      `${this.assetsPath}/tilesets/modern-tileset-16.png`
-    );
-    this.load.image("tiles_wall", "/assets/tilesets/FloorAndGround.png");
-    this.load.image(
+    this.load.spritesheet("tiles_wall", "/assets/tilesets/FloorAndGround.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet(
       "office",
-      "/assets/tilesets/Modern_Office_Black_Shadow.png"
+      "/assets/tilesets/Modern_Office_Black_Shadow.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
     );
-    this.load.image("basement", "/assets/tilesets/Basement.png");
-    this.load.image("generic", "/assets/tilesets/Generic.png");
-  }
-  loadCharacters() {
-    const characters = ["Adam", "Alex", "Amelia", "Bob"];
-    const spriteTypes = ["dir", "idle", "phone", "run", "sit"];
-
-    characters.forEach((character) => {
-      spriteTypes.forEach((type) => {
-        let spritePath;
-        if (type === "dir") {
-          spritePath = `/assets/sprites/characters/${type}/${character}_idle_16x16.png`;
-          this.load.spritesheet(character, spritePath, {
-            frameWidth: 16,
-            frameHeight: 32,
-          });
-        } else {
-          spritePath = `/assets/sprites/characters/${type}/${character}_${type}_16x16.png`;
-          if (type === "sit") {
-            spritePath = `/assets/sprites/characters/${type}/${character}_${type}_16x16.png`;
-            this.load.spritesheet(`${character}_${type}`, spritePath, {
-              frameWidth: 16,
-              frameHeight: 32,
-            });
-            for (let i = 2; i <= 3; i++) {
-              spritePath = `/assets/sprites/characters/${type}/${character}_${type}${i}_16x16.png`;
-              this.load.spritesheet(`${character}_${type}${i}`, spritePath, {
-                frameWidth: 16,
-                frameHeight: 32,
-              });
-            }
-          } else if (type === "idle") {
-            spritePath = `/assets/sprites/characters/${type}/${character}_${type}_anim_16x16.png`;
-            this.load.spritesheet(`${character}_${type}_anim`, spritePath, {
-              frameWidth: 16,
-              frameHeight: 32,
-            });
-          } else {
-            this.load.spritesheet(`${character}_${type}`, spritePath, {
-              frameWidth: 16,
-              frameHeight: 32,
-            });
-          }
-        }
-      });
+    this.load.spritesheet("basement", "/assets/tilesets/Basement.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.spritesheet("generic", "/assets/tilesets/Generic.png", {
+      frameWidth: 32,
+      frameHeight: 32,
     });
   }
 

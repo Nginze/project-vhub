@@ -4,8 +4,10 @@ import { Room, UserData } from "../../../../../shared/types";
 import { Socket } from "socket.io-client";
 import {
   NavKeys,
+  registerGridEngineEvents,
   registerItems,
   registerKeys,
+  registerMapObjects,
   registerRendererEvents,
   registerSpriteAnimations32,
   registerSprites,
@@ -15,7 +17,6 @@ import {
 import { GameObjects } from "phaser";
 import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
 import { clamp } from "framer-motion";
-import { use } from "matter";
 
 export class RoomScene extends Phaser.Scene {
   constructor() {
@@ -60,14 +61,11 @@ export class RoomScene extends Phaser.Scene {
 
     this.map = this.make.tilemap({ key: "map" });
 
-    this.map.addTilesetImage("FloorAndGround", "tiles_wall");
-    // this.map.addTilesetImage("office");
-    // this.map.addTilesetImage("basement");
-    // this.map.addTilesetImage("generic");
-
     registerKeys(this);
+    registerMapObjects(this);
     registerSpriteAnimations32(this);
     registerSprites(this.conn, this, this.map);
+    registerGridEngineEvents(this.conn, this);
     registerRendererEvents(this.conn, this, this.map);
     registerUserActionCollider(this);
     registerUserProximityCollider(this);
@@ -76,15 +74,16 @@ export class RoomScene extends Phaser.Scene {
 
   update() {
     if (!this.gridEngine || !this.cursors || !this.user) {
-      console.log("Scene: Not ready yet");
+      console.log("[LOGGING]: Scene not ready yet.");
       return;
     }
 
     const myUserId = this.user.userId as string;
 
-    this.userActionCollider.update();
     this.userProximityCollider.update();
-    this.proximityUpdate();
+    this.userActionCollider.update();
+
+    this.proximityUpdateForMedia();
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {
       this.gridEngine.move(myUserId, Direction.LEFT);
@@ -117,10 +116,43 @@ export class RoomScene extends Phaser.Scene {
         object.gid! - this.map.getTileset(tilesetName)!.firstgid
       )
       .setDepth(actualY);
+
     return obj;
   }
 
-  proximityUpdate() {
+  addGroupFromTiled(
+    objectLayerName: string,
+    key: string,
+    tilesetName: string,
+    collidable: boolean
+  ) {
+    if (!this.map) {
+      return;
+    }
+
+    const group = this.physics.add.staticGroup();
+    const objectLayer = this.map.getObjectLayer(objectLayerName);
+
+    objectLayer?.objects.forEach((object) => {
+      const actualX = object.x! + object.width! * 0.5;
+      const actualY = object.y! - object.height! * 0.5;
+
+      if (!this.map) {
+        console.log("[LOGGING]: Couldn't load object layer, tileset not found");
+        return;
+      }
+
+      group
+        .get(
+          actualX,
+          actualY,
+          key,
+          object.gid! - this.map.getTileset(tilesetName)!.firstgid
+        )
+        .setDepth(actualY);
+    });
+  }
+  proximityUpdateForMedia() {
     if (!this.gridEngine || !this.userActionCollider) {
       return;
     }
@@ -155,6 +187,8 @@ export class RoomScene extends Phaser.Scene {
       useConsumerStore.getState().setMute(charId, true);
     });
   }
+
+  proximityUpdateForWorld() {}
 
   getAudioMod(
     distance: number,

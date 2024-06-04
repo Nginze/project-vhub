@@ -17,7 +17,7 @@ export default function Document() {
           rel="stylesheet"
         ></link>
       </Head>
-      <body className={`text-white font-body`}>
+      <body className={`text-white font-body overflow-hidden`}>
         <Main />
         <NextScript />
       </body>
