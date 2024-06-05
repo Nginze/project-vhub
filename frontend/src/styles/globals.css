@@ -54,6 +54,19 @@
   overflow: hidden;
 }
 
+.openRoomSheet {
+  z-index: 0;
+  width: 100px;
+  transition: width 0.5s ease 0s;
+}
+
+.closedRoomSheet {
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  transition: width 0.5s ease 0s;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

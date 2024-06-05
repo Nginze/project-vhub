@@ -6,8 +6,11 @@ export const useRoomStore = create(
   combine(
     {
       roomSheetOpen: false,
+      roomIframeOpen: false,
+      currentReaction: "",
     },
     (set) => ({
+      
       set,
     })
   )

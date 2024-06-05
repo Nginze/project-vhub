@@ -11,6 +11,7 @@ import Whiteboard from "../items/WhiteBoard";
 import VendingMachine from "../items/VendingMachine";
 import Item from "../items/Item";
 import { WS_MESSAGE } from "../events";
+import { useRoomStore } from "@/global-store/RoomStore";
 
 export const registerRendererEvents = (
   conn: Socket,
@@ -1152,6 +1153,8 @@ export const updatePlayerContainer = (scene: RoomScene) => {
     return;
   }
 
+  const { roomIframeOpen, set } = useRoomStore.getState();
+
   if (Phaser.Input.Keyboard.JustDown(scene.keyR!)) {
     switch (selectedItem.itemType) {
       case ItemType.COMPUTER:
@@ -1160,6 +1163,8 @@ export const updatePlayerContainer = (scene: RoomScene) => {
         break;
       case ItemType.WHITEBOARD:
         const whiteboard = selectedItem as Whiteboard;
+        console.log("whiteboard clicked");
+        set((state) => ({ roomIframeOpen: !state.roomIframeOpen }));
         // whiteboard.openDialog(network);
         break;
       case ItemType.VENDINGMACHINE:
@@ -1369,6 +1374,29 @@ export const createInteractiveGameObject = (
   customCollider.body.setImmovable(true);
 
   return customCollider;
+};
+
+export const setUserReaction = (scene: RoomScene) => {
+  const myContainer = scene.gridEngine?.getContainer(
+    scene.user.userId as string
+  );
+
+  if (!myContainer) {
+    return;
+  }
+
+  const currentReaction = useRoomStore.getState().currentReaction;
+  const playerName = myContainer.list[1] as GameObjects.DOMElement;
+  const playerIcon = myContainer.list[2] as GameObjects.DOMElement;
+
+  // if (!currentReaction) {
+  //   playerName.setVisible(true);
+  //   playerIcon.setVisible(false);
+  //   return;
+  // }
+
+  // playerName.setVisible(false);
+  // playerIcon.setVisible(true);
 };
 
 export type Keyboard = {

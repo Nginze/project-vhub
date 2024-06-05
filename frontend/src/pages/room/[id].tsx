@@ -11,6 +11,8 @@ import { RoomLayout } from "@/components/room/RoomLayout";
 import { RoomControls } from "@/components/room/RoomControls";
 import { WS_MESSAGE } from "@/engine/2d-renderer/events";
 import { RoomSheet } from "@/components/room/RoomSheet";
+import { useRoomStore } from "@/global-store/RoomStore";
+import AppDialog from "@/components/global/AppDialog";
 
 type RoomProps = {};
 
@@ -22,6 +24,7 @@ const Room: React.FC<RoomProps> = () => {
   const { conn } = useContext(WebSocketContext);
   const { user } = useContext(userContext);
   const { set } = useRendererStore();
+  const { roomIframeOpen } = useRoomStore();
 
   const { room, roomLoading, roomStatus, roomStatusLoading } = useLoadRoomMeta(
     roomId as string,
@@ -59,14 +62,27 @@ const Room: React.FC<RoomProps> = () => {
   }
 
   return room ? (
-    <RoomLayout
-      canvas={
-        <div className="flex flex-row items-center">
-          <TwoDViewComponent />
-        </div>
-      }
-      footer={<RoomControls room={room} />}
-    />
+    <>
+      <RoomLayout
+        canvas={
+          <div className="flex flex-row items-center">
+            <TwoDViewComponent />
+          </div>
+        }
+        footer={<RoomControls room={room} />}
+      />
+
+      <AppDialog
+        open={roomIframeOpen}
+        width={"sm:max-w-full"}
+        content={<AppIFrame />}
+        className="px-0 rounded-none bg-black h-screen"
+        
+      >
+        <></>
+      </AppDialog>
+      <MyContextMenu />
+    </>
   ) : (
     <div className="w-screen h-screen flex items-center justify-center">
       Loading...

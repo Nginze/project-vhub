@@ -13,6 +13,7 @@ import {
   registerSprites,
   registerUserActionCollider,
   registerUserProximityCollider,
+  setUserReaction,
 } from "../utils";
 import { GameObjects } from "phaser";
 import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
@@ -76,7 +77,7 @@ export class RoomScene extends Phaser.Scene {
       console.log("[LOGGING]: Scene not ready yet.");
       return;
     }
-
+     
     const myUserId = this.user.userId as string;
     const myContainer = this.gridEngine.getContainer(myUserId);
 
@@ -84,6 +85,7 @@ export class RoomScene extends Phaser.Scene {
     myContainer?.update();
 
     this.proximityUpdateForMedia();
+    setUserReaction(this);
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {
       this.gridEngine.move(myUserId, Direction.LEFT);

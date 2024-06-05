@@ -9,6 +9,7 @@ type Props = {
   open?: boolean;
   setOpenChange?: any;
   width?: any;
+  className?: string;
 };
 
 const AppDialog = ({
@@ -18,11 +19,14 @@ const AppDialog = ({
   open,
   setOpenChange,
   width,
+  className,
 }: Props) => {
   return (
     <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={setOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className={cn("sm:max-w-[800px] bg-void", width)}>
+      <DialogContent
+        className={cn("sm:max-w-[800px] bg-void", width, className)}
+      >
         {content}
       </DialogContent>
     </Dialog>

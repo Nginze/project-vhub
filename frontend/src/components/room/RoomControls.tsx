@@ -33,13 +33,17 @@ import { VscReactions } from "react-icons/vsc";
 import { useRoomStore } from "@/global-store/RoomStore";
 import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
 import { useRouter } from "next/router";
+import { ReactionBarSelector } from "@charkour/react-reactions";
+import { RoomReactionsButton } from "./RoomReactionsButton";
 
 type RoomControlsProps = {
   room: any;
 };
 
 export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
+  const router = useRouter();
   const { user } = useContext(userContext);
+  const { set } = useRoomStore();
 
   return (
     <div className="w-full py-4 flex items-center">
@@ -50,7 +54,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             7ed9d5d3-8f22-42ae-b86a-b179b84a41b0
           </span>
         </div>
-        <div className="flex items-center gap-5 px-5 py-3 bg-void rounded-full shadow-appShadow">
+        <div className="flex items-center gap-5 px-5 py-3 bg-void rounded-full shadow-appShadow relative">
           <div className="flex items-center gap-3">
             <div>
               <Avatar className="w-8 h-8 cursor-pointer">
@@ -84,12 +88,34 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             iconOff={<BiSolidVideoOff size={22} color="white" fill="white" />}
             tooltipText="Camera"
           />
+          <div>
+            <RoomReactionsButton
+              tooltipText="Emote"
+              iconOff={<VscReactions size={24} color="white" />}
+              iconOn={
+                <div className="flex items-center">
+                  <VscReactions size={24} color="white" />
+                  <ReactionBarSelector
+                    onSelect={(reaction) => {
+                      console.log(reaction);
+                    }}
+                    iconSize={15}
+                    style={{
+                      background: "transparent",
+                      boxShadow: "none",
+                      padding: "0",
+                      margin: "0",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+              }
+            />
+          </div>
           <RoomMediaControlButton
-            tooltipText="Emote"
-            iconOn={<VscReactions size={24} color="white" />}
-            iconOff={<VscReactions size={24} color="white" />}
-          />
-          <RoomMediaControlButton
+            onClick={() => {
+              router.push("/home");
+            }}
             tooltipText="Leave"
             iconOn={<BiExit size={24} />}
             iconOff={<BiExit size={24} />}
@@ -109,6 +135,9 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             title={<span>People</span>}
           >
             <RoomMediaControlButton
+              onClick={() => {
+                set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
+              }}
               tooltipText="Settings"
               iconOn={<FaPeopleGroup size={24} color="white" />}
               iconOff={<FaPeopleGroup size={24} color="white" />}

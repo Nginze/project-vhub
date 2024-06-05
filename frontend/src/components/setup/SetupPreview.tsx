@@ -1,6 +1,12 @@
 import React from "react";
 import { SetupButton } from "./SetupButton";
 import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import {
+  BiSolidMicrophoneOff,
+  BiSolidVideo,
+  BiSolidVideoOff,
+} from "react-icons/bi";
+import { HiMicrophone } from "react-icons/hi2";
 
 type SetupPreviewProps = {};
 
@@ -13,13 +19,17 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
       </div>
       <div className="flex items-center gap-5">
         <SetupButton
-          iconOn={<Mic strokeWidth={1.25} />}
-          iconOff={<MicOff strokeWidth={1.25} />}
+          iconOn={<HiMicrophone size={22} color="white" fill="white" />}
+          iconOff={
+            <BiSolidMicrophoneOff size={22} color="white" fill="white" />
+          }
+          bgColor="bg-appRed"
           tooltipText="Micorphone"
         />
         <SetupButton
-          iconOn={<Video strokeWidth={1.25} />}
-          iconOff={<VideoOff strokeWidth={1.25} />}
+          iconOn={<BiSolidVideo size={22} color="white" fill="white" />}
+          iconOff={<BiSolidVideoOff size={22} color="white" fill="white" />}
+          bgColor="bg-appRed"
           tooltipText="Camera"
         />
       </div>

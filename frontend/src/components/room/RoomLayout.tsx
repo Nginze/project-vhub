@@ -9,7 +9,6 @@ type RoomLayoutProps = {
 };
 
 export const RoomLayout: React.FC<RoomLayoutProps> = ({ canvas, footer }) => {
-  const { roomSheetOpen } = useRoomStore();
 
   return (
     <>
