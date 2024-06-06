@@ -1,16 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import phaserReact from "phaser3-react";
-import { MyContextMenu } from "@/components/global/MyContextMenu";
-import { useRoomStore } from "@/global-store/RoomStore";
-import AppDialog from "@/components/global/AppDialog";
-import { AppIFrame } from "@/components/global/AppIFrame";
 
 type TwoDViewComponentProps = {};
 
 export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
   const gameRef = useRef<any>(null);
   const [gameMounted, setGameMounted] = useState(false);
-  const { roomIframeOpen } = useRoomStore();
 
   useEffect(() => {
     async function initPhaser() {
@@ -70,9 +64,5 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
     };
   }, []);
 
-  return (
-    <div id="2d-view-content" key="2d-view-content">
-
-    </div>
-  );
+  return <div id="2d-view-content" key="2d-view-content"></div>;
 };

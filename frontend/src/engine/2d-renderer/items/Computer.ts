@@ -1,5 +1,5 @@
+import { ItemType } from "../types";
 import Item from "./Item";
-import { ItemType } from "../utils";
 
 export default class Computer extends Item {
   id?: string;

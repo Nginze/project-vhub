@@ -39,7 +39,7 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = () => {
             <BiSolidVideo className="opacity-70 " size={16} />
             <span className="opacity-70 font-semibold">Turn On Video</span>
           </ContextMenuItem>
-          <Separator className="bg-light w-4/5 mx-auto" />
+          <Separator className="bg-black w-full mx-auto" />
           <ContextMenuItem className="cursor-pointer flex items-center gap-2 ">
             <BsFillGearFill className="opacity-70 " size={16} />
             <span className="opacity-70 font-semibold">Settings</span>

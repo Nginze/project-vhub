@@ -1,23 +1,22 @@
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import GridEngine, { Direction, Position } from "grid-engine";
-import { Room, UserData } from "../../../../../shared/types";
 import { Socket } from "socket.io-client";
+import { Room, RoomStatus, UserData } from "../../../../../shared/types";
 import {
-  NavKeys,
   registerGridEngineEvents,
   registerItems,
   registerKeys,
   registerMapObjects,
   registerRendererEvents,
-  registerSpriteAnimations32,
   registerSprites,
-  registerUserActionCollider,
-  registerUserProximityCollider,
-  setUserReaction,
 } from "../utils";
-import { GameObjects } from "phaser";
+
 import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
 import { clamp } from "framer-motion";
+import { registerSpriteAnimations32 } from "../anims";
+import Player from "../entities/Player";
+import { WS_MESSAGE } from "../events";
+import { NavKeys } from "../types";
 
 export class RoomScene extends Phaser.Scene {
   constructor() {
@@ -25,28 +24,29 @@ export class RoomScene extends Phaser.Scene {
   }
 
   // App State
-  public conn: Socket = useRendererStore.getState().conn as Socket;
-  public room: Room = useRendererStore.getState().room as Room;
-  public roomStatus: any = useRendererStore.getState().roomStatus;
+  public conn: Socket = useRendererStore.getState().conn;
+  public room: Room = useRendererStore.getState().room;
+  public roomStatus: RoomStatus = useRendererStore.getState().roomStatus;
   public user: UserData = useRendererStore.getState().user;
+  public players: Map<string, Player> = new Map<string, Player>();
 
   // Colliders and Layers
   public gridEngine: GridEngine | null = null;
   public postFxPlugin: any = null;
-  public userActionCollider: GameObjects.Rectangle = null as any;
-  public userProximityCollider: GameObjects.Rectangle = null as any;
+  public objectGroups = new Map<string, Phaser.Physics.Arcade.StaticGroup>();
   public map: Phaser.Tilemaps.Tilemap | undefined;
 
   // Game Controls & Keys
   public cursors: NavKeys | undefined;
   public keyE: Phaser.Input.Keyboard.Key | undefined;
   public keyR: Phaser.Input.Keyboard.Key | undefined;
+  public keys = new Map<string, Phaser.Input.Keyboard.Key>();
 
   // Other constants
   public earshotDistance = 8;
 
   create() {
-    this.conn.emit("room:join", {
+    this.conn.emit(WS_MESSAGE.WS_ROOM_JOIN, {
       roomId: this.room.roomId,
       roomMeta: {
         isAutospeaker: this.room.autoSpeaker,
@@ -65,11 +65,13 @@ export class RoomScene extends Phaser.Scene {
     registerKeys(this);
     registerMapObjects(this);
     registerSpriteAnimations32(this);
-    registerSprites(this.conn, this, this.map);
-    registerGridEngineEvents(this.conn, this);
-    registerRendererEvents(this.conn, this, this.map);
-    registerUserActionCollider(this);
+    registerSprites(this);
+    registerGridEngineEvents(this);
+    registerRendererEvents(this);
     registerItems(this);
+
+    const { set } = useRendererStore.getState();
+    set({ scene: this });
   }
 
   update() {
@@ -77,15 +79,13 @@ export class RoomScene extends Phaser.Scene {
       console.log("[LOGGING]: Scene not ready yet.");
       return;
     }
-     
+
     const myUserId = this.user.userId as string;
-    const myContainer = this.gridEngine.getContainer(myUserId);
+    const myPlayer = this.players.get(myUserId) as Player;
 
-    this.userActionCollider.update();
-    myContainer?.update();
-
+    myPlayer.update();
+    myPlayer.playerSelector.update();
     this.proximityUpdateForMedia();
-    setUserReaction(this);
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {
       this.gridEngine.move(myUserId, Direction.LEFT);
@@ -155,7 +155,7 @@ export class RoomScene extends Phaser.Scene {
     });
   }
   proximityUpdateForMedia() {
-    if (!this.gridEngine || !this.userActionCollider) {
+    if (!this.gridEngine) {
       return;
     }
 

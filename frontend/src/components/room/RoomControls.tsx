@@ -33,17 +33,21 @@ import { VscReactions } from "react-icons/vsc";
 import { useRoomStore } from "@/global-store/RoomStore";
 import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
 import { useRouter } from "next/router";
-import { ReactionBarSelector } from "@charkour/react-reactions";
+import { Reaction, ReactionBarSelector } from "@charkour/react-reactions";
 import { RoomReactionsButton } from "./RoomReactionsButton";
+import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
+import { REACTIONS_MAP, _REACTION_MAP } from "@/lib/emoji";
+import { Room } from "../../../../shared/types";
 
 type RoomControlsProps = {
-  room: any;
+  room: Room;
 };
 
 export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
   const router = useRouter();
   const { user } = useContext(userContext);
   const { set } = useRoomStore();
+  const { scene } = useRendererStore();
 
   return (
     <div className="w-full py-4 flex items-center">
@@ -96,9 +100,15 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
                 <div className="flex items-center">
                   <VscReactions size={24} color="white" />
                   <ReactionBarSelector
-                    onSelect={(reaction) => {
+                    onSelect={(reaction: string) => {
                       console.log(reaction);
+                      set((s) => ({
+                        //@ts-ignore
+                        currentReaction: _REACTION_MAP[reaction],
+                      }));
+                      scene.players.get(user.userId as string)?.showReaction();
                     }}
+                    reactions={REACTIONS_MAP}
                     iconSize={15}
                     style={{
                       background: "transparent",

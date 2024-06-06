@@ -1,10 +1,11 @@
 import { Socket } from "socket.io-client";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
-import { UserData } from "../../../../../shared/types";
+import { Room, RoomStatus, UserData } from "../../../../../shared/types";
 import Computer from "@/engine/2d-renderer/items/Computer";
 import Whiteboard from "@/engine/2d-renderer/items/WhiteBoard";
 import Chair from "@/engine/2d-renderer/items/Chair";
+import { RoomScene } from "../scenes/RoomScene";
 
 export const useRendererStore = create(
   combine(
@@ -13,8 +14,11 @@ export const useRendererStore = create(
       user: null as unknown as UserData,
       currentRoomId: "",
       currentWhiteboardSrc: "https://wbo.ophir.dev/boards/adasdf",
-      room: {},
-      roomStatus: {},
+      room: {} as Room & {
+        participants: any[];
+      },
+      roomStatus: {} as RoomStatus,
+      scene: null as unknown as RoomScene,
       computerStore: {} as Record<string, Computer>,
       whiteboardStore: {} as Record<string, Whiteboard>,
       chairStore: {} as Record<string, Chair>,

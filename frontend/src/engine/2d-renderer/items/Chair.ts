@@ -1,4 +1,4 @@
-import { ItemType } from "../utils";
+import { ItemType } from "../types";
 import Item from "./Item";
 
 export default class Chair extends Item {
