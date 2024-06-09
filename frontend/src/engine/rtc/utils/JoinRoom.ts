@@ -1,8 +1,8 @@
 import { RtpCapabilities } from "mediasoup-client/lib/types";
-import { useVoiceStore } from "../store/VoiceStore";
+import { useMediaStore } from "../store/MediaStore";
 
 export const joinRoom = async (routerRtpCapabilities: RtpCapabilities) => {
-  const { device } = useVoiceStore.getState();
+  const { device } = useMediaStore.getState();
   if (!device!.loaded) {
     await device!.load({ routerRtpCapabilities });
   }

@@ -1,8 +1,6 @@
 import { TransportOptions } from "mediasoup-client/lib/types";
-import { useVoiceStore } from "../store/VoiceStore";
+import { useMediaStore } from "../store/MediaStore";
 import { RTC_MESSAGE, WS_MESSAGE } from "@/engine/2d-renderer/events";
-// import { useRTCStore } from "../store/useRTCStore";
-// import { useProducerStore } from "../store/useProducerStore";
 
 export async function createTransport(
   conn: any,
@@ -13,7 +11,7 @@ export async function createTransport(
 ) {
   console.log(`[LOGGING]: Creating my ${direction} transport`);
 
-  const { device, set, roomId } = useVoiceStore.getState();
+  const { device, set, roomId } = useMediaStore.getState();
 
   console.log("[LOGGING]: Transport options (from MS)", transportOptions);
 
@@ -43,7 +41,11 @@ export async function createTransport(
     transport.on(
       "produce",
       ({ kind, rtpParameters, appData }, callback, errback) => {
-        console.log("[LOGGING]: Transport produce event", appData.mediaTag);
+        console.log(
+          "[LOGGING]: Transport produce event",
+          appData.mediaTag,
+          userid
+        );
         // we may want to start out paused (if the checkboxes in the ui
         // aren't checked, for each media type. not very clean code, here
         // but, you know, this isn't a real application.)
@@ -62,8 +64,6 @@ export async function createTransport(
           callback({ id: d.id });
         });
 
-
-        console.log("testing us erid", userid)
         conn.emit(
           WS_MESSAGE.RTC_WS_SEND_TRACK,
           {
@@ -90,6 +90,8 @@ export async function createTransport(
     console.log(
       `[LOGGING]: ${direction} transport ${transport.id} connectionstatechange ${state}`
     );
+
+    // @todo: this is a hack to get the transport to reconnect
   });
 
   if (direction === "recv") {

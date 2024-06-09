@@ -7,6 +7,7 @@ import {
   Transport,
 } from "mediasoup/node/lib/types";
 import { Peer } from "../types/Peer";
+import { AppData } from "mediasoup-client/lib/types";
 
 export const createConsumer = async (
   router: Router,
@@ -29,7 +30,7 @@ export const createConsumer = async (
     paused: false, // see note above about always starting paused
     appData: { peerId, mediaPeerId: producer.appData.peerId },
   });
-
+   
   peerConsuming.consumers.push(consumer);
 
   return {
@@ -42,6 +43,7 @@ export const createConsumer = async (
       rtpParameters: consumer.rtpParameters,
       type: consumer.type,
       producerPaused: consumer.producerPaused,
+      appData: { mediaTag: producer.appData.mediaTag },
     },
   };
 };
@@ -56,5 +58,6 @@ export interface Consumer {
     rtpParameters: RtpParameters;
     type: ConsumerType;
     producerPaused: boolean;
+    appData: AppData;
   };
 }

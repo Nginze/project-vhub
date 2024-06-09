@@ -1,6 +1,10 @@
 import { RoomStatus, UserData } from "../../../../../shared/types";
 import { RoomScene } from "../scenes/RoomScene";
-import { createPlayerIcon, createPlayerName } from "../templates";
+import {
+  _createPlayerIcon,
+  createPlayerIcon,
+  createPlayerName,
+} from "../templates";
 import { Direction } from "grid-engine";
 import { AnimationType, ItemType, PlayerBehaviour } from "../types";
 import { useRoomStore } from "@/global-store/RoomStore";
@@ -41,9 +45,9 @@ export default class Player extends Phaser.GameObjects.Container {
       .setOrigin(0.225);
 
     this.playerIcon = scene.add
-      .dom(-3, -39)
+      .dom(0, -20)
       .createFromHTML(createPlayerIcon(this.playerData))
-      .setOrigin(0.225)
+      // .setOrigin(0.225)
       .setVisible(false);
 
     this.playerContainer = scene.add
@@ -121,6 +125,12 @@ export default class Player extends Phaser.GameObjects.Container {
 
   showReaction() {
     const { set } = useRoomStore.getState();
+    const { conn } = this.scene as RoomScene;
+    const {
+      room: { roomId },
+      user: { userId },
+    } = useRendererStore.getState();
+    const { currentReaction } = useRoomStore.getState();
 
     this.playerIcon.setHTML(createPlayerIcon(this.playerData));
     this.playerIcon.setVisible(true);
@@ -136,6 +146,30 @@ export default class Player extends Phaser.GameObjects.Container {
       this.playerIcon.setVisible(false);
       this.playerName.setVisible(true);
       set(() => ({ currentReaction: "" }));
+      this.reactionTimeoutId = null; // Clear the timeout ID
+    }, 5000); // 5000 milliseconds = 5 seconds
+
+    conn.emit(WS_MESSAGE.WS_ROOM_REACTION, {
+      roomId,
+      userId,
+      reaction: currentReaction,
+    });
+  }
+
+  playReaction(reaction: string) {
+    this.playerIcon.setHTML(_createPlayerIcon(this.playerData, reaction));
+    this.playerIcon.setVisible(true);
+    this.playerName.setVisible(false);
+
+    // Clear any existing timeout
+    if (this.reactionTimeoutId) {
+      clearTimeout(this.reactionTimeoutId);
+    }
+
+    // Set a new timeout
+    this.reactionTimeoutId = setTimeout(() => {
+      this.playerIcon.setVisible(false);
+      this.playerName.setVisible(true);
       this.reactionTimeoutId = null; // Clear the timeout ID
     }, 5000); // 5000 milliseconds = 5 seconds
   }
@@ -286,6 +320,7 @@ export default class Player extends Phaser.GameObjects.Container {
 
           player.playerBehavior = PlayerBehaviour.SITTING;
           player.playerContainer.setData("chairOnSit", chairItem);
+
           return;
         }
 
@@ -308,6 +343,7 @@ export default class Player extends Phaser.GameObjects.Container {
           );
           // network.updatePlayer(this.x, this.y, this.anims.currentAnim.key);
         }
+
         break;
     }
   };

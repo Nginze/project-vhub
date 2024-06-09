@@ -82,6 +82,14 @@ const init = (
       participantId: d.userId,
     });
   });
+
+  socket.on(WS_MESSAGE.WS_ROOM_REACTION, (d) => {
+    io.to(d.roomId).emit(WS_MESSAGE.WS_ROOM_REACTION, {
+      //@ts-ignore
+      participantId: d.userId,
+      reaction: d.reaction,
+    });
+  });
 };
 
 export { init };

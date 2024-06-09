@@ -14,7 +14,14 @@ type AudioGraph = {
 export const useConsumerStore = create(
   combine(
     {
-      consumerMap: {} as Record<
+      videoConsumerMap: {} as Record<
+        string,
+        {
+          consumer: Consumer;
+          videoRef?: HTMLVideoElement;
+        }
+      >,
+      audioConsumerMap: {} as Record<
         string,
         {
           consumer: Consumer;
@@ -23,16 +30,34 @@ export const useConsumerStore = create(
           audioGraph: AudioGraph;
         }
       >,
+      screenShareVideoConsumerMap: {} as Record<
+        string,
+        {
+          consumer: Consumer;
+          videoRef?: HTMLVideoElement;
+        }
+      >,
+
+      screenShareAudioConsumerMap: {} as Record<
+        string,
+        {
+          consumer: Consumer;
+          volume: number;
+          audioRef?: HTMLAudioElement;
+        }
+      >,
+
+      proximityList: new Map<string, Consumer>(),
     },
     (set) => ({
       setAudioRef: (userId: string, audioRef: HTMLAudioElement) => {
         set((s) => {
-          if (userId in s.consumerMap) {
+          if (userId in s.audioConsumerMap) {
             return {
-              consumerMap: {
-                ...s.consumerMap,
+              audioConsumerMap: {
+                ...s.audioConsumerMap,
                 [userId]: {
-                  ...s.consumerMap[userId],
+                  ...s.audioConsumerMap[userId],
                   audioRef,
                 },
               },
@@ -45,12 +70,12 @@ export const useConsumerStore = create(
       },
       setVolume: (userId: string, volume: number) => {
         set((s) =>
-          userId in s.consumerMap
+          userId in s.audioConsumerMap
             ? {
-                consumerMap: {
-                  ...s.consumerMap,
+                audioConsumerMap: {
+                  ...s.audioConsumerMap,
                   [userId]: {
-                    ...s.consumerMap[userId],
+                    ...s.audioConsumerMap[userId],
                     volume,
                   },
                 },
@@ -60,8 +85,8 @@ export const useConsumerStore = create(
       },
       setMute: (userId: string, muted: boolean) => {
         set((s) => {
-          if (userId in s.consumerMap) {
-            const x = s.consumerMap[userId];
+          if (userId in s.audioConsumerMap) {
+            const x = s.audioConsumerMap[userId];
             if (x.audioRef) {
               x.audioRef.muted = muted;
             }
@@ -71,8 +96,8 @@ export const useConsumerStore = create(
       },
       setGain: (userId: string, gain: number) => {
         set((s) => {
-          if (userId in s.consumerMap) {
-            const x = s.consumerMap[userId];
+          if (userId in s.audioConsumerMap) {
+            const x = s.audioConsumerMap[userId];
             if (x.audioGraph) {
               x.audioGraph.gain.gain.value = gain;
             }
@@ -82,8 +107,8 @@ export const useConsumerStore = create(
       },
       setStream: (userId: string, stream: MediaStream) => {
         set((s) => {
-          if (userId in s.consumerMap) {
-            const x = s.consumerMap[userId];
+          if (userId in s.audioConsumerMap) {
+            const x = s.audioConsumerMap[userId];
             if (x.audioRef) {
               x.audioRef.srcObject = stream;
             }
@@ -93,8 +118,8 @@ export const useConsumerStore = create(
       },
       setPan: (userId: string, pan: number) => {
         set((s) => {
-          if (userId in s.consumerMap) {
-            const x = s.consumerMap[userId];
+          if (userId in s.audioConsumerMap) {
+            const x = s.audioConsumerMap[userId];
             if (x.audioGraph) {
               x.audioGraph.stereoPanner.pan.value = pan;
             }
@@ -104,10 +129,10 @@ export const useConsumerStore = create(
       },
       playAudio: (userId: string) => {
         set((s) => {
-          if (userId in s.consumerMap) {
-            const x = s.consumerMap[userId];
+          if (userId in s.audioConsumerMap) {
+            const x = s.audioConsumerMap[userId];
             if (x.audioRef) {
-              console.log("[LOGGING]: about to play audio graph")
+              console.log("[LOGGING]: about to play audio graph");
               x.audioRef.play().catch((err) => console.log(err));
             }
           }
@@ -117,29 +142,84 @@ export const useConsumerStore = create(
       add: (c: Consumer, userId: string) =>
         set((s) => {
           let volume = 100;
-          if (userId in s.consumerMap) {
-            const x = s.consumerMap[userId];
-            volume = x.volume;
-            x.consumer.close();
+
+          if (c.appData.mediaTag === "cam-video") {
+            if (userId in s.videoConsumerMap) {
+              const x = s.videoConsumerMap[userId];
+              x.consumer.close();
+            }
+            return {
+              videoConsumerMap: {
+                ...s.videoConsumerMap,
+                [userId]: {
+                  consumer: c,
+                  volume,
+                  videoRef: null,
+                },
+              },
+            };
+          } else if (c.appData.mediaTag === "cam-audio") {
+            if (userId in s.audioConsumerMap) {
+              const x = s.audioConsumerMap[userId];
+              x.volume = volume;
+              x.consumer.close();
+            }
+            return {
+              audioConsumerMap: {
+                ...s.audioConsumerMap,
+                [userId]: {
+                  consumer: c,
+                  volume,
+                  audioGraph: null,
+                  audioRef: null,
+                },
+              },
+            };
+          } else if (c.appData.mediaTag === "screen-video") {
+            if (userId in s.screenShareVideoConsumerMap) {
+              const x = s.screenShareVideoConsumerMap[userId];
+              x.consumer.close();
+            }
+            return {
+              screenShareVideoConsumerMap: {
+                ...s.screenShareVideoConsumerMap,
+                [userId]: {
+                  consumer: c,
+                  volume,
+                  videoRef: null,
+                },
+              },
+            };
+          } else if (c.appData.mediaTag === "screen-audio") {
+            if (userId in s.screenShareAudioConsumerMap) {
+              const x = s.screenShareAudioConsumerMap[userId];
+              x.volume = volume;
+              x.consumer.close();
+            }
+            return {
+              screenShareAudioConsumerMap: {
+                ...s.screenShareAudioConsumerMap,
+                [userId]: {
+                  consumer: c,
+                  volume,
+                  audioRef: null,
+                },
+              },
+            };
           }
-          return {
-            consumerMap: {
-              ...s.consumerMap,
-              [userId]: { consumer: c, volume },
-            },
-          };
         }),
       initAudioGraph: (userId: string) => {
         let streamSrc: MediaStream | null = null;
 
         set((s) => {
-          if (!(userId in s.consumerMap)) {
+          if (!(userId in s.audioConsumerMap)) {
             console.log("could not find consumer for ", userId);
             return s;
           }
-          s.consumerMap[userId].audioGraph = {} as AudioGraph;
+          s.audioConsumerMap[userId].audioGraph = {} as AudioGraph;
 
-          const { consumer, audioGraph, audioRef } = s.consumerMap[userId];
+          const { consumer, audioGraph, audioRef } = s.audioConsumerMap[userId];
+
           const inputStream = new MediaStream([consumer.track]);
 
           const audioContext = new AudioContext();
@@ -164,13 +244,15 @@ export const useConsumerStore = create(
       },
       closeAll: () =>
         set((s) => {
-          Object.values(s.consumerMap).forEach(
+          Object.values(s.audioConsumerMap).forEach(
             ({ consumer: c }) => !c.closed && c.close()
           );
           return {
-            consumerMap: {},
+            audioConsumerMap: {},
           };
         }),
+
+      set,
     })
   )
 );

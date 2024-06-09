@@ -24,3 +24,12 @@ export const createPlayerIcon = (user: UserData) => {
             <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
          </div>`;
 };
+
+export const _createPlayerIcon = (user: UserData, reaction: string) => {
+  const { userId } = user;
+
+  return `<div id="${userId}_icon" class='pop-in' style="position: relative; background: white; padding: 4px 10px; border-radius: 3px; text-align: center; font-size: 16px;">
+            <span role="img" aria-label="emoji">${reaction}</span>
+            <div style="position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid white;"></div>
+         </div>`;
+};

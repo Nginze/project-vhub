@@ -33,13 +33,17 @@ const AudioComponent = ({ volume, onRef, ...props }: Props) => {
   );
 };
 export const AudioRenderer: React.FC<AudioRenderProps> = () => {
-  const { consumerMap, setAudioRef } = useConsumerStore();
+  const { audioConsumerMap, setAudioRef } = useConsumerStore();
   const audioRefs = useRef<Array<[string, HTMLAudioElement]>>([]);
   const [showAutoPlayModal, setShowAutoPlayModal] = useState(false);
   return (
     <>
-      {Object.keys(consumerMap).map((k) => {
-        const { consumer, volume: peerVolume, audioGraph } = consumerMap[k];
+      {Object.keys(audioConsumerMap).map((k) => {
+        const {
+          consumer,
+          volume: peerVolume,
+          audioGraph,
+        } = audioConsumerMap[k];
         return (
           <AudioComponent
             key={consumer.id}
@@ -48,11 +52,11 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
               setAudioRef(k, a);
               audioRefs.current.push([k, a]);
 
-              a.muted = true;
+              a.muted = false;
               a.srcObject = new MediaStream([consumer.track]);
 
               a.play().catch((err) => {
-                console.log(err);
+                console.warn(err);
                 setShowAutoPlayModal(true);
               });
             }}
@@ -62,6 +66,7 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
       {showAutoPlayModal && (
         <>
           <AppDialog
+            open={showAutoPlayModal}
             defaultOpen={true}
             content={
               <>
@@ -81,7 +86,7 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
                       });
                     }}
                   >
-                    okay
+                    Okay
                   </button>
                 </DialogClose>
               </>

@@ -16,7 +16,7 @@ import { clamp } from "framer-motion";
 import { registerSpriteAnimations32 } from "../anims";
 import Player from "../entities/Player";
 import { WS_MESSAGE } from "../events";
-import { NavKeys } from "../types";
+import { NavKeys, ProxmityActionType } from "../types";
 
 export class RoomScene extends Phaser.Scene {
   constructor() {
@@ -62,10 +62,14 @@ export class RoomScene extends Phaser.Scene {
 
     this.map = this.make.tilemap({ key: "map" });
 
+    // import other static layer ground layer to Phaser
+    this.map.addTilesetImage("FloorAndGround", "tiles_wall")!;
+    this.map.createLayer("Ground", "FloorAndGround");
+
     registerKeys(this);
+    registerSprites(this);
     registerMapObjects(this);
     registerSpriteAnimations32(this);
-    registerSprites(this);
     registerGridEngineEvents(this);
     registerRendererEvents(this);
     registerItems(this);
@@ -144,16 +148,16 @@ export class RoomScene extends Phaser.Scene {
         return;
       }
 
-      group
-        .get(
-          actualX,
-          actualY,
-          key,
-          object.gid! - this.map.getTileset(tilesetName)!.firstgid
-        )
-        .setDepth(actualY);
+      const sprite = group.get(
+        actualX,
+        actualY,
+        key,
+        object.gid! - this.map.getTileset(tilesetName)!.firstgid
+      );
+      sprite.setDepth(actualY);
     });
   }
+
   proximityUpdateForMedia() {
     if (!this.gridEngine) {
       return;
@@ -167,6 +171,7 @@ export class RoomScene extends Phaser.Scene {
       const myPosition = this.gridEngine.getPosition(
         this.user.userId as string
       );
+
       const charPosition = this.gridEngine.getPosition(charId);
 
       if (!charPosition || !myPosition) {
@@ -179,14 +184,14 @@ export class RoomScene extends Phaser.Scene {
 
       if (distance <= this.earshotDistance) {
         const pm = this.getAudioMod(distance, myPosition, charPosition);
-        this.updateAudio(pm.gain, pm.pan, charId);
-        //go into the consumer map and update gain and pan of audio ref and play the audio
-
+        // this.updateAudio(pm.gain, pm.pan, charId);
+        this.updateVideo(charId, ProxmityActionType.ADD);
         return;
       }
 
       // mute stream or pause consumer or something
-      useConsumerStore.getState().setMute(charId, true);
+      this.updateVideo(charId, ProxmityActionType.REMOVE);
+      // useConsumerStore.getState().setMute(charId, true);
     });
   }
 
@@ -224,24 +229,54 @@ export class RoomScene extends Phaser.Scene {
   }
 
   updateAudio(gainValue: number, panValue: number, userId: string) {
-    const { consumerMap, setGain, setPan, setMute } =
+    const { audioConsumerMap, setGain, setPan, setMute } =
       useConsumerStore.getState();
 
-    if (!(userId in consumerMap)) {
+    if (!(userId in audioConsumerMap)) {
+      console.log("[LOGGING]: No audio graph");
       return;
     }
 
-    const { audioGraph, audioRef } = consumerMap[userId];
+    const { audioGraph, audioRef } = audioConsumerMap[userId];
 
     if (!audioGraph) {
+      console.log(
+        "[LOGGIN]: peer doesn't have an audio graph creating one ..."
+      );
       this.createAudioNodes(gainValue, panValue, userId);
     }
 
     if (audioRef?.muted) {
+      console.log("[LOGGING]: umuting audio stream");
       setMute(userId, false);
     }
 
+    console.log("[LOGGING]: updating new gain and new pan");
     setGain(userId, gainValue);
     setPan(userId, panValue);
+  }
+
+  updateVideo(userId: string, action: ProxmityActionType) {
+    const { videoConsumerMap, proximityList, set } =
+      useConsumerStore.getState();
+
+    if (!(userId in videoConsumerMap)) {
+      return;
+    }
+
+    if (action === ProxmityActionType.ADD) {
+      set({
+        proximityList: proximityList.set(
+          userId,
+          videoConsumerMap[userId].consumer
+        ),
+      });
+    } else {
+      set((state) => {
+        const newProximityList = new Map(state.proximityList);
+        newProximityList.delete(userId);
+        return { proximityList: newProximityList };
+      });
+    }
   }
 }

@@ -122,23 +122,6 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
               }
             />
           </div>
-          <RoomMediaControlButton
-            onClick={() => {
-              router.push("/home");
-            }}
-            tooltipText="Leave"
-            iconOn={<BiExit size={24} />}
-            iconOff={<BiExit size={24} />}
-            bgColor="bg-appRed/90"
-            textColor="text-white"
-          />
-        </div>
-        <div className="flex items-center gap-5">
-          <RoomMediaControlButton
-            tooltipText="Settings"
-            iconOn={<IoIosSettings size={24} color="white" />}
-            iconOff={<IoIosSettings size={24} color="white" />}
-          />
 
           <AppSheet
             content={<RoomSheet room={room} />}
@@ -153,7 +136,24 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
               iconOff={<FaPeopleGroup size={24} color="white" />}
             />
           </AppSheet>
+
+          <RoomMediaControlButton
+            tooltipText="Settings"
+            iconOn={<IoIosSettings size={24} color="white" />}
+            iconOff={<IoIosSettings size={24} color="white" />}
+          />
+          <RoomMediaControlButton
+            onClick={() => {
+              router.push("/home");
+            }}
+            tooltipText="Leave"
+            iconOn={<BiExit size={24} />}
+            iconOff={<BiExit size={24} />}
+            bgColor="bg-appRed/90"
+            textColor="text-white"
+          />
         </div>
+        <div></div>
       </div>
     </div>
   );

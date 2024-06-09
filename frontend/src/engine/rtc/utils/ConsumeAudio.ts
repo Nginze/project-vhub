@@ -1,8 +1,8 @@
 import { useConsumerStore } from "../store/ConsumerStore";
-import { useVoiceStore } from "../store/VoiceStore";
+import { useMediaStore } from "../store/MediaStore";
 
 export const consumeAudio = async (consumerParameters: any, peerId: string) => {
-  const { recvTransport } = useVoiceStore.getState();
+  const { recvTransport } = useMediaStore.getState();
   if (!recvTransport) {
     console.log(
       "[LOGGING]: Skipping audio consume because recv transport no setup / is null"
@@ -10,16 +10,20 @@ export const consumeAudio = async (consumerParameters: any, peerId: string) => {
     return false;
   }
 
+  console.log("Consumer Parameters", consumerParameters);
+
   const consumer = await recvTransport.consume({
     ...consumerParameters,
     appData: {
       peerId,
       producerId: consumerParameters.producerId,
-      mediaTag: "cam-audio",
+      mediaTag: consumerParameters.appData.mediaTag,
     },
   });
 
   console.log("[LOGGING]: Finished creating consumer");
+
+  console.log("THis is the consumers media tag", consumer.appData.mediaTag);
 
   useConsumerStore.getState().add(consumer, peerId);
 

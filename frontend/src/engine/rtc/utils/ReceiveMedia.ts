@@ -1,14 +1,14 @@
 import { Socket } from "socket.io-client";
-import { useVoiceStore } from "../store/VoiceStore";
+import { useMediaStore } from "../store/MediaStore";
 import { consumeAudio } from "./ConsumeAudio";
 import { RTC_MESSAGE, WS_MESSAGE } from "@/engine/2d-renderer/events";
 
-export const receiveVoice = (
+export const receiveMedia = (
   conn: Socket | null,
   flushQueue: () => void,
   userId: string
 ) => {
-  const { roomId } = useVoiceStore.getState();
+  const { roomId } = useMediaStore.getState();
   if (!conn) {
     return;
   }
@@ -33,7 +33,7 @@ export const receiveVoice = (
   );
 
   conn.emit(WS_MESSAGE.RTC_WS_GET_RECV_TRACKS, {
-    rtpCapabilities: useVoiceStore.getState().device!.rtpCapabilities,
+    rtpCapabilities: useMediaStore.getState().device!.rtpCapabilities,
     roomId,
     peerId: userId,
   });

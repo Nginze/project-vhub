@@ -59,7 +59,10 @@ const init = (
 
   socket.on(WS_MESSAGE.RTC_WS_SEND_TRACK, (d) => {
     logger.debug("Send Track");
-    console.log(d);
+
+    const user = getUser(socket);
+
+    console.log("userId: ", d.peerId, "peerId: ", socket.id, user);
     try {
       sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_SEND_TRACK, {
         op: RTC_MESSAGE.RTC_MS_RECV_SEND_TRACK,

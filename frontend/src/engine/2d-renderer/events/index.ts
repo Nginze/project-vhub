@@ -19,6 +19,7 @@ export enum WS_MESSAGE {
   WS_USER_SPEAKING = "room:user-speaking",
   WS_USER_STOPPED_SPEAKING = "room:user-stopped-speaking",
   WS_NEW_USER_JOINED_ROOM = "room:new-user-joined-room",
+  WS_ROOM_REACTION = "room:reaction",
   WS_PARTICIPANT_MOVED = "room:participant-moved",
   WS_PARTICIPANT_LEFT = "room:participant-left",
 

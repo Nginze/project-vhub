@@ -3581,6 +3581,12 @@
                  "y":224
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"ge_collide",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,

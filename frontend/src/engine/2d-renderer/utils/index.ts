@@ -1,7 +1,7 @@
 import { api } from "@/api";
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { useRoomStore } from "@/global-store/RoomStore";
-import { Direction } from "grid-engine";
+import { CollisionStrategy, Direction } from "grid-engine";
 import { GameObjects } from "phaser";
 import { Socket } from "socket.io-client";
 import { Room, RoomStatus, UserData } from "../../../../../shared/types";
@@ -108,6 +108,15 @@ export const registerRendererEvents = (scene: RoomScene) => {
       statusIndicator.style.display = "inline";
     }
   });
+
+  conn.on(WS_MESSAGE.WS_ROOM_REACTION, (d: any) => {
+    console.log("[LOGGING]: Room reaction", d);
+
+    const { participantId, reaction } = d;
+
+    const player = scene.players.get(participantId);
+    player?.playReaction(reaction);
+  });
 };
 
 export const registerSprites = (scene: RoomScene) => {
@@ -146,7 +155,10 @@ export const registerSprites = (scene: RoomScene) => {
   );
 
   // initialize grid engine
-  scene.gridEngine.create(scene.map!, { characters });
+  scene.gridEngine.create(scene.map!, {
+    characters,
+    characterCollisionStrategy: CollisionStrategy.BLOCK_ONE_TILE_AHEAD,
+  });
 };
 
 export const registerGridEngineEvents = (scene: RoomScene) => {
@@ -336,6 +348,10 @@ export const registerItems = (scene: RoomScene) => {
   }
 
   const { set } = useRendererStore.getState();
+  const {
+    user: { userId },
+  } = useRendererStore.getState();
+  const player = scene.players.get(userId as string);
 
   // create chairs from object layer
   const chairs = scene.physics.add.staticGroup({ classType: Chair });
@@ -397,10 +413,25 @@ export const registerItems = (scene: RoomScene) => {
     );
   });
 
+  if (!player) {
+    console.log("[LOGGING]: player not found");
+    return;
+  }
+
+  console.log("[LOGGING]: player found", player);
+
+  scene.physics.add.collider(
+    [player, player.playerContainer, player.playerSprite],
+    vendingMachines,
+    () => console.log("collided with vending machine")
+  );
+
   scene.objectGroups.set("chairs", chairs);
   scene.objectGroups.set("computers", computers);
   scene.objectGroups.set("whiteboards", whiteboards);
   scene.objectGroups.set("vendingmachines", vendingMachines);
+
+  player.playerSelector.registerPhysics();
 };
 
 export const registerKeys = (scene: RoomScene) => {
@@ -422,10 +453,6 @@ export const registerMapObjects = (scene: RoomScene) => {
   if (!scene.map) {
     return;
   }
-
-  // import other static layer ground layer to Phaser
-  scene.map.addTilesetImage("FloorAndGround", "tiles_wall")!;
-  scene.map.createLayer("Ground", "FloorAndGround");
 
   // import other objects from Tiled map to Phaser
   scene.addGroupFromTiled("Wall", "tiles_wall", "FloorAndGround", false);
@@ -451,154 +478,154 @@ export const registerMapObjects = (scene: RoomScene) => {
   scene.addGroupFromTiled("Basement", "basement", "Basement", true);
 };
 
-export const handleUserInput = (scene: RoomScene) => {
-  if (!scene.cursors) {
-    return;
-  }
+// export const handleUserInput = (scene: RoomScene) => {
+//   if (!scene.cursors) {
+//     return;
+//   }
 
-  const {
-    user: { userId },
-  } = useRendererStore.getState();
+//   const {
+//     user: { userId },
+//   } = useRendererStore.getState();
 
-  const { roomIframeOpen, set } = useRoomStore.getState();
+//   const { roomIframeOpen, set } = useRoomStore.getState();
 
-  const selectedItem = scene.players.get(userId as string)?.playerSelector
-    .selectedItem;
+//   const selectedItem = scene.players.get(userId as string)?.playerSelector
+//     .selectedItem;
 
-  if (!selectedItem) {
-    return;
-  }
+//   if (!selectedItem) {
+//     return;
+//   }
 
-  if (Phaser.Input.Keyboard.JustDown(scene.keyR!)) {
-    switch (selectedItem.itemType) {
-      case ItemType.COMPUTER:
-        const computer = selectedItem as Computer;
-        // computer.openDialog(this.playerId, network);
-        break;
-      case ItemType.WHITEBOARD:
-        const whiteboard = selectedItem as Whiteboard;
-        console.log("whiteboard clicked");
-        set((state) => ({ roomIframeOpen: !state.roomIframeOpen }));
-        // whiteboard.openDialog(network);
-        break;
-      case ItemType.VENDINGMACHINE:
-        // hacky and hard-coded, but leaving it as is for now
-        // const url = "https://www.buymeacoffee.com/skyoffice";
-        // openURL(url);
-        break;
-    }
-  }
+//   if (Phaser.Input.Keyboard.JustDown(scene.keyR!)) {
+//     switch (selectedItem.itemType) {
+//       case ItemType.COMPUTER:
+//         const computer = selectedItem as Computer;
+//         // computer.openDialog(this.playerId, network);
+//         break;
+//       case ItemType.WHITEBOARD:
+//         const whiteboard = selectedItem as Whiteboard;
+//         console.log("whiteboard clicked");
+//         set((state) => ({ roomIframeOpen: !state.roomIframeOpen }));
+//         // whiteboard.openDialog(network);
+//         break;
+//       case ItemType.VENDINGMACHINE:
+//         // hacky and hard-coded, but leaving it as is for now
+//         // const url = "https://www.buymeacoffee.com/skyoffice";
+//         // openURL(url);
+//         break;
+//     }
+//   }
 
-  const myContainer = scene.gridEngine?.getContainer(
-    scene.user.userId as string
-  );
+//   const myContainer = scene.gridEngine?.getContainer(
+//     scene.user.userId as string
+//   );
 
-  const mySprite = scene.gridEngine?.getSprite(scene.user.userId as string);
+//   const mySprite = scene.gridEngine?.getSprite(scene.user.userId as string);
 
-  const currentBehaviour = myContainer?.getData(
-    "currentBehavior"
-  ) as PlayerBehaviour;
+//   const currentBehaviour = myContainer?.getData(
+//     "currentBehavior"
+//   ) as PlayerBehaviour;
 
-  switch (currentBehaviour) {
-    case PlayerBehaviour.IDLE:
-      // if press E in front of selected chair
-      if (
-        Phaser.Input.Keyboard.JustDown(scene.keyE!) &&
-        selectedItem?.itemType === ItemType.CHAIR
-      ) {
-        const chairItem = selectedItem as Chair;
-        /**
-         * move player to the chair and play sit animation
-         * a delay is called to wait for player movement (from previous velocity) to end
-         * as the player tends to move one more frame before sitting down causing player
-         * not sitting at the center of the chair
-         */
-        scene.time.addEvent({
-          delay: 10,
-          callback: () => {
-            // update character velocity and position
-            if (chairItem.itemDirection) {
-              mySprite!
-                .setPosition(
-                  chairItem.x +
-                    SITTING_OFFSET[
-                      chairItem.itemDirection as keyof typeof SITTING_OFFSET
-                    ][0],
-                  chairItem.y +
-                    SITTING_OFFSET[
-                      chairItem.itemDirection as keyof typeof SITTING_OFFSET
-                    ][1]
-                )
-                .setDepth(
-                  chairItem.depth +
-                    SITTING_OFFSET[
-                      chairItem.itemDirection as keyof typeof SITTING_OFFSET
-                    ][2]
-                );
-              myContainer!.setPosition(
-                chairItem.x +
-                  SITTING_OFFSET[
-                    chairItem.itemDirection as keyof typeof SITTING_OFFSET
-                  ][0],
-                chairItem.y +
-                  SITTING_OFFSET[
-                    chairItem.itemDirection as keyof typeof SITTING_OFFSET
-                  ][1] -
-                  30
-              );
-            }
+//   switch (currentBehaviour) {
+//     case PlayerBehaviour.IDLE:
+//       // if press E in front of selected chair
+//       if (
+//         Phaser.Input.Keyboard.JustDown(scene.keyE!) &&
+//         selectedItem?.itemType === ItemType.CHAIR
+//       ) {
+//         const chairItem = selectedItem as Chair;
+//         /**
+//          * move player to the chair and play sit animation
+//          * a delay is called to wait for player movement (from previous velocity) to end
+//          * as the player tends to move one more frame before sitting down causing player
+//          * not sitting at the center of the chair
+//          */
+//         scene.time.addEvent({
+//           delay: 10,
+//           callback: () => {
+//             // update character velocity and position
+//             if (chairItem.itemDirection) {
+//               mySprite!
+//                 .setPosition(
+//                   chairItem.x +
+//                     SITTING_OFFSET[
+//                       chairItem.itemDirection as keyof typeof SITTING_OFFSET
+//                     ][0],
+//                   chairItem.y +
+//                     SITTING_OFFSET[
+//                       chairItem.itemDirection as keyof typeof SITTING_OFFSET
+//                     ][1]
+//                 )
+//                 .setDepth(
+//                   chairItem.depth +
+//                     SITTING_OFFSET[
+//                       chairItem.itemDirection as keyof typeof SITTING_OFFSET
+//                     ][2]
+//                 );
+//               myContainer!.setPosition(
+//                 chairItem.x +
+//                   SITTING_OFFSET[
+//                     chairItem.itemDirection as keyof typeof SITTING_OFFSET
+//                   ][0],
+//                 chairItem.y +
+//                   SITTING_OFFSET[
+//                     chairItem.itemDirection as keyof typeof SITTING_OFFSET
+//                   ][1] -
+//                   30
+//               );
+//             }
 
-            mySprite?.anims.play(
-              `${mySprite.texture.key.split("_")[0].toLowerCase()}_sit_${
-                chairItem.itemDirection
-              }`
-            );
+//             mySprite?.anims.play(
+//               `${mySprite.texture.key.split("_")[0].toLowerCase()}_sit_${
+//                 chairItem.itemDirection
+//               }`
+//             );
 
-            scene.userActionCollider.setData("selectedItem", undefined);
+//             scene.userActionCollider.setData("selectedItem", undefined);
 
-            if (chairItem.itemDirection === "up") {
-              scene.userActionCollider.setPosition(
-                myContainer!.x,
-                myContainer!.y - myContainer!.height
-              );
-            } else {
-              scene.userActionCollider.setPosition(0, 0);
-            }
-            // send new location and anim to server (Here)
-          },
-          loop: false,
-        });
-        // set up new dialog as player sits down
-        chairItem.clearDialogBox();
-        chairItem.setDialogBox(
-          "<span>Press <kbd class='key'>E</kbd> to Leave</span>"
-        );
-        myContainer?.setData("currentBehavior", PlayerBehaviour.SITTING);
-        myContainer?.setData("chairOnSit", chairItem);
-        return;
-      }
+//             if (chairItem.itemDirection === "up") {
+//               scene.userActionCollider.setPosition(
+//                 myContainer!.x,
+//                 myContainer!.y - myContainer!.height
+//               );
+//             } else {
+//               scene.userActionCollider.setPosition(0, 0);
+//             }
+//             // send new location and anim to server (Here)
+//           },
+//           loop: false,
+//         });
+//         // set up new dialog as player sits down
+//         chairItem.clearDialogBox();
+//         chairItem.setDialogBox(
+//           "<span>Press <kbd class='key'>E</kbd> to Leave</span>"
+//         );
+//         myContainer?.setData("currentBehavior", PlayerBehaviour.SITTING);
+//         myContainer?.setData("chairOnSit", chairItem);
+//         return;
+//       }
 
-      break;
+//       break;
 
-    case PlayerBehaviour.SITTING:
-      // back to idle if player press E while sitting
-      if (Phaser.Input.Keyboard.JustDown(scene.keyE!)) {
-        mySprite?.anims.play(
-          `${mySprite.texture.key.split("_")[0].toLowerCase()}_idle_${
-            Direction.UP
-          }`
-        );
+//     case PlayerBehaviour.SITTING:
+//       // back to idle if player press E while sitting
+//       if (Phaser.Input.Keyboard.JustDown(scene.keyE!)) {
+//         mySprite?.anims.play(
+//           `${mySprite.texture.key.split("_")[0].toLowerCase()}_idle_${
+//             Direction.UP
+//           }`
+//         );
 
-        myContainer?.setData("currentBehavior", PlayerBehaviour.IDLE);
-        const chairOnSit = myContainer?.getData("chairOnSit") as Chair;
+//         myContainer?.setData("currentBehavior", PlayerBehaviour.IDLE);
+//         const chairOnSit = myContainer?.getData("chairOnSit") as Chair;
 
-        chairOnSit?.clearDialogBox();
-        scene.userActionCollider.setPosition(myContainer!.x, myContainer!.y);
-        // network.updatePlayer(this.x, this.y, this.anims.currentAnim.key);
-      }
-      break;
-  }
-};
+//         chairOnSit?.clearDialogBox();
+//         scene.userActionCollider.setPosition(myContainer!.x, myContainer!.y);
+//         // network.updatePlayer(this.x, this.y, this.anims.currentAnim.key);
+//       }
+//       break;
+//   }
+// };
 
 // export const updateActionCollider = (scene: RoomScene) => {
 //   if (!scene.gridEngine || !scene.userActionCollider) {

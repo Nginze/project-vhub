@@ -13,6 +13,7 @@ import { WS_MESSAGE } from "@/engine/2d-renderer/events";
 import { RoomSheet } from "@/components/room/RoomSheet";
 import { useRoomStore } from "@/global-store/RoomStore";
 import AppDialog from "@/components/global/AppDialog";
+import { RoomVideoOverlay } from "@/components/room/RoomVideoOverlay";
 
 type RoomProps = {};
 
@@ -77,7 +78,6 @@ const Room: React.FC<RoomProps> = () => {
         width={"sm:max-w-full"}
         content={<AppIFrame />}
         className="px-0 rounded-none bg-black h-screen"
-        
       >
         <></>
       </AppDialog>

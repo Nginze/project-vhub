@@ -18,12 +18,22 @@ export const getDevice = () => {
   }
 };
 
-export const useVoiceStore = create(
+export const useMediaStore = create(
   combine(
     {
       roomId: "",
-      micStream: null as MediaStream | null,
+
+      // Local stream
+      localStream: null as MediaStream | null,
+      vid: null as MediaStreamTrack | null,
       mic: null as MediaStreamTrack | null,
+
+      // Screen share stream
+      screenStream: null as MediaStream | null,
+      screenVid: null as MediaStreamTrack | null,
+      screenMic: null as MediaStreamTrack | null,
+
+
       recvTransport: null as Transport | null,
       sendTransport: null as Transport | null,
       device: getDevice(),
@@ -35,7 +45,8 @@ export const useVoiceStore = create(
           sendTransport: null,
           roomId: "",
           mic: null,
-          micStream: null,
+          vid: null,
+          localStream: null,
         }),
       set,
     })

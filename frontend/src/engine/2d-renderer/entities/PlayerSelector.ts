@@ -22,6 +22,7 @@ export default class PlayerSelector extends GameObjects.Rectangle {
       true,
       "selector"
     ) as GameObjects.Rectangle;
+
   }
 
   update() {
@@ -37,7 +38,9 @@ export default class PlayerSelector extends GameObjects.Rectangle {
 
     const facingDirection = scene.gridEngine.getFacingDirection(userId!);
 
-    const myContainer = scene.gridEngine.getContainer(userId as string) as GameObjects.Container;
+    const myContainer = scene.gridEngine.getContainer(
+      userId as string
+    ) as GameObjects.Container;
 
     switch (facingDirection) {
       case Direction.DOWN: {
@@ -71,7 +74,7 @@ export default class PlayerSelector extends GameObjects.Rectangle {
     this.addPhysics();
   }
 
-  addPhysics() {
+  registerPhysics() {
     const scene = this.scene as RoomScene;
 
     scene.physics.add.collider(
@@ -126,8 +129,12 @@ export default class PlayerSelector extends GameObjects.Rectangle {
         }
       }
     );
+  }
 
+  addPhysics() {
+    const scene = this.scene as RoomScene;
     const currentItem = this.selectedItem as Item;
+
     if (currentItem) {
       if (!scene.physics.overlap(this.selector, currentItem)) {
         currentItem.removeHiglight(scene.postFxPlugin);

@@ -10,12 +10,12 @@ import {
 import { useRouter } from "next/router";
 import React, { useContext, useEffect } from "react";
 import { ActiveSpeakerListener } from "./components/ActiveSpeakerListener";
-import { useVoiceStore } from "./store/VoiceStore";
+import { useMediaStore } from "./store/MediaStore";
 import { consumeAudio } from "./utils/ConsumeAudio";
 import { createTransport } from "./utils/CreateTransport";
 import { joinRoom } from "./utils/JoinRoom";
-import { receiveVoice } from "./utils/ReceiveVoice";
-import { sendVoice } from "./utils/SendVoice";
+import { receiveMedia } from "./utils/ReceiveMedia";
+import { sendMedia } from "./utils/SendMedia";
 import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { AudioRenderer } from "./components/AudioRenderer";
@@ -55,13 +55,19 @@ export type RecvDTO = {
   id?: string;
 };
 
-export function closeVoiceConnections(_roomId: string | null) {
-  const { roomId, mic, nullify } = useVoiceStore.getState();
+export function closeMediaConnections(_roomId: string | null) {
+  const { roomId, mic, vid, nullify } = useMediaStore.getState();
   if (_roomId === null || _roomId === roomId) {
     if (mic) {
       console.log("[LOGGING]: Stopping Microphone");
       mic.stop();
     }
+
+    if (vid) {
+      console.log("[LOGGING]: Stopping Video");
+      vid.stop();
+    }
+
     console.log("[LOGGING]: Nullify All Transports");
     nullify();
   }
@@ -83,28 +89,22 @@ const WebrtcApp: React.FC<Props> = () => {
         d.roomId
       );
       await router.push(`/room/${d.roomId}`);
-      //   useRTCStore.getState().set({ createRoomLoading: false });
     });
 
     conn.on(RTC_MESSAGE.RTC_MS_SEND_NEW_PEER_SPEAKER, async (d: RecvDTO) => {
-      console.log("[LOGGING]: Received new speaker params");
-      const { roomId, recvTransport } = useVoiceStore.getState();
-
-      console.log("Trouble D", d);
+      console.log("[LOGGING]: Received new media consumer parameters");
+      const { roomId, recvTransport } = useMediaStore.getState();
 
       if (recvTransport && roomId === d.roomId) {
-        console.log("[LOGGING]: Consuming audio of new speaker, ", d.userId);
-        await consumeAudio(
-          d.consumerParameters,
-          d.userId as string
-        );
+        console.log("[LOGGING]: Consuming media of new speaker, ", d.userId);
+        await consumeAudio(d.consumerParameters, d.userId as string);
       }
     });
 
     conn.on(
       RTC_MESSAGE.RTC_MS_SEND_YOU_ARE_NOW_A_SPEAKER,
       async (d: RecvDTO) => {
-        if (d.roomId !== useVoiceStore.getState().roomId) {
+        if (d.roomId !== useMediaStore.getState().roomId) {
           return;
         }
 
@@ -128,7 +128,7 @@ const WebrtcApp: React.FC<Props> = () => {
         );
 
         try {
-          await sendVoice();
+          await sendMedia();
         } catch (err) {
           console.log(err);
         }
@@ -141,8 +141,8 @@ const WebrtcApp: React.FC<Props> = () => {
         console.log("[LOGGING]: You joined as a peer");
 
         // Close all connections and add user to room
-        closeVoiceConnections(null);
-        useVoiceStore.getState().set({ roomId: d.roomId });
+        closeMediaConnections(null);
+        useMediaStore.getState().set({ roomId: d.roomId });
 
         console.log("[LOGGING]: Creating a MS device");
 
@@ -169,18 +169,18 @@ const WebrtcApp: React.FC<Props> = () => {
         }
 
         // Start consuming audio tracks of participants
-        receiveVoice(conn, () => {}, user.userId as string);
+        receiveMedia(conn, () => {}, user.userId as string);
       }
     );
 
     conn.on(
       RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER,
       async (d: RecvDTO) => {
-        console.log("[LOGGING]: You joined as a peer");
+        console.log("[LOGGING]: You joined as a speaker (now default)");
 
         // Close all connections and add user to room
-        closeVoiceConnections(null);
-        useVoiceStore.getState().set({ roomId: d.roomId });
+        closeMediaConnections(null);
+        useMediaStore.getState().set({ roomId: d.roomId });
 
         console.log("[LOGGING]: Creating a device");
 
@@ -212,7 +212,7 @@ const WebrtcApp: React.FC<Props> = () => {
 
         // Send Voice on MS producer transport
         try {
-          await sendVoice();
+          await sendMedia();
         } catch (err) {
           console.log("error sending voice | ", err);
           return;
@@ -228,7 +228,7 @@ const WebrtcApp: React.FC<Props> = () => {
         );
 
         // Consume audio of everyone in the room
-        receiveVoice(conn, () => {}, user.userId as string);
+        receiveMedia(conn, () => {}, user.userId as string);
       }
     );
 

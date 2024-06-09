@@ -1,6 +1,6 @@
 import hark from "hark";
 import { useContext, useEffect } from "react";
-import { useVoiceStore } from "../store/VoiceStore";
+import { useMediaStore } from "../store/MediaStore";
 import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { WS_MESSAGE } from "@/engine/2d-renderer/events";
@@ -10,16 +10,17 @@ interface Props {}
 export const ActiveSpeakerListener: React.FC<Props> = ({}) => {
   const { conn } = useContext(WebSocketContext);
   const { user, userLoading } = useContext(userContext);
-  const { micStream, roomId } = useVoiceStore();
+  const { localStream, roomId } = useMediaStore();
 
   useEffect(() => {
-    if (!micStream || !conn || userLoading) {
+    if (!localStream || !conn || userLoading) {
       console.log("[LOGGING]: No mic stream or conn");
       return;
     }
 
     console.log("[LOGGING]: Setting up harker");
 
+    const micStream = new MediaStream([localStream.getAudioTracks()[0]]);
     const harker = hark(micStream);
 
     harker.on("speaking", () => {
@@ -38,7 +39,7 @@ export const ActiveSpeakerListener: React.FC<Props> = ({}) => {
     return () => {
       harker.stop();
     };
-  }, [micStream, conn]);
+  }, [localStream, conn]);
 
   return null;
 };

@@ -70,7 +70,10 @@ export async function main() {
         recvTransport,
         sendTransport,
         consumers: [],
-        producer: null,
+        audioProducer: null,
+        videoProducer: null,
+        screenShareAudioProducer: null,
+        screenShareVideoProducer: null,
         userId: userId as string,
       };
 
@@ -106,7 +109,10 @@ export async function main() {
         recvTransport,
         sendTransport: null,
         consumers: [],
-        producer: null,
+        audioProducer: null,
+        videoProducer: null,
+        screenShareAudioProducer: null,
+        screenShareVideoProducer: null,
         userId: userId as string,
       };
 
@@ -142,7 +148,7 @@ export async function main() {
     [RTC_MESSAGE.RTC_MS_RECV_REMOVE_SPEAKER]: async ({ roomId, peerId }) => {
       if (roomId in rooms) {
         const peer = rooms[roomId].state[peerId];
-        peer?.producer?.close();
+        peer?.audioProducer?.close();
         peer?.sendTransport?.close();
       }
     },
@@ -221,27 +227,45 @@ export async function main() {
 
       for (const theirPeerId of Object.keys(state)) {
         const peerState = state[theirPeerId];
-        if (theirPeerId === peerId || !peerState || !peerState.producer) {
+        if (
+          theirPeerId === peerId ||
+          !peerState ||
+          !peerState.audioProducer ||
+          !peerState.videoProducer
+        ) {
           continue;
         }
         try {
-          const { producer, userId } = peerState;
-          consumerParametersArr.push(
-            await createConsumer(
+          const { audioProducer, videoProducer, userId } = peerState;
+          const [videoConsumer, audioConsumer] = await Promise.all([
+            createConsumer(
               router,
-              producer,
+              audioProducer,
               rtpCapabilities as RtpCapabilities,
               transport,
               peerId,
               userId,
               state[theirPeerId]
-            )
-          );
+            ),
+            createConsumer(
+              router,
+              videoProducer,
+              rtpCapabilities as RtpCapabilities,
+              transport,
+              peerId,
+              userId,
+              state[theirPeerId]
+            ),
+          ]);
+          consumerParametersArr.push(videoConsumer);
+          consumerParametersArr.push(audioConsumer);
         } catch (err) {
           console.log(err);
           continue;
         }
       }
+
+      console.log("sending consumer parameters", consumerParametersArr);
       send({
         op: RTC_MESSAGE.RTC_MS_SEND_GET_RECV_TRACKS_DONE,
         peerId,
@@ -271,7 +295,8 @@ export async function main() {
       const { state } = rooms[roomId];
       const {
         sendTransport,
-        producer: previousProducer,
+        audioProducer: previousAudioProducer,
+        videoProducer: previousVideoProducer,
         consumers,
       } = state[peerId];
       const transport = sendTransport;
@@ -280,12 +305,21 @@ export async function main() {
       }
 
       try {
-        if (previousProducer) {
-          previousProducer.close();
+        if (appData.mediaTag === "cam-audio" && previousAudioProducer) {
+          previousAudioProducer.close();
           consumers.forEach((c) => c.close());
           send({
             op: RTC_MESSAGE.RTC_MS_SEND_CLOSE_CONSUMER,
-            d: { producerId: previousProducer!.id, roomId },
+            d: { producerId: previousAudioProducer!.id, roomId },
+          });
+        }
+
+        if (appData.mediaTag === "cam-video" && previousVideoProducer) {
+          previousVideoProducer.close();
+          consumers.forEach((c) => c.close());
+          send({
+            op: RTC_MESSAGE.RTC_MS_SEND_CLOSE_CONSUMER,
+            d: { producerId: previousVideoProducer!.id, roomId },
           });
         }
 
@@ -296,8 +330,17 @@ export async function main() {
           appData: { ...appData, peerId, transportId },
         });
 
-        rooms[roomId].state[peerId].producer = producer;
+        if (appData.mediaTag === "cam-audio") {
+          rooms[roomId].state[peerId].audioProducer = producer;
+        }
+
+        if (appData.mediaTag === "cam-video") {
+          rooms[roomId].state[peerId].videoProducer = producer;
+        }
+
         for (const theirPeerId of Object.keys(state)) {
+          // console.log(theirPeerId);
+          console.log(state);
           if (theirPeerId === peerId) {
             console.log("Send track initialized by", state[theirPeerId].userId);
             continue;
@@ -307,18 +350,36 @@ export async function main() {
 
           const peerTransport = state[theirPeerId]?.recvTransport;
           if (!peerTransport) {
+            console.log("no peer transport");
             continue;
           }
           try {
-            const consumer = await createConsumer(
-              rooms[roomId].router,
-              producer,
-              rtpCapabilities as RtpCapabilities,
-              peerTransport,
-              peerId,
-              myUserId,
-              state[theirPeerId]
-            );
+            let consumer;
+            if (appData.mediaTag === "cam-audio") {
+              consumer = await createConsumer(
+                rooms[roomId].router,
+                producer,
+                rtpCapabilities as RtpCapabilities,
+                peerTransport,
+                peerId,
+                myUserId,
+                state[theirPeerId]
+              );
+            }
+
+            if (appData.mediaTag === "cam-video") {
+              consumer = await createConsumer(
+                rooms[roomId].router,
+                producer,
+                rtpCapabilities as RtpCapabilities,
+                peerTransport,
+                peerId,
+                myUserId,
+                state[theirPeerId]
+              );
+            }
+
+            console.log("sending track to ", theirPeerId);
 
             send({
               peerId: theirPeerId,
