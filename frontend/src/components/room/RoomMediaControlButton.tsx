@@ -3,8 +3,11 @@ import React from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { TooltipArrow } from "@radix-ui/react-tooltip";
 import { Button } from "../ui/button";
+import { RotatingLines } from "react-loader-spinner";
 
 type RoomMediaControlButtonProps = {
+  isOn?: boolean;
+  isLoading?: boolean;
   iconOn: React.ReactNode;
   iconOff: React.ReactNode;
   onClick?: () => void;
@@ -16,6 +19,8 @@ type RoomMediaControlButtonProps = {
 };
 
 export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
+  isOn,
+  isLoading,
   iconOn,
   iconOff,
   bgColor,
@@ -24,7 +29,6 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
   tooltipText,
   onClick,
 }) => {
-  const [isOn, setIsOn] = React.useState(false);
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -41,7 +45,17 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {iconOn}
+              {isLoading ? (
+                <RotatingLines
+                  width={"16"}
+                  animationDuration="0.75"
+                  strokeColor="grey"
+                  strokeWidth="5"
+                  visible={true}
+                />
+              ) : (
+                iconOn
+              )}
             </div>
           ) : (
             <div
@@ -52,7 +66,17 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {iconOff}
+              {isLoading ? (
+                <RotatingLines
+                  width={"16"}
+                  animationDuration="0.75"
+                  strokeColor="grey"
+                  strokeWidth="5"
+                  visible={true}
+                />
+              ) : (
+                iconOn
+              )}
             </div>
           )}
         </Button>

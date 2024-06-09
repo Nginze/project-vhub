@@ -38,6 +38,7 @@ import { RoomReactionsButton } from "./RoomReactionsButton";
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { REACTIONS_MAP, _REACTION_MAP } from "@/lib/emoji";
 import { Room } from "../../../../shared/types";
+import { useMediaStore } from "@/engine/rtc/store/MediaStore";
 
 type RoomControlsProps = {
   room: Room;
@@ -48,6 +49,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
   const { user } = useContext(userContext);
   const { set } = useRoomStore();
   const { scene } = useRendererStore();
+  const { mic, vid, set: setMedia } = useMediaStore();
 
   return (
     <div className="w-full py-4 flex items-center">
@@ -81,16 +83,34 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             className="h-10 opacity-30  bg-veryLight"
           />
           <RoomMediaControlButton
+            isOn={mic?.enabled}
             iconOn={<HiMicrophone size={22} color="white" fill="white" />}
             iconOff={
               <BiSolidMicrophoneOff size={22} color="white" fill="white" />
             }
             tooltipText="Micorphone"
+            onClick={() => {
+              setMedia((s) => {
+                if (s.mic) {
+                  s.mic.enabled = !s.mic?.enabled;
+                }
+                return s;
+              });
+            }}
           />
           <RoomMediaControlButton
+            isOn={vid?.enabled}
             iconOn={<BiSolidVideo size={22} color="white" fill="white" />}
             iconOff={<BiSolidVideoOff size={22} color="white" fill="white" />}
             tooltipText="Camera"
+            onClick={() => {
+              setMedia((s) => {
+                if (s.vid) {
+                  s.vid.enabled = !s.vid?.enabled;
+                }
+                return s;
+              });
+            }}
           />
           <div>
             <RoomReactionsButton
@@ -137,11 +157,11 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             />
           </AppSheet>
 
-          <RoomMediaControlButton
+          {/* <RoomMediaControlButton
             tooltipText="Settings"
             iconOn={<IoIosSettings size={24} color="white" />}
             iconOff={<IoIosSettings size={24} color="white" />}
-          />
+          /> */}
           <RoomMediaControlButton
             onClick={() => {
               router.push("/home");
@@ -153,7 +173,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({ room }) => {
             textColor="text-white"
           />
         </div>
-        <div></div>
+        <div className="w-10"></div>
       </div>
     </div>
   );

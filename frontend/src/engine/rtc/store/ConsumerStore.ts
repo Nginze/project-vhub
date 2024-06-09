@@ -2,13 +2,19 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import { Consumer } from "mediasoup-client/lib/Consumer";
 
+// type AudioGraph = {
+//   source: MediaStreamAudioSourceNode;
+//   destination: MediaStreamAudioDestinationNode;
+//   gain: GainNode;
+//   stereoPanner: StereoPannerNode;
+//   compressor: DynamicsCompressorNode;
+//   loopback: any;
+// };
 type AudioGraph = {
   source: MediaStreamAudioSourceNode;
-  destination: MediaStreamAudioDestinationNode;
   gain: GainNode;
-  stereoPanner: StereoPannerNode;
-  compressor: DynamicsCompressorNode;
-  loopback: any;
+  pan: StereoPannerNode;
+  context: AudioContext;
 };
 
 export const useConsumerStore = create(
@@ -105,6 +111,19 @@ export const useConsumerStore = create(
           return s;
         });
       },
+      // setGain: (userId: string, gainValue: number) => {
+      //   set((s) => {
+      //     if (userId in s.audioConsumerMap) {
+      //       const x = s.audioConsumerMap[userId];
+      //       if (x.audioGraph && x.audioGraph.gain) {
+      //         // Update the gain node of the audio graph
+      //         x.audioGraph.gain.gain.value = gainValue;
+      //       }
+      //     }
+      //     return s;
+      //   });
+      // },
+
       setStream: (userId: string, stream: MediaStream) => {
         set((s) => {
           if (userId in s.audioConsumerMap) {
@@ -121,19 +140,41 @@ export const useConsumerStore = create(
           if (userId in s.audioConsumerMap) {
             const x = s.audioConsumerMap[userId];
             if (x.audioGraph) {
-              x.audioGraph.stereoPanner.pan.value = pan;
+              x.audioGraph.pan.pan.value = pan;
             }
           }
           return s;
         });
       },
+      setAudioGraph: (userId: string, audioGraph: any) =>
+        set((state) => ({
+          audioConsumerMap: {
+            ...state.audioConsumerMap,
+            [userId]: {
+              ...(state.audioConsumerMap[userId] || {}),
+              audioGraph,
+            },
+          },
+        })),
+
+      // setPan: (userId: string, pan: number) => {
+      //   set((s) => {
+      //     if (userId in s.audioConsumerMap) {
+      //       const x = s.audioConsumerMap[userId];
+      //       if (x.audioGraph) {
+      //         x.audioGraph.stereoPanner.pan.value = pan;
+      //       }
+      //     }
+      //     return s;
+      //   });
+      // },
       playAudio: (userId: string) => {
         set((s) => {
           if (userId in s.audioConsumerMap) {
             const x = s.audioConsumerMap[userId];
             if (x.audioRef) {
               console.log("[LOGGING]: about to play audio graph");
-              x.audioRef.play().catch((err) => console.log(err));
+              x.audioRef.play().catch((err) => console.warn(err));
             }
           }
           return s;
@@ -208,40 +249,39 @@ export const useConsumerStore = create(
             };
           }
         }),
-      initAudioGraph: (userId: string) => {
-        let streamSrc: MediaStream | null = null;
+      // initAudioGraph: (userId: string) => {
+      //   let streamSrc: MediaStream | null = null;
 
-        set((s) => {
-          if (!(userId in s.audioConsumerMap)) {
-            console.log("could not find consumer for ", userId);
-            return s;
-          }
-          s.audioConsumerMap[userId].audioGraph = {} as AudioGraph;
+      //   set((s) => {
+      //     if (!(userId in s.audioConsumerMap)) {
+      //       console.log("could not find consumer for ", userId);
+      //       return s;
+      //     }
+      //     s.audioConsumerMap[userId].audioGraph = {} as AudioGraph;
 
-          const { consumer, audioGraph, audioRef } = s.audioConsumerMap[userId];
+      //     const { consumer, audioGraph, audioRef } = s.audioConsumerMap[userId];
+      //     const inputStream = new MediaStream([consumer.track]);
 
-          const inputStream = new MediaStream([consumer.track]);
+      //     const audioContext = new AudioContext();
 
-          const audioContext = new AudioContext();
+      //     audioGraph.gain = audioContext.createGain();
+      //     audioGraph.stereoPanner = audioContext.createStereoPanner();
+      //     audioGraph.compressor = audioContext.createDynamicsCompressor();
+      //     audioGraph.source = audioContext.createMediaStreamSource(inputStream);
+      //     audioGraph.destination = audioContext.createMediaStreamDestination();
 
-          audioGraph.gain = audioContext.createGain();
-          audioGraph.stereoPanner = audioContext.createStereoPanner();
-          audioGraph.compressor = audioContext.createDynamicsCompressor();
-          audioGraph.source = audioContext.createMediaStreamSource(inputStream);
-          audioGraph.destination = audioContext.createMediaStreamDestination();
+      //     audioGraph.source.connect(audioGraph.gain);
+      //     audioGraph.gain.connect(audioGraph.stereoPanner);
+      //     audioGraph.stereoPanner.connect(audioGraph.compressor);
+      //     audioGraph.compressor.connect(audioGraph.destination);
 
-          audioGraph.source.connect(audioGraph.gain);
-          audioGraph.gain.connect(audioGraph.stereoPanner);
-          audioGraph.stereoPanner.connect(audioGraph.compressor);
-          audioGraph.compressor.connect(audioGraph.destination);
+      //     streamSrc = audioGraph!.destination.stream;
 
-          streamSrc = audioGraph!.destination.stream;
+      //     return s;
+      //   });
 
-          return s;
-        });
-
-        return streamSrc;
-      },
+      //   return streamSrc;
+      // },
       closeAll: () =>
         set((s) => {
           Object.values(s.audioConsumerMap).forEach(

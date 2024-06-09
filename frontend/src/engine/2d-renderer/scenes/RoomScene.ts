@@ -74,8 +74,11 @@ export class RoomScene extends Phaser.Scene {
     registerRendererEvents(this);
     registerItems(this);
 
+    console.log("[LOGGING]: Loading complete");
+
     const { set } = useRendererStore.getState();
     set({ scene: this });
+    set({ ready: true });
   }
 
   update() {
@@ -184,14 +187,15 @@ export class RoomScene extends Phaser.Scene {
 
       if (distance <= this.earshotDistance) {
         const pm = this.getAudioMod(distance, myPosition, charPosition);
-        // this.updateAudio(pm.gain, pm.pan, charId);
+        this.updateAudio(pm.gain, pm.pan, charId);
         this.updateVideo(charId, ProxmityActionType.ADD);
+        useConsumerStore.getState().setMute(charId, false); // Unmute the audio
         return;
       }
 
       // mute stream or pause consumer or something
       this.updateVideo(charId, ProxmityActionType.REMOVE);
-      // useConsumerStore.getState().setMute(charId, true);
+      useConsumerStore.getState().setMute(charId, true);
     });
   }
 
@@ -202,7 +206,7 @@ export class RoomScene extends Phaser.Scene {
   ): { gain: number; pan: number } {
     let gainValue = clamp(
       0,
-      0.5,
+      0.7,
       ((this.earshotDistance - distance) * 0.5) / this.earshotDistance
     );
 
@@ -215,21 +219,59 @@ export class RoomScene extends Phaser.Scene {
     };
   }
 
-  createAudioNodes(gainValue: number, panValue: number, userId: string) {
-    const stream = useConsumerStore.getState().initAudioGraph(userId);
-    const { setGain, setPan, setMute, setStream, playAudio } =
-      useConsumerStore.getState();
+  // createAudioNodes(gainValue: number, panValue: number, userId: string) {
+  //   const stream = useConsumerStore.getState().initAudioGraph(userId);
+  //   const { setGain, setPan, setMute, setStream, playAudio } =
+  //     useConsumerStore.getState();
 
-    setGain(userId, gainValue);
-    setPan(userId, panValue);
+  //   setGain(userId, gainValue);
+  //   setPan(userId, panValue);
 
-    setMute(userId, false);
-    setStream(userId, stream!);
-    playAudio(userId);
+  //   setMute(userId, false);
+  //   setStream(userId, stream!);
+  //   playAudio(userId);
+  // }
+
+  createSpatialAudio(
+    userId: string,
+    stream: MediaStream,
+    gainValue: number,
+    panValue: number
+  ) {
+    // Create a new AudioContext
+    const audioContext = new AudioContext();
+
+    // Create a new MediaStreamAudioSourceNode
+    const source = audioContext.createMediaStreamSource(stream);
+
+    // Create a new GainNode
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = gainValue;
+
+    // Create a new StereoPannerNode
+    const panNode = audioContext.createStereoPanner();
+    panNode.pan.value = panValue;
+
+    const compressorNode = audioContext.createDynamicsCompressor();
+
+    // Connect the nodes
+    source
+      .connect(gainNode)
+      .connect(panNode)
+      .connect(compressorNode)
+      .connect(audioContext.destination);
+
+    // Store the audio graph in the state
+    useConsumerStore.getState().setAudioGraph(userId, {
+      source,
+      gain: gainNode,
+      pan: panNode,
+      context: audioContext,
+    });
   }
 
   updateAudio(gainValue: number, panValue: number, userId: string) {
-    const { audioConsumerMap, setGain, setPan, setMute } =
+    const { audioConsumerMap, setMute, setPan, setGain, setStream } =
       useConsumerStore.getState();
 
     if (!(userId in audioConsumerMap)) {
@@ -237,24 +279,55 @@ export class RoomScene extends Phaser.Scene {
       return;
     }
 
-    const { audioGraph, audioRef } = audioConsumerMap[userId];
+    const { audioGraph, audioRef, consumer } = audioConsumerMap[userId];
+    const stream = new MediaStream([consumer.track]);
 
     if (!audioGraph) {
       console.log(
-        "[LOGGIN]: peer doesn't have an audio graph creating one ..."
+        "[LOGGING]: peer doesn't have an audio graph creating one ..."
       );
-      this.createAudioNodes(gainValue, panValue, userId);
+      // Create the audio graph if it doesn't exist
+      this.createSpatialAudio(userId, stream, gainValue, panValue);
     }
 
     if (audioRef?.muted) {
-      console.log("[LOGGING]: umuting audio stream");
+      console.log("[LOGGING]: unmuting audio stream");
       setMute(userId, false);
     }
 
-    console.log("[LOGGING]: updating new gain and new pan");
     setGain(userId, gainValue);
     setPan(userId, panValue);
+    setStream(userId, stream);
   }
+
+  // updateAudio(gainValue: number, panValue: number, userId: string) {
+  //   const { audioConsumerMap, setGain, setPan, setMute, playAudio } =
+  //     useConsumerStore.getState();
+
+  //   if (!(userId in audioConsumerMap)) {
+  //     console.log("[LOGGING]: No audio graph");
+  //     return;
+  //   }
+
+  //   const { audioGraph, audioRef } = audioConsumerMap[userId];
+
+  //   if (!audioGraph) {
+  //     console.log(
+  //       "[LOGGING]: peer doesn't have an audio graph creating one ..."
+  //     );
+  //     // Create the audio graph if it doesn't exist
+  //     this.createAudioNodes(gainValue, panValue, userId);
+  //   }
+
+  //   if (audioRef?.muted) {
+  //     console.log("[LOGGING]: unmuting audio stream");
+  //     setMute(userId, false);
+  //   }
+
+  //   // Update gain and pan values
+  //   setGain(userId, gainValue);
+  //   setPan(userId, panValue);
+  // }
 
   updateVideo(userId: string, action: ProxmityActionType) {
     const { videoConsumerMap, proximityList, set } =

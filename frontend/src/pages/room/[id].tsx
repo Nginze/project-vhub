@@ -14,6 +14,8 @@ import { RoomSheet } from "@/components/room/RoomSheet";
 import { useRoomStore } from "@/global-store/RoomStore";
 import AppDialog from "@/components/global/AppDialog";
 import { RoomVideoOverlay } from "@/components/room/RoomVideoOverlay";
+import { Logo } from "@/components/global/Logo";
+import { read } from "fs";
 
 type RoomProps = {};
 
@@ -24,7 +26,7 @@ const Room: React.FC<RoomProps> = () => {
   const { id: roomId } = router.query;
   const { conn } = useContext(WebSocketContext);
   const { user } = useContext(userContext);
-  const { set } = useRendererStore();
+  const { set, ready } = useRendererStore();
   const { roomIframeOpen } = useRoomStore();
 
   const { room, roomLoading, roomStatus, roomStatusLoading } = useLoadRoomMeta(
@@ -62,7 +64,7 @@ const Room: React.FC<RoomProps> = () => {
     return <div>Room not found</div>;
   }
 
-  return room ? (
+  return room && ready ? (
     <>
       <RoomLayout
         canvas={
@@ -84,9 +86,21 @@ const Room: React.FC<RoomProps> = () => {
       <MyContextMenu />
     </>
   ) : (
-    <div className="w-screen h-screen flex items-center justify-center">
-      Loading...
-    </div>
+    <>
+      <div className="w-screen h-screen flex items-center justify-center bg-void">
+        <div className="animate-bounce">
+          <Logo size="md" withLogo />
+        </div>
+        <div className="text-[12px] opacity-30 font-logo w-[500px] text-center absolute bottom-5">
+          By Joining Holoverse you agree to the Terms of Service and Privacy
+          Policy, and confirm you are 18 and over
+        </div>
+      </div>
+
+      {/* <div className="hidden">
+        <TwoDViewComponent />
+      </div> */}
+    </>
   );
 };
 

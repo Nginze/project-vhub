@@ -32,7 +32,6 @@ export default class Player extends Phaser.GameObjects.Container {
   constructor(scene: RoomScene, user: UserData & RoomStatus) {
     const { posX, posY, skin, dir } = user;
     super(scene, posX, posY);
-
     this.playerData = user;
     this.playerBehavior = PlayerBehaviour.IDLE;
     this.playerSprite = scene.physics.add
@@ -45,9 +44,9 @@ export default class Player extends Phaser.GameObjects.Container {
       .setOrigin(0.225);
 
     this.playerIcon = scene.add
-      .dom(0, -20)
+      .dom(0, -30)
       .createFromHTML(createPlayerIcon(this.playerData))
-      // .setOrigin(0.225)
+      .setOrigin(0.5)
       .setVisible(false);
 
     this.playerContainer = scene.add
@@ -65,10 +64,15 @@ export default class Player extends Phaser.GameObjects.Container {
     );
 
     this.playAnimation(AnimationType.IDLE, dir as Direction);
-    this.setCtxMenu();
+
+    if (user.userId == useRendererStore.getState().user.userId) {
+      this.setCtxMenu();
+    }
   }
 
   update() {
+    this.playerIcon.x = this.playerSprite.x + this.playerSprite.width / 2;
+    this.playerIcon.y = this.playerSprite.y - this.playerSprite.height / 2 - 10; // 20 is the desired distance from the player's head
     this.handleUserInput();
   }
 

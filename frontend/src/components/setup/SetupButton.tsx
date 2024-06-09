@@ -2,8 +2,11 @@ import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
+import { Oval, RotatingLines } from "react-loader-spinner";
 
 type SetupButtonProps = {
+  isOn: boolean;
+  isLoading: boolean;
   iconOn: React.ReactNode;
   iconOff: React.ReactNode;
   onClick?: () => void;
@@ -15,6 +18,8 @@ type SetupButtonProps = {
 };
 
 export const SetupButton: React.FC<SetupButtonProps> = ({
+  isOn,
+  isLoading,
   iconOn,
   iconOff,
   bgColor,
@@ -24,13 +29,15 @@ export const SetupButton: React.FC<SetupButtonProps> = ({
   tooltipText,
   textColor,
 }) => {
-  const [isOn, setIsOn] = useState(false);
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
           onClick={onClick}
-          className="flex items-center overflow-hidden bg-white bg-opacity-55 rounded-full px-0 py-0 w-auto h-auto hover:text-white"
+          className={cn(
+            "flex items-center overflow-hidden  bg-[#4f29387e]  rounded-full px-0 py-0 w-auto h-auto hover:text-white",
+            isOn && "bg-[#1e4b54]"
+          )}
         >
           {isOn ? (
             <div
@@ -41,7 +48,17 @@ export const SetupButton: React.FC<SetupButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {iconOn}
+              {isLoading ? (
+                <RotatingLines
+                  width={"16"}
+                  animationDuration="0.75"
+                  strokeColor="grey"
+                  strokeWidth="5"
+                  visible={true}
+                />
+              ) : (
+                iconOn
+              )}
             </div>
           ) : (
             <div
@@ -52,7 +69,17 @@ export const SetupButton: React.FC<SetupButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {iconOff}
+              {isLoading ? (
+                <RotatingLines
+                  width={"16"}
+                  animationDuration="0.75"
+                  strokeColor="grey"
+                  strokeWidth="5"
+                  visible={true}
+                />
+              ) : (
+                iconOff
+              )}
             </div>
           )}
         </Button>

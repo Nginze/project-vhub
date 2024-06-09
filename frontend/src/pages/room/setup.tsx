@@ -5,6 +5,8 @@ import { NextPage } from "next";
 import React from "react";
 
 const Setup: NextPage = () => {
+
+  
   return (
     <main className="w-screen h-screen flex justify-center font-logo bg-[#202225]">
       <div className="w-4/5 h-full flex flex-col px-2 py-2 gap-44">

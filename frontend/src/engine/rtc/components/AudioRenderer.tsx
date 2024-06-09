@@ -52,11 +52,11 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
               setAudioRef(k, a);
               audioRefs.current.push([k, a]);
 
-              a.muted = false;
-              a.srcObject = new MediaStream([consumer.track]);
+              a.muted = true;
+              // a.srcObject = new MediaStream([consumer.track]);
 
               a.play().catch((err) => {
-                console.warn(err);
+                console.log(err);
                 setShowAutoPlayModal(true);
               });
             }}
@@ -66,7 +66,6 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
       {showAutoPlayModal && (
         <>
           <AppDialog
-            open={showAutoPlayModal}
             defaultOpen={true}
             content={
               <>
@@ -86,7 +85,7 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
                       });
                     }}
                   >
-                    Okay
+                    okay
                   </button>
                 </DialogClose>
               </>

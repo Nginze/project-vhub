@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Dice2, Dices } from "lucide-react";
+import { userContext } from "@/context/UserContext";
 
 type SetupFormProps = {};
 
 export const SetupForm: React.FC<SetupFormProps> = () => {
+  const { user } = useContext(userContext);
+
   return (
     <div className="w-full py-3">
       <div className="flex flex-col items-end gap-5 w-full">
@@ -15,7 +18,7 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
           <Avatar className="w-8 h-8 cursor-pointer">
             <AvatarImage
               className="object-cover"
-              src="https://i.pinimg.com/736x/bd/46/35/bd463547b9ae986ba4d44d717828eb09.jpg"
+              src={user?.avatarUrl as string}
             />
             <AvatarFallback />
           </Avatar>

@@ -1,7 +1,12 @@
 import { useMediaStore } from "@/engine/rtc/store/MediaStore";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef } from "react";
-import { BiSolidMicrophoneOff, BiSolidVideoOff } from "react-icons/bi";
+import {
+  BiSolidMicrophone,
+  BiSolidMicrophoneOff,
+  BiSolidVideo,
+  BiSolidVideoOff,
+} from "react-icons/bi";
 import { HiMicrophone } from "react-icons/hi2";
 
 type RoomVideoCardProps = {
@@ -29,6 +34,7 @@ const VideoComponent = ({ onRef, ...props }: VideoProps) => {
 
   return (
     <video
+      className="bg-light"
       ref={videoRef}
       muted={true}
       autoPlay
@@ -60,25 +66,34 @@ export const RoomVideoCard: React.FC<RoomVideoCardProps> = ({
         className
       )}
     >
-      <VideoComponent
-        onRef={(v) => {
-          v.muted = true;
-          videoRef.current = v;
-        }}
-      />
+      {stream && stream.active ? (
+        <VideoComponent
+          onRef={(v) => {
+            v.muted = true;
+            videoRef.current = v;
+          }}
+        />
+      ) : (
+        <div className="flex font-logo text-[12px] justify-center items-center h-full">
+          <p>Connecting...</p>
+        </div>
+      )}
+      <div className="absolute top-2 left-2.5 opacity-80  font-logo text-[12px]">
+        You
+      </div>
       <div className="flex items-center gap-2 p-1 absolute bottom-1">
         <span>
           {audioMuted ? (
             <BiSolidMicrophoneOff size={16} />
           ) : (
-            <HiMicrophone size={16} />
+            <BiSolidMicrophone size={16} />
           )}
         </span>
         <span>
           {videoMuted ? (
             <BiSolidVideoOff size={16} />
           ) : (
-            <BiSolidVideoOff size={16} />
+            <BiSolidVideo size={16} />
           )}
         </span>
       </div>
