@@ -1,7 +1,4 @@
-import {
-  soundEffects,
-  useSoundEffectStore,
-} from "../../../store/useSoundEffectStore";
+import { useSoundEffectStore, soundEffects } from "@/global-store/SoundFxStore";
 
 const soundKeys = Object.keys(soundEffects);
 

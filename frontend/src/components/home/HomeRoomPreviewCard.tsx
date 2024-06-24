@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { EllipsisVertical } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { Room } from "../../../../shared/types";
+import { AppDropDownMenu } from "../global/AppDropDownMenu";
+import { HomePreviewCardMenu } from "./HomePreviewCardMenu";
 
 type HomeRoomPreviewCardProps = {
   room: Room;
@@ -12,19 +14,21 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
   room,
 }) => {
   return (
-    <div className="flex flex-col">
-      <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl cursor-pointer">
+    <div className="flex flex-col group">
+      <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl group-hover:rounded-none cursor-pointer">
         <img
           src="/mock_prev.jpg"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-xl group-hover:rounded-none"
         />
       </div>
       <div className="flex flex-col items-start gap-2 py-4">
         <div className="w-full flex items-center justify-between">
           <span className="font-semibold text-[16px]">Groovy Room</span>
-          <button>
-            <EllipsisVertical size={15} />
-          </button>
+          <AppDropDownMenu content={<HomePreviewCardMenu />}>
+            <button className="hover:bg-light rounded-xl p-3">
+              <EllipsisVertical size={15} />
+            </button>
+          </AppDropDownMenu>
         </div>
         <span className="text-[13px] opacity-70">{room.roomDesc}</span>
         <span className="text-[13px] opacity-70 flex items-center gap-2">

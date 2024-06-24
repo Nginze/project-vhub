@@ -35,8 +35,6 @@ type HomeResourceMenuProps = {};
 export const HomeResourceMenu: React.FC<HomeResourceMenuProps> = () => {
   return (
     <div>
-      <DropdownMenuLabel>More Services</DropdownMenuLabel>
-      <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem>
           <MdBrowserUpdated className="mr-2 h-4 w-4" />

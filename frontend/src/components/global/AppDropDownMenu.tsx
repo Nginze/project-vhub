@@ -36,7 +36,7 @@ export const AppDropDownMenu: React.FC<AppDropDownMenuProps> = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">{content}</DropdownMenuContent>
+        <DropdownMenuContent className="w-40">{content}</DropdownMenuContent>
       </DropdownMenu>
     </>
   );

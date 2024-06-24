@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { Button } from "../ui/button";
 import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
@@ -9,7 +9,7 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { Activity, GitBranch, Loader, Pencil, X } from "lucide-react";
+import { Activity, GitBranch, Loader, Pencil, Wrench, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import AppDialog from "../global/AppDialog";
@@ -26,25 +26,49 @@ import {
   SelectValue,
 } from "../ui/select";
 import { BiImageAdd, BiMicrophone } from "react-icons/bi";
-import { BsPersonPlus } from "react-icons/bs";
+import { BsPersonPlus, BsSoundwave, BsWrench } from "react-icons/bs";
 import { FaPerson } from "react-icons/fa6";
 import { PiDressFill } from "react-icons/pi";
 import { HomeCharacterCustomizer } from "./HomeCharacterCustomizer";
+import { useSettingStore, getMicrophones } from "@/global-store/SettingStore";
+import { useToast } from "../ui/use-toast";
+import { LiveAudioVisualizer } from "react-audio-visualize";
 
 type HomeProfileSheetProps = {};
 
 export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
   const { user, userLoading } = useContext(userContext);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [newBio, setBio] = useState(user.bio);
   const [uploaderOpen, setUploaderOpen] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
+  const [isTestingAudio, setIsTestingAudio] = useState(false);
   const [microphones, setMicrophones] = useState<
     { value: string; label: string }[]
   >([]);
+  const [bioOpen, setBioOpen] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
+  const [blob, setBlob] = useState<Blob>();
   const router = useRouter();
+  const { toast } = useToast();
+
+  const {
+    spatialAudio,
+    statsForNerds,
+    noiseCancellation,
+    soundEffects,
+    selectedMicDevice,
+    updateNoiseCancellation,
+    updateSoundEffects,
+    updateSpatialAudio,
+    updateStatsForNerds,
+  } = useSettingStore();
 
   const handleBioChange = async () => {
     if (user.bio !== newBio) {
+      toast({
+        description: "Syncing Bio",
+      });
       // await toast.promise(profileMutation.mutateAsync(), {
       //   loading: "Syncing Bio",
       //   success: "Bio Updated",
@@ -56,6 +80,28 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
   const handleBlur = async (e: any) => {
     await handleBioChange();
   };
+
+  const handleAudioTest = async () => {
+    if (isTestingAudio && mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop());
+      setMediaStream(null);
+      setMediaRecorder(null);
+    } else {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      setMediaStream(stream);
+      setMediaRecorder(recorder);
+      recorder.start();
+    }
+    setIsTestingAudio(!isTestingAudio);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const microphones = await getMicrophones();
+      setMicrophones(microphones);
+    })();
+  }, []);
 
   return (
     <>
@@ -109,7 +155,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
               <Separator className="bg-light opacity-40 w-full mx-auto" />
             </div>
           </div>
-          <div className="w-full space-y-3">
+          <div className="w-full space-y-1 mb-4">
             <span className="font-semibold text-[15px] flex flex-col items-start space-y-2">
               <span className="flex items-center flex-col"> 🌟 About </span>
               <span className="text-[13px] font-sans font-normal opacity-30">
@@ -117,20 +163,27 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
               </span>
             </span>
             <div>
-              {!newBio ? (
+              {!user.bio && !bioOpen ? (
                 <div className="text-center py-4">
                   <p className="text-gray-500">No bio available</p>
-                  <button className="mt-2 text-blue-600">Add a bio</button>
+                  <button
+                    onClick={() => {
+                      setBio("Enter your bio here");
+                      setBioOpen(true);
+                    }}
+                    className="mt-2 text-blue-600"
+                  >
+                    Add a bio
+                  </button>
                 </div>
               ) : (
                 <textarea
-                  className="chat cursor-text bg-transparent text-white outline-none  border-none w-full rounded-md hover:shadow-sm"
+                  className="chat cursor-text bg-transparent italic text-[14px] text-white outline-none  border-none w-full rounded-md hover:shadow-sm"
                   value={newBio as string}
                   onChange={(e) => {
                     setBio(e.target.value);
                   }}
-
-                  // onBlur={handleBlur}
+                  onBlur={handleBlur}
                 />
               )}
             </div>
@@ -194,32 +247,62 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
                       }
                     />
                   </SelectTrigger>
+
                   <SelectContent>
-                    <SelectItem
-                      value="public"
-                      className="text-[16px] font-semibold opacity-70"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-[16px] font-semibold opacity-70">
-                          Mic 1
+                    {microphones.map(({ value, label }) => (
+                      <SelectItem
+                        value={value}
+                        className="text-[16px] font-semibold opacity-70"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-[16px] font-semibold opacity-70">
+                            {label}
+                          </span>
                         </span>
-                      </span>
-                    </SelectItem>
-                    <SelectItem
-                      value="private"
-                      className="text-[16px] font-semibold opacity-70"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-[16px] font-semibold opacity-70">
-                          Mic 2
-                        </span>
-                      </span>
-                    </SelectItem>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-                <span className="text-[13px] opacity-30">
-                  Control your audio & video input
-                </span>
+                <div className="flex items-center justify-between w-full flex-col">
+                  <span className="text-[13px] opacity-30 ">
+                    Control your audio & video input
+                  </span>
+
+                  {!isTestingAudio ? (
+                    <button
+                      className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
+                      onClick={() => {
+                        handleAudioTest();
+                        setIsTestingAudio(true);
+                      }}
+                    >
+                      <BsWrench />
+                      Test Audio
+                    </button>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center">
+                      <button
+                        className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
+                        onClick={() => {
+                          handleAudioTest();
+                          setIsTestingAudio(false);
+                        }}
+                      >
+                        Cancel Test
+                      </button>
+                      <div>
+                        {mediaRecorder && (
+                          <LiveAudioVisualizer
+                            mediaRecorder={mediaRecorder}
+                            barColor={"#43b581"}
+                            width={300}
+                            height={50}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center justify-between w-full">
@@ -227,9 +310,9 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
                   Spatial Audio
                 </label>
                 <Switch
-                  // checked={roomInvites}
-                  // onCheckedChange={() => updateRoomInvites(!roomInvites)}
-                  id="invites"
+                  checked={spatialAudio}
+                  onCheckedChange={() => updateSpatialAudio(!spatialAudio)}
+                  id="spatial_audio"
                 />
               </div>
               <div className="flex items-center justify-between w-full">
@@ -237,9 +320,11 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
                   Noise Cancelation
                 </label>
                 <Switch
-                  // checked={roomInvites}
-                  // onCheckedChange={() => updateRoomInvites(!roomInvites)}
-                  id="invites"
+                  checked={noiseCancellation}
+                  onCheckedChange={() =>
+                    updateNoiseCancellation(!noiseCancellation)
+                  }
+                  id="noise_cancellation"
                 />
               </div>
               <div className="flex items-center justify-between w-full">
@@ -250,8 +335,8 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
                   Sound FX
                 </label>
                 <Switch
-                  // checked={soundEffects}
-                  // onCheckedChange={() => updateSoundEffects(!soundEffects)}
+                  checked={soundEffects}
+                  onCheckedChange={() => updateSoundEffects(!soundEffects)}
                   id="sound-effects"
                 />
               </div>
@@ -264,9 +349,9 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
                   Stats For Nerds
                 </label>
                 <Switch
-                  // checked={soundEffects}
-                  // onCheckedChange={() => updateSoundEffects(!soundEffects)}
-                  id="sound-effects"
+                  checked={statsForNerds}
+                  onCheckedChange={() => updateStatsForNerds(!soundEffects)}
+                  id="stats_for_nerds"
                 />
               </div>
             </div>
