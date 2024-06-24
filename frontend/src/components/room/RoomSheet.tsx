@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { Button } from "../ui/button";
 import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
@@ -15,12 +15,21 @@ import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import AppDialog from "../global/AppDialog";
 import { RoomInvite } from "./RoomInvite";
+import { RoomParticipant } from "../../../../shared/types";
 
 type RoomSheetProps = {
   room: any;
 };
 
 export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredParticipants = room.participants.filter(
+    (participant: RoomParticipant) =>
+      participant.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      participant.displayName?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="w-full h-full flex flex-col px-3.5 font-logo">
       <SheetHeader className="flex flex-row w-full mb-8 items-center space-y-0 justify-between">
@@ -55,6 +64,8 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
         <div className="flex bg-deep px-4 py-0 rounded-lg gap-2 items-center border-2 border-appPrimary">
           <AiOutlineSearch size={20} />
           <Input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-transparent py-0 outline-none border-none focus:outline-none placeholder:text-white/70"
             placeholder="Search Participants"
           />
@@ -68,7 +79,7 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
           </span>
         </span>
         <div className="flex flex-col items-start gap-1.5 w-full">
-          {room.participants.map((p: any) => (
+          {filteredParticipants.map((p: RoomParticipant) => (
             <RoomParticipantProfile key={p.userId} roomParticipant={p} />
           ))}
         </div>

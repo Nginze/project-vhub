@@ -6,6 +6,8 @@ import { Direction } from "grid-engine";
 import Player from "./Player";
 import Item from "../items/Item";
 import { ItemType } from "../types";
+import Whiteboard from "../items/WhiteBoard";
+import Computer from "../items/Computer";
 
 export default class PlayerSelector extends GameObjects.Rectangle {
   public selectedItem = null as Item | null;
@@ -22,7 +24,6 @@ export default class PlayerSelector extends GameObjects.Rectangle {
       true,
       "selector"
     ) as GameObjects.Rectangle;
-
   }
 
   update() {
@@ -76,6 +77,9 @@ export default class PlayerSelector extends GameObjects.Rectangle {
 
   registerPhysics() {
     const scene = this.scene as RoomScene;
+    const {
+      user: { userId },
+    } = useRendererStore.getState();
 
     scene.physics.add.collider(
       this.selector,
@@ -110,14 +114,37 @@ export default class PlayerSelector extends GameObjects.Rectangle {
             );
             break;
           case ItemType.COMPUTER:
-            selectedItem.setDialogBox(
-              "<span>Press <kbd class='key'>R</kbd> to interact</span>"
-            );
+            const computer = selectedItem as Computer;
+            if (computer.currentUsers.size === 0) {
+              computer.setDialogBox(
+                "<span>Press <kbd class='key'>R</kbd> to use computer</span>"
+              );
+            } else {
+              selectedItem.setDialogBox(
+                "<span>Press <kbd class='key'>R</kbd> to join</span>"
+              );
+            }
             break;
           case ItemType.WHITEBOARD:
-            selectedItem.setDialogBox(
-              "<span>Press <kbd class='key'>R</kbd> to interact</span>"
-            );
+            const whiteboard = selectedItem as Whiteboard;
+            if (whiteboard.currentUsers.size === 0) {
+              console.log(
+                "whiteboard.currentUsers.size",
+                whiteboard.currentUsers.size
+              );
+              whiteboard.setDialogBox(
+                "<span>Press <kbd class='key'>R</kbd> to use whiteboard</span>"
+              );
+            } else {
+              console.log(
+                "whiteboard.currentUsers.size",
+                whiteboard.currentUsers.size
+              );
+              whiteboard.setDialogBox(
+                "<span>Press <kbd class='key'>R</kbd> to join</span>"
+              );
+            }
+
             break;
           case ItemType.VENDINGMACHINE:
             selectedItem.setDialogBox(

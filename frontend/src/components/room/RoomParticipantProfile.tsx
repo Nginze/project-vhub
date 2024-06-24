@@ -9,14 +9,17 @@ import {
 import {
   BiExit,
   BiMicrophoneOff,
+  BiSolidMicrophone,
   BiSolidMicrophoneOff,
   BiSolidVideo,
   BiSolidVideoOff,
 } from "react-icons/bi";
 import { EllipsisVertical } from "lucide-react";
+import { RoomParticipant } from "../../../../shared/types";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type RoomParticipantProfileProps = {
-  roomParticipant: any;
+  roomParticipant: RoomParticipant;
 };
 
 export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
@@ -42,12 +45,40 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
       </div>
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-1">
-          <button className="hover:bg-light p-1.5 rounded-lg">
-            <BiSolidMicrophoneOff className="opacity-70" size={20} />
-          </button>
-          <button className="hover:bg-light p-1.5 rounded-lg">
-            <BiSolidVideoOff size={20} className="opacity-70" />
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="hover:bg-light p-1.5 rounded-lg">
+                {roomParticipant.isMuted ? (
+                  <BiSolidMicrophoneOff
+                    className="opacity-70 text-appRed"
+                    size={20}
+                  />
+                ) : (
+                  <BiSolidMicrophone className="opacity-70" size={20} />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent className="">
+              {roomParticipant.isMuted ? "Muted" : "Unmuted"}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="hover:bg-light p-1.5 rounded-lg">
+                {roomParticipant.isVideoOff ? (
+                  <BiSolidVideoOff
+                    className="opacity-70 text-appRed"
+                    size={20}
+                  />
+                ) : (
+                  <BiSolidVideo className="opacity-70 " size={20} />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {roomParticipant.isVideoOff ? "Video Off" : "Video On"}
+            </TooltipContent>
+          </Tooltip>
         </div>
         <div className="flex items-center">
           <button className="hover:bg-light p-1.5 rounded-lg">

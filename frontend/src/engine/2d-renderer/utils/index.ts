@@ -117,6 +117,41 @@ export const registerRendererEvents = (scene: RoomScene) => {
     const player = scene.players.get(participantId);
     player?.playReaction(reaction);
   });
+
+  conn.on("item-update", (d: any) => {
+    const {
+      computerStore,
+      whiteboardStore,
+      user: { userId },
+    } = useRendererStore.getState();
+
+    console.log("[LOGGING]: item-update", d);
+
+    if (d.userId == userId) {
+      return;
+    }
+
+    switch (d.itemType) {
+      case ItemType.COMPUTER:
+        const computer = computerStore[d.itemId];
+        if (d.action == "join") {
+          computer.addCurrentUser(d.userId);
+        } else {
+          computer.removeCurrentUser(d.userId);
+        }
+        break;
+      case ItemType.WHITEBOARD:
+        const whiteboard = whiteboardStore[d.itemId];
+        console.log("whiteboard", whiteboard);
+        if (d.action == "join") {
+          whiteboard.addCurrentUser(d.userId);
+        } else {
+          whiteboard.removeCurrentUser(d.userId);
+        }
+        break;
+    }
+    //handle the item update here
+  });
 };
 
 export const registerSprites = (scene: RoomScene) => {

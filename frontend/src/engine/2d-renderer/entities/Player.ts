@@ -241,8 +241,9 @@ export default class Player extends Phaser.GameObjects.Container {
         case ItemType.WHITEBOARD:
           const whiteboard = selectedItem as Whiteboard;
           console.log("whiteboard clicked");
+          whiteboard.addCurrentUser(userId as string);
+          whiteboard.broadcastUpdate(userId as string, "join");
           set((state) => ({ roomIframeOpen: !state.roomIframeOpen }));
-          // whiteboard.openDialog(network);
           break;
         case ItemType.VENDINGMACHINE:
           // hacky and hard-coded, but leaving it as is for now

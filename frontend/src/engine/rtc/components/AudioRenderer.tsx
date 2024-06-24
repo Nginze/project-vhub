@@ -52,7 +52,7 @@ export const AudioRenderer: React.FC<AudioRenderProps> = () => {
               setAudioRef(k, a);
               audioRefs.current.push([k, a]);
 
-              a.muted = true;
+              a.muted = false;
               // a.srcObject = new MediaStream([consumer.track]);
 
               a.play().catch((err) => {

@@ -149,8 +149,8 @@ router.get(
 
       await client.query(
         `
-          INSERT INTO room_status (room_id, user_id, is_speaker, is_mod, raised_hand, is_muted, pos_x, pos_y, skin, dir)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          INSERT INTO room_status (room_id, user_id, is_speaker, is_mod, raised_hand, is_muted, pos_x, pos_y, skin, dir, is_video_off)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         `,
         [
           roomId,
@@ -164,6 +164,7 @@ router.get(
           posData ? posData.posY : 3,
           generateSkinName(),
           posData ? posData.dir : "down",
+          true,
         ]
       );
 
@@ -208,7 +209,7 @@ router.get(
 
       const { rows } = await pool.query(
         `
-          SELECT u.user_id, is_speaker, is_mod, raised_hand, is_muted, pos_x, pos_y, skin, dir
+          SELECT u.user_id, is_speaker, is_mod, raised_hand, is_muted,is_video_off, pos_x, pos_y, skin, dir
           FROM room_status rs
           INNER JOIN user_data u ON rs.user_id = u.user_id
           WHERE rs.user_id = $1 AND room_id = $2
@@ -294,6 +295,33 @@ router.put(
       );
 
       res.status(200).json({ msg: "Permissions updated" });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/rooms/live",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { rows: rooms } = await pool.query(
+        `
+          SELECT *,
+          (SELECT user_name FROM user_data WHERE user_id = room.creator_id) as creator,
+          (
+            SELECT json_agg(json_build_object('user_name', ud.user_name, 'avatar_url', ud.avatar_url))
+            FROM user_data ud
+            WHERE ud.current_room_id = room.room_id
+          ) AS participants,
+          ARRAY(SELECT category FROM room_category WHERE room_id = room.room_id) AS categories
+          FROM room
+          WHERE ended = false
+          LIMIT 5
+        `
+      );
+
+      return res.status(200).json(parseCamel(rooms));
     } catch (error) {
       next(error);
     }

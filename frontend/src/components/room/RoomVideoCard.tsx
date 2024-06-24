@@ -10,6 +10,8 @@ import {
 import { HiMicrophone } from "react-icons/hi2";
 
 type RoomVideoCardProps = {
+  userName: string;
+  indicatorOn: boolean;
   stream: MediaStream | null;
   audioMuted: boolean;
   videoMuted: boolean;
@@ -46,6 +48,8 @@ const VideoComponent = ({ onRef, ...props }: VideoProps) => {
 };
 
 export const RoomVideoCard: React.FC<RoomVideoCardProps> = ({
+  userName,
+  indicatorOn,
   stream,
   audioMuted,
   videoMuted,
@@ -63,7 +67,8 @@ export const RoomVideoCard: React.FC<RoomVideoCardProps> = ({
     <div
       className={cn(
         "bg-light rounded-xl relative overflow-hidden w-52 h-[8rem]",
-        className
+        className,
+        indicatorOn ? "border-2 border-appGreen" : ""
       )}
     >
       {stream && stream.active ? (
@@ -78,22 +83,22 @@ export const RoomVideoCard: React.FC<RoomVideoCardProps> = ({
           <p>Connecting...</p>
         </div>
       )}
-      <div className="absolute top-2 left-2.5 opacity-80  font-logo text-[12px]">
-        You
+      <div className="absolute top-2 left-2.5 opacity-80  font-bold text-[10px] truncate">
+        {userName}
       </div>
       <div className="flex items-center gap-2 p-1 absolute bottom-1">
         <span>
           {audioMuted ? (
-            <BiSolidMicrophoneOff size={16} />
+            <BiSolidMicrophoneOff size={16} className="text-appRed" />
           ) : (
-            <BiSolidMicrophone size={16} />
+            <></>
           )}
         </span>
         <span>
           {videoMuted ? (
-            <BiSolidVideoOff size={16} />
+            <BiSolidVideoOff size={16} className="text-appRed" />
           ) : (
-            <BiSolidVideo size={16} />
+            <></>
           )}
         </span>
       </div>

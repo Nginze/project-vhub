@@ -98,6 +98,18 @@ export interface Room {
   mapKey: string;
 }
 
+export type RoomParticipant = UserData & {
+  indicatorOn: boolean | undefined;
+  isMod: boolean;
+  isSpeaker: boolean;
+  isMuted: boolean;
+  isVideoOff: boolean;
+  raisedHand: boolean;
+  followers: number;
+  following: number;
+  followsMe: boolean;
+};
+
 export interface RoomBan {
   roomId: string;
   userId: string;
@@ -118,6 +130,7 @@ export interface RoomStatus {
   raisedHand?: boolean | null;
   createdAt?: (Date | string) | null;
   isMuted?: boolean | null;
+  isVideoOff?: boolean | null;
   posX: number;
   posY: number;
   dir: string;

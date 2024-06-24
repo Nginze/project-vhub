@@ -7,6 +7,7 @@ import {
   CreateSpaceSelectTypeForm,
 } from "@/components/home/HomeCreateSpace";
 import { RoomInvite } from "@/components/room/RoomInvite";
+import { RoomLeaveConfirmation } from "@/components/room/RoomLeaveConfirmation";
 import { NextPage } from "next";
 import React from "react";
 
@@ -30,6 +31,9 @@ const Playground: NextPage = () => {
         <button>Open Copy Link </button>
       </AppDialog>
 
+      <AppDialog width={"sm:max-w-[450px]"} content={<RoomLeaveConfirmation />}>
+        <button>Leave Room</button>
+      </AppDialog>
     </main>
   );
 };

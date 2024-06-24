@@ -1,3 +1,4 @@
+import { RoomScene } from "../scenes/RoomScene";
 import { ItemType } from "../types";
 import Item from "./Item";
 
@@ -58,5 +59,18 @@ export default class Computer extends Item {
 
   openDialog(playerId: string) {
     //handle logic later
+  }
+
+  broadcastUpdate(userId: string, action: string) {
+    const scene = this.scene as RoomScene;
+    const roomId = scene.room.roomId;
+
+    scene.conn.emit("item-update", {
+      userId,
+      roomId,
+      itemType: this.itemType,
+      itemId: this.id,
+      action: action,
+    });
   }
 }

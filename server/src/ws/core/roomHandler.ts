@@ -1,14 +1,13 @@
 import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { WS_MESSAGE } from "../../../../shared/events/index";
 import { logger } from "../../config/logger";
-import {
-  broadcastExcludeSender,
-  getUser,
-  getUserPosition,
-  setUserPosition,
-} from "../helpers";
-import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
-import { redis } from "../../config/redis";
+import { broadcastExcludeSender, getUser, setUserPosition } from "../helpers";
+
+type SocketDTO = {
+  roomId: string;
+  userId?: string;
+};
 
 const init = (
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
@@ -36,6 +35,7 @@ const init = (
               ...user,
               isSpeaker: isAutospeaker || isCreator,
               isMuted: true,
+              isVideoOff: true,
               raisedHand: false,
               isMod: isCreator,
               posX,
@@ -74,12 +74,24 @@ const init = (
       //@ts-ignore
       participantId: d.userId,
     });
+
+    io.to(d.roomId).emit("active-speaker-change", {
+      userId: d.userId,
+      roomId: d.roomId,
+      status: "speaking",
+    });
   });
 
   socket.on(WS_MESSAGE.WS_USER_STOPPED_SPEAKING, (d) => {
     io.to(d.roomId).emit(WS_MESSAGE.WS_USER_STOPPED_SPEAKING, {
       //@ts-ignore
       participantId: d.userId,
+    });
+
+    io.to(d.roomId).emit("active-speaker-change", {
+      userId: d.userId,
+      roomId: d.roomId,
+      status: "stopped",
     });
   });
 
@@ -89,6 +101,42 @@ const init = (
       participantId: d.userId,
       reaction: d.reaction,
     });
+  });
+
+  socket.on("action:mute", ({ userId, roomId }: SocketDTO) => {
+    try {
+      io.to(roomId).emit("mute-changed", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on("action:unmute", ({ userId, roomId }: SocketDTO) => {
+    try {
+      io.to(roomId).emit("mute-changed", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on("action:videoOn", ({ userId, roomId }: SocketDTO) => {
+    try {
+      io.to(roomId).emit("video-changed", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on("action:videoOff", ({ userId, roomId }: SocketDTO) => {
+    try {
+      io.to(roomId).emit("video-changed", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on("item-update", (d) => {
+    io.to(d.roomId).emit("item-update", d);
   });
 };
 

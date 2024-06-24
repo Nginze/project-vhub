@@ -1,6 +1,8 @@
 import React from "react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
 
 type Props = {
   children: React.ReactNode;
@@ -10,6 +12,7 @@ type Props = {
   setOpenChange?: any;
   width?: any;
   className?: string;
+  onClose?: () => void;
 };
 
 const AppDialog = ({
@@ -19,6 +22,7 @@ const AppDialog = ({
   open,
   setOpenChange,
   width,
+  onClose,
   className,
 }: Props) => {
   return (
@@ -27,6 +31,13 @@ const AppDialog = ({
       <DialogContent
         className={cn("sm:max-w-[800px] bg-void", width, className)}
       >
+        <DialogPrimitive.Close
+          onClick={onClose}
+          className="absolute z-50 right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
         {content}
       </DialogContent>
     </Dialog>

@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useRendererStore } from "../store/RendererStore";
 
 type TwoDViewComponentProps = {};
 
 export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
-  const gameRef = useRef<any>(null);
+  const gameRef = useRef<Phaser.Game | null>(null);
   const [gameMounted, setGameMounted] = useState(false);
+  const { ready } = useRendererStore();
 
   useEffect(() => {
     async function initPhaser() {

@@ -1,3 +1,5 @@
+import { RoomScene } from "../scenes/RoomScene";
+import { useRendererStore } from "../store/RendererStore";
 import { ItemType } from "../types";
 import Item from "./Item";
 
@@ -40,17 +42,35 @@ export default class Whiteboard extends Item {
     if (!this.currentUsers || this.currentUsers.has(userId)) return;
     this.currentUsers.add(userId);
     this.updateStatus();
+    const { user, room, set } = useRendererStore.getState();
+    if (user.userId == userId) {
+      set({
+        currentWhiteboardSrc: `https://wbo.ophir.dev/boards/${room.roomId}_${this.id}`,
+      });
+      useRendererStore.getState().set({ currentWhiteboardId: this.id });
+    }
   }
 
   removeCurrentUser(userId: string) {
     if (!this.currentUsers || !this.currentUsers.has(userId)) return;
     this.currentUsers.delete(userId);
     this.updateStatus();
+    const { user, set } = useRendererStore.getState();
+    if (user.userId == userId) {
+      useRendererStore.getState().set({ currentWhiteboardId: "" });
+    }
   }
 
-  //   openDialog(network: Network) {
-  //     if (!this.id) return;
-  //     store.dispatch(openWhiteboardDialog(this.id));
-  //     network.connectToWhiteboard(this.id);
-  //   }
+  broadcastUpdate(userId: string, action: string) {
+    const scene = this.scene as RoomScene;
+    const roomId = scene.room.roomId;
+
+    scene.conn.emit("item-update", {
+      userId,
+      roomId,
+      itemType: this.itemType,
+      itemId: this.id,
+      action: action,
+    });
+  }
 }

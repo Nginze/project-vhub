@@ -12,8 +12,8 @@ export const Logo: React.FC<LogoProps> = ({
   withText = true,
   size = "md",
 }) => {
-  const WIDTH = size == "sm" ? 20 : size == "md" ? 40 : 50;
-  const HEIGHT = size == "sm" ? 20 : size == "md" ? 40 : 50;
+  const WIDTH = size == "sm" ? 20 : size == "md" ? 30 : 50;
+  const HEIGHT = size == "sm" ? 20 : size == "md" ? 30 : 50;
 
   return (
     <div className="flex items-center gap-2 cursor-pointer">

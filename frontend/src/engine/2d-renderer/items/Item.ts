@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { ItemType } from "../types";
+import { RoomScene } from "../scenes/RoomScene";
 export default class Item extends Phaser.Physics.Arcade.Sprite {
   private dialogBox!: Phaser.GameObjects.Container;
   private statusBox!: Phaser.GameObjects.Container;
@@ -140,4 +141,5 @@ export default class Item extends Phaser.Physics.Arcade.Sprite {
   clearStatusBox() {
     this.statusBox.removeAll(true);
   }
+
 }

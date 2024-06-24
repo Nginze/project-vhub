@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { UserData } from "../../../shared/types/index";
 import { api } from "../api";
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
+import { useRouter } from "next/router";
 
 type Props = {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ export const userContext = createContext<UContext>({} as UContext);
 
 const UserProvider = ({ children }: Props) => {
   const { set } = useRendererStore();
+  const router = useRouter();
 
   const getUser = async () => {
     const { data: user } = await api.get("/auth/me");

@@ -36,7 +36,7 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
           onClick={onClick}
           className="flex items-center overflow-hidden bg-light  rounded-full px-0 py-0 w-auto h-auto hover:text-white shadow-appShadow"
         >
-          {isOn ? (
+          {isOn == true ? (
             <div
               className={cn(
                 `p-2 text-black hover:text-white`,
@@ -75,7 +75,7 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
                   visible={true}
                 />
               ) : (
-                iconOn
+                iconOff
               )}
             </div>
           )}

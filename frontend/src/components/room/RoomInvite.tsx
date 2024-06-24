@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { Link, Share, Share2 } from "lucide-react";
+import { CheckCheck, Link, Share, Share2 } from "lucide-react";
+import { useRouter } from "next/router";
 
 type RoomInviteProps = {};
 
 export const RoomInvite: React.FC<RoomInviteProps> = () => {
+  const router = useRouter();
+  const { id: roomId } = router.query;
+  const [buttonText, setButtonText] = useState("Copy Link");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  const handleCopyLink = async () => {
+    const link = `http://localhost:3000/room/${roomId}`;
+    await navigator.clipboard.writeText(link);
+    setButtonText("Link Copied!");
+    setButtonDisabled(true);
+    setTimeout(() => {
+      setButtonText("Copy Link");
+      setButtonDisabled(false);
+    }, 1000);
+  };
+
   return (
     <div className="font-logo">
       <div className="w-full flex flex-col items-start gap-2 mb-5">
@@ -16,9 +33,13 @@ export const RoomInvite: React.FC<RoomInviteProps> = () => {
         </span>
       </div>
       <div>
-        <Button className="flex items-center gap-2 py-6 w-full bg-appGreen">
-          <Link />
-          Copy Link
+        <Button
+          onClick={handleCopyLink}
+          disabled={buttonDisabled}
+          className="flex items-center gap-2 py-6 w-full bg-appGreen"
+        >
+          {buttonDisabled ? <CheckCheck /> : <Link />}
+          {buttonText}
         </Button>
       </div>
     </div>

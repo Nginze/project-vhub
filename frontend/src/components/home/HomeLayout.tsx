@@ -12,8 +12,8 @@ export const HomeLayout: React.FC<HomeLayoutProps> = ({
   content,
 }) => {
   return (
-    <main className="w-11/12 h-auto flex flex-col gap-10">
-      <div className="py-5">{navbar}</div>
+    <main className="w-11/12 h-screen flex flex-col gap-6">
+      <div>{navbar}</div>
       <div>{optionbar}</div>
       <div>{content}</div>
     </main>

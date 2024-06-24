@@ -1,32 +1,33 @@
+import AppDialog from "@/components/global/AppDialog";
 import { AppIFrame } from "@/components/global/AppIFrame";
+import { Logo } from "@/components/global/Logo";
 import { MyContextMenu } from "@/components/global/MyContextMenu";
+import { RoomControls } from "@/components/room/RoomControls";
+import { RoomLayout } from "@/components/room/RoomLayout";
 import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { TwoDViewComponent } from "@/engine/2d-renderer/components/2DViewComponent";
-import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
+import { WS_MESSAGE } from "@/engine/2d-renderer/events";
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
+import { useRoomStore } from "@/global-store/RoomStore";
+import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef } from "react";
-import { RoomLayout } from "@/components/room/RoomLayout";
-import { RoomControls } from "@/components/room/RoomControls";
-import { WS_MESSAGE } from "@/engine/2d-renderer/events";
-import { RoomSheet } from "@/components/room/RoomSheet";
-import { useRoomStore } from "@/global-store/RoomStore";
-import AppDialog from "@/components/global/AppDialog";
-import { RoomVideoOverlay } from "@/components/room/RoomVideoOverlay";
-import { Logo } from "@/components/global/Logo";
-import { read } from "fs";
+import { Room } from "../../../../shared/types";
+import Whiteboard from "@/engine/2d-renderer/items/WhiteBoard";
 
 type RoomProps = {};
 
-const Room: React.FC<RoomProps> = () => {
+const RoomPage: React.FC<RoomProps> = () => {
   const router = useRouter();
   const hasJoined = useRef<boolean>(false);
 
   const { id: roomId } = router.query;
   const { conn } = useContext(WebSocketContext);
   const { user } = useContext(userContext);
-  const { set, ready } = useRendererStore();
+  const { set, ready, whiteboardStore, currentWhiteboardId } =
+    useRendererStore();
+  const { set: setRoom } = useRoomStore();
   const { roomIframeOpen } = useRoomStore();
 
   const { room, roomLoading, roomStatus, roomStatusLoading } = useLoadRoomMeta(
@@ -58,27 +59,40 @@ const Room: React.FC<RoomProps> = () => {
         isCreator: room!.creatorId === user.userId,
       },
     });
-  }, [roomId, room, conn]);
+  }, [roomId, ready, conn]);
 
   if (room == "404") {
     return <div>Room not found</div>;
   }
 
-  return room && ready ? (
+  return room && roomStatus ? (
     <>
       <RoomLayout
+        room={room}
         canvas={
           <div className="flex flex-row items-center">
             <TwoDViewComponent />
           </div>
         }
-        footer={<RoomControls room={room} />}
+        footer={
+          <RoomControls
+            myRoomStatus={roomStatus}
+            roomId={(room as Room).roomId as string}
+            conn={conn!}
+            room={room}
+          />
+        }
       />
-
       <AppDialog
         open={roomIframeOpen}
+        onClose={() => {
+          setRoom({ roomIframeOpen: false });
+          const whiteboard = whiteboardStore[currentWhiteboardId] as Whiteboard;
+          whiteboard.removeCurrentUser(user.userId as string);
+          whiteboard.broadcastUpdate(user.userId as string, "leave");
+        }}
         width={"sm:max-w-full"}
-        content={<AppIFrame />}
+        content={<AppIFrame room={room} />}
         className="px-0 rounded-none bg-black h-screen"
       >
         <></>
@@ -96,7 +110,6 @@ const Room: React.FC<RoomProps> = () => {
           Policy, and confirm you are 18 and over
         </div>
       </div>
-
       {/* <div className="hidden">
         <TwoDViewComponent />
       </div> */}
@@ -104,4 +117,4 @@ const Room: React.FC<RoomProps> = () => {
   );
 };
 
-export default Room;
+export default RoomPage;

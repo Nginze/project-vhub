@@ -11,8 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import App from "@/pages/_app";
+import AppDialog from "../global/AppDialog";
+import { useCreateFormStore } from "@/global-store/CreateFormStore";
+import { cn } from "@/lib/utils";
 
 export const CreateSpaceForm: React.FC = () => {
+  const { set, createFormOpen } = useCreateFormStore();
   return (
     <div className="flex flex-col gap-5">
       <div className="w-full flex flex-col gap-6">
@@ -53,7 +58,16 @@ export const CreateSpaceForm: React.FC = () => {
       </div>
 
       <div className="w-full flex justify-between items-center">
-        <Button className="bg-dark/80 gap-2 flex items-center px-4 py-6 rounded-lg">
+        <Button
+          onClick={() => {
+            set({
+              createFormOpen: false,
+              selectFormOpen: true,
+              selectedMapTemplate: false,
+            });
+          }}
+          className="bg-dark/80 gap-2 flex items-center px-4 py-6 rounded-lg"
+        >
           Back
         </Button>
         <Button className="bg-appGreen gap-2 flex items-center px-4 py-6 rounded-lg">
@@ -74,8 +88,9 @@ export const CreateSpaceOnboardForm: React.FC = () => {
 };
 
 export const CreateSpaceSelectMapTemplateForm: React.FC = () => {
+  const { set, createFormOpen } = useCreateFormStore();
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className={cn("w-full flex flex-col gap-6")}>
       <div className="flex items-end gap-7">
         <div className="flex flex-col items-start w-3/5 gap-4">
           <span className="text-[24px]">Choose your space template</span>
@@ -91,20 +106,20 @@ export const CreateSpaceSelectMapTemplateForm: React.FC = () => {
         </div>
         <div className="w-2/5">
           <span className="text-[18px]">Map Theme</span>
-          <div className="grid grid-cols-2 gap-3 mt-3">
-            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-2xl">
+          <div className="grid grid-cols-2 gap-2 mt-3">
+            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-xl">
               <span>🚀</span>
               <span>Startup</span>
             </Button>
-            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-2xl">
+            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-xl">
               <span>🌳</span>
               <span>Outdoors</span>
             </Button>
-            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-2xl">
+            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-xl">
               <span>🏢</span>
               <span>Sleek</span>
             </Button>
-            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-2xl">
+            <Button className="flex flex-col items-center py-10 w-full flex-grow bg-dark/80 rounded-xl">
               <span>😊</span>
               <span>Cozy</span>
             </Button>
@@ -112,12 +127,30 @@ export const CreateSpaceSelectMapTemplateForm: React.FC = () => {
         </div>
       </div>
       <div className="w-full flex justify-between items-center">
-        <Button className="bg-dark/80 gap-2 flex items-center px-4 py-6 rounded-lg">
+        <Button
+          onClick={() =>
+            set({
+              createFormOpen: false,
+              selectFormOpen: false,
+              selectedMapTemplate: false,
+            })
+          }
+          className="bg-dark/80 gap-2 flex items-center px-4 py-6 rounded-lg"
+        >
           Back
         </Button>
-        <Button className="bg-appGreen gap-2 flex items-center px-4 py-6 rounded-lg">
+        <Button
+          onClick={() =>
+            set({
+              createFormOpen: true,
+              selectFormOpen: false,
+              selectedMapTemplate: true,
+            })
+          }
+          className="bg-appGreen gap-2 flex items-center px-4 py-6 rounded-lg"
+        >
           <CircleCheckBig size={15} />
-          Confirm Selection
+          Confirm
         </Button>
       </div>
     </div>

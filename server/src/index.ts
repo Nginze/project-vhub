@@ -48,7 +48,7 @@ app.use("/room", roomRoutes);
 app.use("/worker", workerRoutes);
 
 app.use(notFoundHandler);
-app.use(errorHandler);
+// app.use(errorHandler);
 
 io.use(wrap(session(sessionMiddleware)));
 io.use(wrap(passport.initialize()));

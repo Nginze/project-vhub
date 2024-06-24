@@ -2,7 +2,8 @@ import { useProducerStore } from "../store/ProducerStore";
 import { useMediaStore } from "../store/MediaStore";
 
 export const sendMedia = async () => {
-  const { sendTransport, set, mic } = useMediaStore.getState();
+  const { sendTransport, set, mic, vid } = useMediaStore.getState();
+
   if (!sendTransport) {
     console.log("no sendTransport in sendVoice");
     return;
@@ -27,6 +28,8 @@ export const sendMedia = async () => {
     console.log("[LOGGING]: Creating audio producer...");
     const track = audioTracks[0];
 
+    track.enabled = false;
+
     useProducerStore.getState().add(
       await sendTransport.produce({
         track,
@@ -40,6 +43,8 @@ export const sendMedia = async () => {
   if (videoTracks.length) {
     console.log("[LOGGING]: Creating video producer...");
     const track = videoTracks[0];
+
+    track.enabled = false;
 
     useProducerStore.getState().add(
       await sendTransport.produce({

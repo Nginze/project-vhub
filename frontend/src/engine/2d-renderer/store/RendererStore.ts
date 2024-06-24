@@ -17,7 +17,8 @@ export const useRendererStore = create(
       room: {} as Room & {
         participants: any[];
       },
-
+      currentWhiteboardId: "",
+      currentComputerId: "",
       ready: false,
       roomStatus: {} as RoomStatus,
       scene: null as unknown as RoomScene,
