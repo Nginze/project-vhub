@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Logo } from "../global/Logo";
 import { Button } from "../ui/button";
 import {
@@ -34,6 +34,7 @@ type HomeNavProps = {};
 export const HomeNav: React.FC<HomeNavProps> = () => {
   const { set, selectFormOpen, createFormOpen } = useCreateFormStore();
   const { user } = useContext(userContext);
+  const [sheetOpen, setSheetOpen] = useState(false);
   return (
     <>
       <div className="flex justify-between items-center border-b border-light/50 pb-5">
@@ -70,7 +71,11 @@ export const HomeNav: React.FC<HomeNavProps> = () => {
               <span className="font-semibold">Create Space</span>
             </Button>
           </AppDialog>
-          <AppSheet content={<HomeProfileSheet />}>
+          <AppSheet
+            open={sheetOpen}
+            onOpenChange={setSheetOpen}
+            content={<HomeProfileSheet setSheetOpen={setSheetOpen} />}
+          >
             <Avatar className="w-8 h-8 cursor-pointer ring ">
               <AvatarImage
                 className="object-cover"

@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { Button } from "../ui/button";
 import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
@@ -9,7 +15,7 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { Activity, GitBranch, Loader, Pencil, Wrench, X } from "lucide-react";
+import { Activity, GitBranch, Pencil, Wrench, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import AppDialog from "../global/AppDialog";
@@ -33,10 +39,17 @@ import { HomeCharacterCustomizer } from "./HomeCharacterCustomizer";
 import { useSettingStore, getMicrophones } from "@/global-store/SettingStore";
 import { useToast } from "../ui/use-toast";
 import { LiveAudioVisualizer } from "react-audio-visualize";
+import { api } from "@/api";
+import Loader from "../global/Loader";
+import FileUploader from "../global/AppFileUploader";
 
-type HomeProfileSheetProps = {};
+type HomeProfileSheetProps = {
+  setSheetOpen: Dispatch<SetStateAction<boolean>>;
+};
 
-export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
+export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
+  setSheetOpen,
+}) => {
   const { user, userLoading } = useContext(userContext);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const [newBio, setBio] = useState(user.bio);
@@ -62,6 +75,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
     updateSoundEffects,
     updateSpatialAudio,
     updateStatsForNerds,
+    set: setSettings,
   } = useSettingStore();
 
   const handleBioChange = async () => {
@@ -81,13 +95,34 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
     await handleBioChange();
   };
 
+  const handleLogout = async () => {
+    try {
+      setLogoutLoading(true);
+      await api.post("/auth/logout");
+      await router.push("/auth/login");
+    } catch (error) {
+      console.log(error);
+      // toast.error("logout failed");
+      setLogoutLoading(false);
+    }
+  };
+
   const handleAudioTest = async () => {
+    if (!selectedMicDevice) {
+      return toast({
+        description: "Please select a microphone",
+        type: "error",
+      });
+    }
+
     if (isTestingAudio && mediaStream) {
       mediaStream.getTracks().forEach((track) => track.stop());
       setMediaStream(null);
       setMediaRecorder(null);
     } else {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: { exact: selectedMicDevice } },
+      });
       const recorder = new MediaRecorder(stream);
       setMediaStream(stream);
       setMediaRecorder(recorder);
@@ -121,8 +156,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
                 <AppDialog
                   open={uploaderOpen}
                   setOpenChange={setUploaderOpen}
-                  content={<></>}
-                  //   content={<FileUploader setUploaderOpen={setUploaderOpen} />}
+                  content={<FileUploader setUploaderOpen={setUploaderOpen} />}
                 >
                   <div className="hidden group-hover:flex absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 justify-center items-center rounded-3xl">
                     <BiImageAdd size={30} color="white" opacity={40} />
@@ -232,7 +266,12 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
                   className="text-black"
                 /> */}
 
-                <Select>
+                <Select
+                  onValueChange={(v) => {
+                    setSettings({ selectedMicDevice: v });
+                  }}
+                  defaultValue={selectedMicDevice}
+                >
                   <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-light hover:bg-deep border-none ring-0 outline-none focus:outline-none focus:ring-0">
                     <SelectValue
                       placeholder={
@@ -359,15 +398,16 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({}) => {
           <div className="w-full mt-16 space-y-3">
             <Button
               disabled={logoutLoading}
-              // onClick={handleLogout}
+              onClick={async () => {
+                await handleLogout();
+              }}
               className="w-full rounded-sm flex-1 py-1 px-2 bg-appRed"
             >
-              {/* {logoutLoading ? <Loader alt={true} width={15} /> : "Logout"} */}
-              Logout
+              {logoutLoading ? <Loader alt={true} width={15} /> : "Logout"}
             </Button>
 
             <Button
-              // onClick={() => setSheetOpen(false)}
+              onClick={() => setSheetOpen(false)}
               className="rounded-sm flex-1 py-1 px-2 bg-light w-full shadow-app_shadow"
             >
               Close

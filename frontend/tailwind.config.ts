@@ -7,6 +7,8 @@ const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
+import { withUt } from "uploadthing/tw";
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -28,7 +30,7 @@ const config = {
       fontFamily: {
         body: ["Inter"],
         logo: ["Lexend Deca"],
-        sans: ["DM Sans"]
+        sans: ["DM Sans"],
       },
       boxShadow: {
         appShadow:
@@ -141,4 +143,7 @@ function addVariablesForColors({ addBase, theme }: any) {
   });
 }
 
-export default config;
+export default withUt({
+  ...config,
+  content: ["./src/**/*.{ts,tsx,mdx}"],
+});
