@@ -8,6 +8,7 @@ import { router as authRoutes } from "./api/authRoutes";
 import { router as indexRoutes } from "./api/indexRoutes";
 import { router as roomRoutes } from "./api/roomRoutes";
 import { router as workerRoutes } from "./api/workerRoutes";
+import { router as meRoutes } from "./api/meRoutes";
 
 import { Server } from "socket.io";
 import { logger } from "./config/logger";
@@ -46,6 +47,7 @@ app.use("/", indexRoutes);
 app.use("/auth", authRoutes);
 app.use("/room", roomRoutes);
 app.use("/worker", workerRoutes);
+app.use("/me", meRoutes);
 
 app.use(notFoundHandler);
 // app.use(errorHandler);

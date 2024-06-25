@@ -154,6 +154,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                   alt=""
                 />
                 <AppDialog
+                  width={"sm:max-w-[450px]"}
                   open={uploaderOpen}
                   setOpenChange={setUploaderOpen}
                   content={<FileUploader setUploaderOpen={setUploaderOpen} />}
@@ -329,7 +330,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       >
                         Cancel Test
                       </button>
-                      <div>
+                      <div className="flex flex-col items-center">
                         {mediaRecorder && (
                           <LiveAudioVisualizer
                             mediaRecorder={mediaRecorder}
@@ -338,6 +339,10 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                             height={50}
                           />
                         )}
+
+                        <span className="text-[13px] opacity-30 mt-2">
+                          Check for playing waveforms
+                        </span>
                       </div>
                     </div>
                   )}
