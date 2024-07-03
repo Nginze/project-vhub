@@ -1,10 +1,11 @@
 import React from "react";
 import { Button } from "../ui/button";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Plus } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { Room } from "../../../../shared/types";
 import { AppDropDownMenu } from "../global/AppDropDownMenu";
 import { HomePreviewCardMenu } from "./HomePreviewCardMenu";
+import { useRouter } from "next/router";
 
 type HomeRoomPreviewCardProps = {
   room: Room;
@@ -13,27 +14,40 @@ type HomeRoomPreviewCardProps = {
 export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
   room,
 }) => {
+  const router = useRouter();
   return (
-    <div className="flex flex-col group">
-      <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl group-hover:rounded-none cursor-pointer">
+    <div
+      onClick={() => {
+        router.push(
+          `/room/setup?roomId=${room.roomId}&&roomName=${room.roomName}`
+        );
+      }}
+      className="flex overflow-hidden flex-col group shadow-appShadow relative bg-deep/50 rounded-xl card car"
+    >
+      <div className="bg-black bg-opacity-30 cursor-pointer  w-full h-full absolute overlay">
+        <button className="absolute p-3 button rounded-xl bg-deep right-2 top-2">
+          <Plus size={16} />
+        </button>
+      </div>
+      <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl rounded-b-none  cursor-pointer">
         <img
           src="/mock_prev.jpg"
-          className="w-full h-full object-cover rounded-xl group-hover:rounded-none"
+          className="w-full h-full object-cover rounded-xl rounded-b-none"
         />
       </div>
-      <div className="flex flex-col items-start gap-2 py-4">
-        <div className="w-full flex items-center justify-between">
+      <div className="flex flex-col items-start gap-2 py-4 px-3 cursor-pointer ">
+        <div className="w-full flex items-center justify-between z-30">
           <span className="font-semibold text-[16px]">{room.roomName}</span>
           <AppDropDownMenu content={<HomePreviewCardMenu />}>
-            <button className="hover:bg-light rounded-xl p-3">
+            <button className="hover:bg-light rounded-xl p-3 button">
               <EllipsisVertical size={15} />
             </button>
           </AppDropDownMenu>
         </div>
-        <span className="text-[13px] opacity-70 overflow-hidden overflow-ellipsis h-10 w-full">
+        <span className="text-[13px] opacity-90 font-sans overflow-hidden overflow-ellipsis h-10 w-full">
           {room.roomDesc}
         </span>
-        <span className="text-[13px] opacity-70 flex items-center gap-2">
+        <span className="text-[13px] opacity-90 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-appGreen"></div>
           66,560 online
         </span>

@@ -1,3 +1,8 @@
+import { api } from "@/api";
+import { userContext } from "@/context/UserContext";
+import { getMicrophones, useSettingStore } from "@/global-store/SettingStore";
+import { GitBranch } from "lucide-react";
+import { useRouter } from "next/router";
 import React, {
   Dispatch,
   SetStateAction,
@@ -5,25 +10,15 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { Button } from "../ui/button";
-import { useLoadRoomMeta } from "@/hooks/useLoadRoomMeta";
-import { SheetHeader } from "../ui/sheet";
-import {
-  AiOutlineUsergroupAdd,
-  AiOutlineCalendar,
-  AiOutlineSearch,
-} from "react-icons/ai";
-import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { Activity, GitBranch, Pencil, Wrench, X } from "lucide-react";
-import { Input } from "../ui/input";
-import { Separator } from "../ui/separator";
+import { LiveAudioVisualizer } from "react-audio-visualize";
+import { BiImageAdd, BiMicrophone, BiMicrophoneOff } from "react-icons/bi";
+import { BsWrench } from "react-icons/bs";
+import { PiDressFill } from "react-icons/pi";
 import AppDialog from "../global/AppDialog";
-import { RoomParticipant } from "../../../../shared/types";
-import { useRouter } from "next/router";
-import { userContext } from "@/context/UserContext";
+import FileUploader from "../global/AppFileUploader";
+import Loader from "../global/Loader";
 import { Logo } from "../global/Logo";
-import { Switch } from "../ui/switch";
+import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
@@ -31,23 +26,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { BiImageAdd, BiMicrophone } from "react-icons/bi";
-import { BsPersonPlus, BsSoundwave, BsWrench } from "react-icons/bs";
-import { FaPerson } from "react-icons/fa6";
-import { PiDressFill } from "react-icons/pi";
+import { Separator } from "../ui/separator";
+import { Switch } from "../ui/switch";
 import { HomeCharacterCustomizer } from "./HomeCharacterCustomizer";
-import { useSettingStore, getMicrophones } from "@/global-store/SettingStore";
-import { useToast } from "../ui/use-toast";
-import { LiveAudioVisualizer } from "react-audio-visualize";
-import { api } from "@/api";
-import Loader from "../global/Loader";
-import FileUploader from "../global/AppFileUploader";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 type HomeProfileSheetProps = {
   setSheetOpen: Dispatch<SetStateAction<boolean>>;
+  dontShowXtra?: boolean;
 };
 
 export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
+  dontShowXtra,
   setSheetOpen,
 }) => {
   const { user, userLoading } = useContext(userContext);
@@ -63,7 +54,6 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
   const [blob, setBlob] = useState<Blob>();
   const router = useRouter();
-  const { toast } = useToast();
 
   const {
     spatialAudio,
@@ -78,16 +68,36 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
     set: setSettings,
   } = useSettingStore();
 
+  const profileMutation = useMutation({
+    mutationFn: async () => {
+      try {
+        await api.patch("/me/update/bio", {
+          bio: newBio,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
   const handleBioChange = async () => {
     if (user.bio !== newBio) {
-      toast({
-        description: "Syncing Bio",
-      });
-      // await toast.promise(profileMutation.mutateAsync(), {
-      //   loading: "Syncing Bio",
-      //   success: "Bio Updated",
-      //   error: "Sync failed",
-      // });
+      await toast.promise(
+        profileMutation.mutateAsync(),
+        {
+          loading: "Syncing Bio",
+          success: "Bio Updated",
+          error: "Sync failed",
+        },
+        {
+          style: {
+            borderRadius: "100px",
+            background: "#333",
+            padding: "14px",
+            color: "#fff",
+          },
+        }
+      );
     }
   };
 
@@ -102,16 +112,21 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
       await router.push("/auth/login");
     } catch (error) {
       console.log(error);
-      // toast.error("logout failed");
+      toast.error("logout failed");
       setLogoutLoading(false);
     }
   };
 
   const handleAudioTest = async () => {
     if (!selectedMicDevice) {
-      return toast({
-        description: "Please select a microphone",
-        type: "error",
+      return toast("No Mic Selected", {
+        icon: <BiMicrophoneOff size={19} />,
+        style: {
+          borderRadius: "100px",
+          background: "#333",
+          padding: "14px",
+          color: "#fff",
+        },
       });
     }
 
@@ -140,9 +155,13 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
 
   return (
     <>
-      <div className="mt-5 relative h-full px-3 font-sans">
+      <div className="mt-5 w-full relative px-3 font-sans">
         <div
-          style={{ height: "calc(100vh - 6rem)" }}
+          style={{
+            height: !dontShowXtra
+              ? "calc(100vh - 6rem)"
+              : "calc(100vh - 15rem)",
+          }}
           className="chat w-full sheet overflow-auto"
         >
           <div className="space-y-3 mb-5">
@@ -223,51 +242,13 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                 />
               )}
             </div>
-            {/* <div className="mb-6 text-[14px] opacity-70">
-              Joined April 25th 2023
-            </div> */}
           </div>
-          {/* <div className="mb-6 space-y-3">
-          <span className="font-semibold text-[15px] flex items-start flex-col">
-            <span className="flex items-center flex-col">Topics ✨</span>
-
-            <span className="text-[13px] opacity-30">
-              Topics influence what you see on your feed
-            </span>
-          </span>
-          <div className="chat w-full  space-y-1 max-h-[120px] overflow-y-auto">
-            {categories.slice(1, 5).map(category => (
-              <Toggle
-                className="bg-app_bg_deep mr-1 rounded-sm shadow-app_shadow"
-                key={category}
-                value={category}
-                aria-label="Toggle italic"
-              >
-                <span>{category}</span>
-              </Toggle>
-            ))}
-          </div>
-        </div> */}
-
           <div className="space-y-3">
             <span className="font-semibold text-[15px] flex items-center">
               ⚙ Preferences{/* <Settings2Icon className="ml-2" /> */}
             </span>
             <div className="flex flex-col items-start space-y-3">
               <div className="w-full flex flex-col items-start space-y-2">
-                {/* <Select
-                  options={microphones}
-                  isSearchable={true}
-                  isDisabled={router.pathname.includes("/room")}
-                  value={micAsObj}
-                  defaultValue={microphones[0]}
-                  onChange={(newMic) => {
-                    console.log(newMic);
-                    updateSelectedMic(newMic);
-                  }}
-                  className="text-black"
-                /> */}
-
                 <Select
                   onValueChange={(v) => {
                     setSettings({ selectedMicDevice: v });
@@ -401,36 +382,41 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
               </div>
             </div>
           </div>
-          <div className="w-full mt-16 space-y-3">
-            <Button
-              disabled={logoutLoading}
-              onClick={async () => {
-                await handleLogout();
-              }}
-              className="w-full rounded-sm flex-1 py-1 px-2 bg-appRed"
-            >
-              {logoutLoading ? <Loader alt={true} width={15} /> : "Logout"}
-            </Button>
 
-            <Button
-              onClick={() => setSheetOpen(false)}
-              className="rounded-sm flex-1 py-1 px-2 bg-light w-full shadow-app_shadow"
-            >
-              Close
-            </Button>
-          </div>
+          {!dontShowXtra && (
+            <div className="w-full mt-16 space-y-3">
+              <Button
+                disabled={logoutLoading}
+                onClick={async () => {
+                  await handleLogout();
+                }}
+                className="w-full rounded-sm flex-1 py-1 px-2 bg-appRed"
+              >
+                {logoutLoading ? <Loader alt={true} width={15} /> : "Logout"}
+              </Button>
+
+              <Button
+                onClick={() => setSheetOpen(false)}
+                className="rounded-sm flex-1 py-1 px-2 bg-light w-full shadow-app_shadow"
+              >
+                Close
+              </Button>
+            </div>
+          )}
         </div>
 
-        <div className="py-4 px-2 absolute bottom-0 w-full flex items-center justify-between">
+        <div className="py-4 absolute bottom-0 w-full flex items-center justify-between">
           <h1 className="font-logo text-[1.5rem] leading-[2.3rem] opacity-10 flex items-center relative">
             <Logo withLogo={false} size="sm" />
           </h1>
-          <div className="flex items-center space-x-10  leading=[2.3em]">
-            <a className="text-sm flex items-center text-[#424549] ">
-              <GitBranch className="mr-1" color="#424549" size={17} />
-              v.1.0.0
-            </a>
-          </div>
+          {!dontShowXtra && (
+            <div className="flex items-center space-x-10  leading=[2.3em]">
+              <a className="text-sm flex items-center text-[#424549] ">
+                <GitBranch className="mr-1" color="#424549" size={17} />
+                v.1.0.0
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </>

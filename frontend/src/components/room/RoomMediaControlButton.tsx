@@ -54,7 +54,11 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {isLoading ? <Loader width={22} alt /> : iconOn}
+              {isLoading ? (
+                <Loader width={22} strokeColor="#f04747" alt />
+              ) : (
+                iconOn
+              )}
             </div>
           ) : (
             <div
@@ -65,7 +69,11 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {isLoading ? <Loader alt width={22} /> : iconOff}
+              {isLoading ? (
+                <Loader alt width={22} strokeColor="#f04747" />
+              ) : (
+                iconOff
+              )}
             </div>
           )}
         </Button>

@@ -18,6 +18,7 @@ export const useRendererStore = create(
         participants: any[];
       },
       currentWhiteboardId: "",
+      game: null as Phaser.Game | null,
       currentComputerId: "",
       ready: false,
       roomStatus: {} as RoomStatus,

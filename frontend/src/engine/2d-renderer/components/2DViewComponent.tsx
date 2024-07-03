@@ -6,7 +6,7 @@ type TwoDViewComponentProps = {};
 export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
   const gameRef = useRef<Phaser.Game | null>(null);
   const [gameMounted, setGameMounted] = useState(false);
-  const { ready } = useRendererStore();
+  const { ready, set } = useRendererStore();
 
   useEffect(() => {
     async function initPhaser() {
@@ -25,6 +25,11 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
           autoCenter: Phaser.Scale.CENTER_BOTH,
           height: window.innerHeight,
           autoRound: true,
+        },
+        fps: {
+          target: 30,
+          limit: 30,
+          forceSetTimeOut: true,
         },
 
         physics: {
@@ -54,6 +59,7 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
     // force phaser to initialize only once
     if (!gameMounted) {
       initPhaser().then(() => {
+        set({ game: gameRef.current });
         setGameMounted(true);
       });
     }

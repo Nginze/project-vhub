@@ -35,14 +35,14 @@ export const SetupButton: React.FC<SetupButtonProps> = ({
         <Button
           onClick={onClick}
           className={cn(
-            "flex items-center overflow-hidden  bg-[#4f29387e]  rounded-full px-0 py-0 w-auto h-auto hover:text-white",
-            isOn && "bg-[#1e4b54]"
+            "flex items-center overflow-hidden  bg-appRed/30  rounded-full px-0 py-0 w-auto h-auto hover:text-white",
+            isOn && "bg-appGreen/30"
           )}
         >
           {isOn ? (
             <div
               className={cn(
-                `p-3 text-black hover:text-white`,
+                `p-1 text-black hover:text-white`,
                 bgColor && bgColor,
                 hoverColor && hoverColor,
                 textColor && textColor
@@ -50,8 +50,8 @@ export const SetupButton: React.FC<SetupButtonProps> = ({
             >
               {isLoading ? (
                 <RotatingLines
-                  width={"16"}
-                  animationDuration="0.75"
+                  width={"20"}
+                  animationDuration="5"
                   strokeColor="grey"
                   strokeWidth="5"
                   visible={true}
@@ -63,7 +63,7 @@ export const SetupButton: React.FC<SetupButtonProps> = ({
           ) : (
             <div
               className={cn(
-                `p-3 text-black hover:text-white`,
+                `p-1 text-black hover:text-white`,
                 bgColor && bgColor,
                 hoverColor && hoverColor,
                 textColor && textColor
@@ -71,8 +71,9 @@ export const SetupButton: React.FC<SetupButtonProps> = ({
             >
               {isLoading ? (
                 <RotatingLines
-                  width={"16"}
-                  animationDuration="0.75"
+                  width={"20"}
+                  animationDuration="5"
+
                   strokeColor="grey"
                   strokeWidth="5"
                   visible={true}

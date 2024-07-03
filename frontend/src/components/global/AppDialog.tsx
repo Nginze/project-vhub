@@ -11,6 +11,7 @@ type Props = {
   open?: boolean;
   setOpenChange?: any;
   width?: any;
+  height?: string;
   className?: string;
   onClose?: () => void;
 };
@@ -22,6 +23,7 @@ const AppDialog = ({
   open,
   setOpenChange,
   width,
+  height,
   onClose,
   className,
 }: Props) => {
@@ -29,7 +31,7 @@ const AppDialog = ({
     <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={setOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
-        className={cn("sm:max-w-[800px] bg-void", width, className)}
+        className={cn("sm:max-w-[800px] bg-void", width, height, className)}
       >
         <DialogPrimitive.Close
           onClick={onClose}

@@ -116,7 +116,7 @@ export const HomeCharacterCustomizer: React.FC<
         </div>
         <div className="w-full flex-grow p-6 overflow-y-hidden">
           <Tabs defaultValue="Base" className="w-full ">
-            <TabsList className="grid w-full grid-cols-4 bg-deep text-white border border-light ">
+            <TabsList className="grid w-full grid-cols-4 bg-deep  text-white border border-light ">
               <TabsTrigger value="Base">Base</TabsTrigger>
               <TabsTrigger value="Eyes">Eyes</TabsTrigger>
               <TabsTrigger value="Outfits">Outfits</TabsTrigger>
@@ -129,7 +129,7 @@ export const HomeCharacterCustomizer: React.FC<
                     setHairstyleSelected(!hairstyleSelected);
                   }}
                   aria-label="Hairstyles"
-                  className="flex rounded-3xl px-1.5 py-0 h-7 items-center gap-1"
+                  className="flex rounded-lg active:bg-deep  hover:text-white hover:bg-light px-3 py-3  items-center gap-1"
                 >
                   <AiOutlineScissor size={16} className="opacity-70" />{" "}
                   <span className="opacity-70 font-semibold text-sm">Hair</span>{" "}
@@ -142,7 +142,7 @@ export const HomeCharacterCustomizer: React.FC<
                     className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
                       (base === "" && hairstyleSelected === false) ||
                       (hair === "" && hairstyleSelected === true)
-                        ? "outline outline-2 outline-offset-2 outline-appGreen"
+                        ? "border-2 border-appGreen"
                         : ""
                     }`}
                     onClick={() => {
@@ -161,9 +161,7 @@ export const HomeCharacterCustomizer: React.FC<
                       <button
                         key={index}
                         className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                          base === url
-                            ? "outline outline-2 outline-offset-2 outline-appGreen"
-                            : ""
+                          base === url ? "border-2 border-appGreen" : ""
                         }`}
                         onClick={() => handleSelection(setBase)(url)}
                       >
@@ -178,9 +176,7 @@ export const HomeCharacterCustomizer: React.FC<
                       <button
                         key={index}
                         className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                          hair === url
-                            ? "outline outline-2 outline-offset-2 outline-appGreen"
-                            : ""
+                          hair === url ? "border-2 border-appGreen" : ""
                         }`}
                         onClick={() => handleSelection(setHair)(url)}
                       >
@@ -199,9 +195,7 @@ export const HomeCharacterCustomizer: React.FC<
                 {
                   <button
                     className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                      eyes === ""
-                        ? "outline outline-2 outline-offset-2 outline-appGreen"
-                        : ""
+                      eyes === "" ? "border-2 border-appGreen" : ""
                     }`}
                     onClick={() => handleSelection(setEyes)("")}
                   >
@@ -212,9 +206,7 @@ export const HomeCharacterCustomizer: React.FC<
                   <button
                     key={index}
                     className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                      eyes === url
-                        ? "outline outline-2 outline-offset-2 outline-appGreen"
-                        : ""
+                      eyes === url ? "border-2 border-appGreen" : ""
                     }`}
                     onClick={() => handleSelection(setEyes)(url)}
                   >
@@ -228,9 +220,7 @@ export const HomeCharacterCustomizer: React.FC<
                 {
                   <button
                     className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                      clothing === ""
-                        ? "outline outline-2 outline-offset-2 outline-appGreen"
-                        : ""
+                      clothing === "" ? "border-2 border-appGreen" : ""
                     }`}
                     onClick={() => handleSelection(setClothing)("")}
                   >
@@ -241,9 +231,7 @@ export const HomeCharacterCustomizer: React.FC<
                   <button
                     key={index}
                     className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                      clothing === url
-                        ? "outline outline-2 outline-offset-2 outline-appGreen"
-                        : ""
+                      clothing === url ? "border-2 border-appGreen" : ""
                     }`}
                     onClick={() => handleSelection(setClothing)(url)}
                   >
@@ -257,9 +245,7 @@ export const HomeCharacterCustomizer: React.FC<
                 {
                   <button
                     className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                      accessories === ""
-                        ? "outline outline-2 outline-offset-2 outline-appGreen"
-                        : ""
+                      accessories === "" ? "border-2 border-appGreen" : ""
                     }`}
                     onClick={() => handleSelection(setAccessories)("")}
                   >
@@ -270,9 +256,7 @@ export const HomeCharacterCustomizer: React.FC<
                   <button
                     key={index}
                     className={`w-auto rounded-lg h-16 bg-light flex items-center justify-center ${
-                      accessories === url
-                        ? "outline outline-2 outline-offset-2 outline-appGreen"
-                        : ""
+                      accessories === url ? "border-2 border-appGreen" : ""
                     }`}
                     onClick={() => handleSelection(setAccessories)(url)}
                   >

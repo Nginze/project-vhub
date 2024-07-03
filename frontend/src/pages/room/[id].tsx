@@ -17,6 +17,7 @@ import { Room } from "../../../../shared/types";
 import Whiteboard from "@/engine/2d-renderer/items/WhiteBoard";
 import Loader from "@/components/global/Loader";
 import { Grid } from "@/components/ui/grid";
+import { useMediaStore } from "@/engine/rtc/store/MediaStore";
 
 type RoomProps = {};
 
@@ -31,6 +32,7 @@ const RoomPage: React.FC<RoomProps> = () => {
     useRendererStore();
   const { set: setRoom } = useRoomStore();
   const { roomIframeOpen } = useRoomStore();
+  const { localStream } = useMediaStore();
 
   const { room, roomLoading, roomStatus, roomStatusLoading } = useLoadRoomMeta(
     roomId as string,
@@ -49,7 +51,7 @@ const RoomPage: React.FC<RoomProps> = () => {
   }, [roomId, room, roomStatus]);
 
   useEffect(() => {
-    if (!conn || !roomId || !room || hasJoined.current) {
+    if (!conn || !roomId || !room || !roomStatus || hasJoined.current) {
       return;
     }
 
@@ -61,13 +63,29 @@ const RoomPage: React.FC<RoomProps> = () => {
         isCreator: room!.creatorId === user.userId,
       },
     });
-  }, [roomId, ready, conn]);
+
+    // for regular room join
+    conn.emit(WS_MESSAGE.WS_ROOM_JOIN, {
+      roomId: roomId,
+      roomMeta: {
+        isAutospeaker: room.autoSpeaker,
+        isCreator: room.creatorId === user.userId,
+        posX: roomStatus.posX,
+        posY: roomStatus.posY,
+        dir: roomStatus.dir,
+        skin: roomStatus.skin,
+      },
+    });
+
+    console.log("Emit to server");
+    hasJoined.current = true;
+  }, [roomId, roomStatus, conn]);
 
   if (room == "404") {
     return <div>Room not found</div>;
   }
 
-  return room && roomStatus ? (
+  return room && roomStatus && localStream && localStream.active ? (
     <>
       <RoomLayout
         room={room}

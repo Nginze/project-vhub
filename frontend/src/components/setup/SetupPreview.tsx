@@ -77,40 +77,45 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
   }
 
   return (
-    <div className="w-full flex flex-col items-center gap-5">
-      <div className="w-full border border-[#7289DA] relative overflow-hidden h-[200px] rounded-md bg-black/20 gap-3 text-center flex flex-col items-center justify-center">
-        {!audioStream && (
-          <span className={cn("text-sm opacity-40 z-10")}>You are muted</span>
-        )}
-        {!videoStream && (
-          <span className="text-sm opacity-40 z-10">Your camera is Off</span>
-        )}
+    <div className="w-full flex flex-col items-center gap-3">
+      <div className="w-full border border-light relative overflow-hidden h-[200px] rounded-2xl bg-black/60 cursor-pointer gap-3 text-center flex flex-col items-center justify-center">
+        <div className="flex flex-col w-full h-full absolute space-y-2 items-center justify-center ">
+          {!audioStream && (
+            <span className={cn("text-sm opacity-40 z-10")}>You are muted</span>
+          )}
+          {!videoStream && (
+            <span className="text-sm opacity-40 z-10 ">Your camera is Off</span>
+          )}
+        </div>
         {videoStream && (
           <video className="w-full " ref={videoRef} autoPlay muted />
         )}
         {audioStream && <audio ref={audioRef} autoPlay />}
-      </div>
-      <div className="flex items-center gap-5">
-        <SetupButton
-          isOn={audioStream !== null}
-          isLoading={audioLoading}
-          onClick={testAudio}
-          iconOn={
-            <BiSolidMicrophone size={19} color="#43b581" fill="#43b581" />
-          }
-          iconOff={
-            <BiSolidMicrophoneOff size={19} color="#ff3049" fill="#ff3049" />
-          }
-          tooltipText="Micorphone"
-        />
-        <SetupButton
-          isOn={videoStream !== null}
-          isLoading={videoLoading}
-          onClick={testVideo}
-          iconOn={<BiSolidVideo size={19} color="#43b581" fill="#43b581" />}
-          iconOff={<BiSolidVideoOff size={19} color="#ff3049" fill="#ff3049" />}
-          tooltipText="Camera"
-        />
+
+        <div className="flex items-center gap-2 absolute bottom-2 left-2">
+          <SetupButton
+            isOn={audioStream !== null}
+            isLoading={audioLoading}
+            onClick={testAudio}
+            iconOn={
+              <BiSolidMicrophone size={19} color="#43b581" fill="#43b581" />
+            }
+            iconOff={
+              <BiSolidMicrophoneOff size={19} color="#ff3049" fill="#ff3049" />
+            }
+            tooltipText="Micorphone"
+          />
+          <SetupButton
+            isOn={videoStream !== null}
+            isLoading={videoLoading}
+            onClick={testVideo}
+            iconOn={<BiSolidVideo size={19} color="#43b581" fill="#43b581" />}
+            iconOff={
+              <BiSolidVideoOff size={19} color="#ff3049" fill="#ff3049" />
+            }
+            tooltipText="Camera"
+          />
+        </div>
       </div>
     </div>
   );

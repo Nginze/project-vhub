@@ -10,7 +10,7 @@ import { Tooltip } from "@radix-ui/react-tooltip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import WebrtcApp from "@/engine/rtc/WebRTCApp";
 import SoundEffectPlayer from "@/engine/global/SoundFxPlayer";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
               </MainWsHandler>
               <SoundEffectPlayer />
               <WebrtcApp />
-              <Toaster />
+              <Toaster position="bottom-center" reverseOrder={false} />
             </WebSocketProvider>
           </UserProvider>
           <ReactQueryDevtools initialIsOpen={false} />

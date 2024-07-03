@@ -25,6 +25,41 @@
   z-index: 1;
 }
 
+.button {
+  transition: all 0.2s ease-in-out 0s;
+  transform: scale(1);
+}
+
+/* Define the state of the button on hover */
+.button:hover {
+  transform: scale(1.04);
+}
+
+/* Define the state of the button when active */
+.button:active {
+  transform: scale(0.96);
+}
+
+.overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Define the state of the overlay when the card is hovered over */
+.card:hover .overlay {
+  opacity: 1;
+}
+
+.card {
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(0);
+}
+
+/* Define the state of the card on hover */
+.card:hover {
+  transform: translateY(-8px);
+}
+
 .slide-enter {
   transform: translateX(100%);
 }

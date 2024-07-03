@@ -1,6 +1,7 @@
 import React from "react";
 import { RoomVideoOverlay } from "./RoomVideoOverlay";
 import { Room } from "../../../../shared/types";
+import { RoomPerfStats } from "./RoomPerfStats";
 
 type RoomLayoutProps = {
   room: Room;
@@ -22,6 +23,7 @@ export const RoomLayout: React.FC<RoomLayoutProps> = ({
             <div className="absolute bottom-0 w-full">{footer}</div>
           </div>
         </main>
+        <RoomPerfStats/>
       </RoomVideoOverlay>
     </main>
   );

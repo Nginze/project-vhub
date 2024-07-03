@@ -46,17 +46,17 @@ export class RoomScene extends Phaser.Scene {
   public earshotDistance = 8;
 
   create() {
-    this.conn.emit(WS_MESSAGE.WS_ROOM_JOIN, {
-      roomId: this.room.roomId,
-      roomMeta: {
-        isAutospeaker: this.room.autoSpeaker,
-        isCreator: this.room.creatorId === this.user.userId,
-        posX: this.roomStatus.posX,
-        posY: this.roomStatus.posY,
-        dir: this.roomStatus.dir,
-        skin: this.roomStatus.skin,
-      },
-    });
+    // this.conn.emit(WS_MESSAGE.WS_ROOM_JOIN, {
+    //   roomId: this.room.roomId,
+    //   roomMeta: {
+    //     isAutospeaker: this.room.autoSpeaker,
+    //     isCreator: this.room.creatorId === this.user.userId,
+    //     posX: this.roomStatus.posX,
+    //     posY: this.roomStatus.posY,
+    //     dir: this.roomStatus.dir,
+    //     skin: this.roomStatus.skin,
+    //   },
+    // });
 
     this.postFxPlugin = this.plugins.get("rexoutlinepipelineplugin");
 

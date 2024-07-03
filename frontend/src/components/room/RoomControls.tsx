@@ -31,6 +31,7 @@ import { WebSocketContext } from "@/context/WsContext";
 import { Socket } from "socket.io-client";
 import AppDialog from "../global/AppDialog";
 import { RoomLeaveConfirmation } from "./RoomLeaveConfirmation";
+import { HomeProfileSheet } from "../home/HomeProfileSheet";
 
 type RoomControlsProps = {
   room: Room;
@@ -141,118 +142,129 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
           <Logo withLogo={false} size="sm" />
           <span className="text-[9px] opacity-60">{roomId}</span>
         </div>
-        <div className="flex items-center gap-5 px-5 py-3 bg-void rounded-full shadow-appShadow relative">
-          <div className="flex items-center gap-3">
-            <div>
-              <Avatar className="w-8 h-8 cursor-pointer">
-                <AvatarImage
-                  className="object-cover"
-                  src={user.avatarUrl as string}
-                />
-                <AvatarFallback />
-              </Avatar>
-            </div>
-            <div className="flex flex-col items-start">
-              <span className="text-[12px] opacity-70 font-body font-semibold">
-                {user.userName}
-              </span>
-              <span className="text-[11px] opacity-70">Online</span>
-            </div>
-          </div>
-          <Separator
-            orientation="vertical"
-            className="h-10 opacity-30  bg-veryLight"
-          />
-          <RoomMediaControlButton
-            isOn={!myRoomStatus.isMuted as boolean}
-            isLoading={!localStream || !localStream.active}
-            iconOn={
-              <BiSolidMicrophone size={22} color="#43b581" fill="#43b581" />
-            }
-            iconOff={
-              <BiSolidMicrophoneOff size={22} color="#f04747" fill="#f04747" />
-            }
-            tooltipText="Microphone"
-            onClick={async () => {
-              await handleMute();
-            }}
-          />
-          <RoomMediaControlButton
-            isOn={!myRoomStatus.isVideoOff as boolean}
-            isLoading={!localStream || !localStream.active}
-            iconOn={<BiSolidVideo size={22} color="#43b581" fill="#43b581" />}
-            iconOff={
-              <BiSolidVideoOff size={22} color="#f04747" fill="#f04747" />
-            }
-            tooltipText="Camera"
-            onClick={async () => {
-              await handleVideo();
-            }}
-          />
-          <div>
-            <RoomReactionsButton
-              tooltipText="Emote"
-              iconOff={<VscReactions size={24} color="white" />}
-              iconOn={
-                <div className="flex items-center">
-                  <VscReactions size={24} color="white" />
-                  <ReactionBarSelector
-                    onSelect={(reaction: string) => {
-                      console.log(reaction);
-                      set((s) => ({
-                        //@ts-ignore
-                        currentReaction: _REACTION_MAP[reaction],
-                      }));
-                      scene.players.get(user.userId as string)?.showReaction();
-                    }}
-                    reactions={REACTIONS_MAP}
-                    iconSize={15}
-                    style={{
-                      background: "transparent",
-                      boxShadow: "none",
-                      padding: "0",
-                      margin: "0",
-                      boxSizing: "border-box",
-                    }}
-                  />
-                </div>
-              }
-            />
-          </div>
-
-          <AppSheet
-            content={<RoomSheet room={room} />}
-            title={<span>People</span>}
-          >
-            <RoomMediaControlButton
-              useDefaultBg
-              onClick={() => {
-                set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
-              }}
-              tooltipText="Settings"
-              iconOn={<FaPeopleGroup size={24} color="white" />}
-              iconOff={<FaPeopleGroup size={24} color="white" />}
-            />
-          </AppSheet>
-
-          {/* <RoomMediaControlButton
-            tooltipText="Settings"
-            iconOn={<IoIosSettings size={24} color="white" />}
-            iconOff={<IoIosSettings size={24} color="white" />}
-          /> */}
-
+        <div className="flex items-center pr-5 p-0.5 bg-void overflow-hidden rounded-full shadow-appShadow relative">
           <AppDialog
             width={"sm:max-w-[450px]"}
-            content={<RoomLeaveConfirmation />}
+            height={"sm:max-h-auto h-auto"}
+            content={
+              <HomeProfileSheet setSheetOpen={() => {}} dontShowXtra={true} />
+            }
           >
-            <RoomMediaControlButton
-              tooltipText="Leave"
-              iconOn={<BiExit size={24} />}
-              iconOff={<BiExit size={24} />}
-              bgColor="bg-appRed/90"
-              textColor="text-white"
-            />
+            <div className="flex items-center gap-3 px-5 py-3 hover:bg-dark active:bg-deep cursor-pointer">
+              <div>
+                <Avatar className="w-8 h-8 cursor-pointer">
+                  <AvatarImage
+                    className="object-cover"
+                    src={user.avatarUrl as string}
+                  />
+                  <AvatarFallback />
+                </Avatar>
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="text-[12px] opacity-70 font-body font-semibold">
+                  {user.userName}
+                </span>
+                <span className="text-[11px] opacity-70">Online</span>
+              </div>
+            </div>
           </AppDialog>
+          <Separator
+            orientation="vertical"
+            className="h-10 opacity-30 mr-5 bg-veryLight"
+          />
+          <div className="flex items-center p-0.5 gap-5 bg-void overflow-hidden rounded-full">
+            <RoomMediaControlButton
+              isOn={!myRoomStatus.isMuted as boolean}
+              isLoading={!localStream || !localStream.active}
+              iconOn={
+                <BiSolidMicrophone size={22} color="#43b581" fill="#43b581" />
+              }
+              iconOff={
+                <BiSolidMicrophoneOff
+                  size={22}
+                  color="#f04747"
+                  fill="#f04747"
+                />
+              }
+              tooltipText="Microphone"
+              onClick={async () => {
+                await handleMute();
+              }}
+            />
+            <RoomMediaControlButton
+              isOn={!myRoomStatus.isVideoOff as boolean}
+              isLoading={!localStream || !localStream.active}
+              iconOn={<BiSolidVideo size={22} color="#43b581" fill="#43b581" />}
+              iconOff={
+                <BiSolidVideoOff size={22} color="#f04747" fill="#f04747" />
+              }
+              tooltipText="Camera"
+              onClick={async () => {
+                await handleVideo();
+              }}
+            />
+            <div>
+              <RoomReactionsButton
+                tooltipText="Emote"
+                iconOff={<VscReactions size={24} color="white" />}
+                iconOn={
+                  <div className="flex items-center">
+                    <VscReactions size={24} color="white" />
+                    <ReactionBarSelector
+                      
+                      onSelect={(reaction: string) => {
+                        console.log(reaction);
+                        set((s) => ({
+                          //@ts-ignore
+                          currentReaction: _REACTION_MAP[reaction],
+                        }));
+                        scene.players
+                          .get(user.userId as string)
+                          ?.showReaction();
+                      }}
+                      reactions={REACTIONS_MAP}
+                      iconSize={17}
+                      style={{
+                        background: "transparent",
+                        boxShadow: "none",
+                        padding: "0",
+                        margin: "0",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                  </div>
+                }
+              />
+            </div>
+
+            <AppSheet
+              content={<RoomSheet room={room} />}
+              title={<span>People</span>}
+            >
+              <RoomMediaControlButton
+                useDefaultBg
+                onClick={() => {
+                  set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
+                }}
+                tooltipText="Settings"
+                iconOn={<FaPeopleGroup size={24} color="white" />}
+                iconOff={<FaPeopleGroup size={24} color="white" />}
+              />
+            </AppSheet>
+
+            <AppDialog
+              width={"sm:max-w-[450px]"}
+              content={<RoomLeaveConfirmation />}
+            >
+              <RoomMediaControlButton
+                tooltipText="Leave"
+                iconOn={<BiExit size={24} />}
+                iconOff={<BiExit size={24} />}
+                bgColor="bg-appRed/30"
+                textColor="text-white"
+              />
+            </AppDialog>
+          </div>
         </div>
         <div className="w-10"></div>
       </div>

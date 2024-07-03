@@ -48,6 +48,10 @@ const init = (
     }
   });
 
+  socket.on("ping", () => {
+    socket.emit("pong");
+  });
+
   socket.on(WS_MESSAGE.WS_DISCONNECT, () => {
     try {
       logger.debug(`Peer disconnected, (${socket.id}) `);

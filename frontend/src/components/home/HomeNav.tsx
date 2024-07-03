@@ -51,7 +51,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
             <button
               onClick={() => setActiveTab("events")}
               className={cn(
-                "flex gap-2 items-center px-5 p-3 hover:bg-light active:bg-deep rounded-xl font-semibold transform transition-transform duration-150",
+                "flex gap-2 items-center px-5 button p-3 hover:bg-light active:bg-deep rounded-xl font-semibold transform transition-transform duration-150",
                 activeTab === "events" && `bg-light active:scale-90`
               )}
             >
@@ -61,7 +61,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
             <button
               onClick={() => setActiveTab("spaces")}
               className={cn(
-                "flex gap-2 items-center px-5 p-3 hover:bg-light active:bg-deep rounded-xl font-semibold transform transition-transform duration-150",
+                "flex gap-2 items-center px-5 p-3 button hover:bg-light active:bg-deep rounded-xl font-semibold transform transition-transform duration-150",
                 activeTab === "spaces" && `bg-light active:scale-90`
               )}
             >
@@ -72,7 +72,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
         </div>
         <div className="flex items-center gap-10">
           <AppDropDownMenu content={<HomeResourceMenu />}>
-            <button className="flex gap-2 items-center px-5 p-3 active:bg-deep hover:bg-light rounded-xl font-semibold">
+            <button className="flex gap-2 items-center button px-5 p-3 active:bg-deep hover:bg-light rounded-xl font-semibold">
               <HiQuestionMarkCircle size={26} />
               Resources
             </button>
@@ -84,7 +84,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
           >
             <Button
               onClick={() => set({ selectFormOpen: true })}
-              className="flex items-center gap-2 py-6 bg-appGreen rounded-xl"
+              className="flex items-center gap-2 py-6 button bg-appGreen rounded-xl"
             >
               <PlusCircle size={18} />
               <span className="font-semibold">Create Space</span>

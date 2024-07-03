@@ -31,13 +31,10 @@ export const HomeGrid: React.FC<HomeGridProps> = ({
       <HomeRoomPreviewCardSkeleton />
     </div>
   ) : (
-    <div className="grid grid-cols-5 gap-10 overflow-y-auto">
+    <div className="grid grid-cols-5 gap-10 overflow-visible">
       {rooms &&
         rooms
-          .filter(
-            (room: any) => room.roomDesc.includes(filterQuery)
-            // room.roomname.includes(filterQuery)
-          )
+          .filter((room: any) => room.roomDesc.includes(filterQuery))
           .map((room: any) => (
             <HomeRoomPreviewCard key={room.id} room={room} />
           ))}
