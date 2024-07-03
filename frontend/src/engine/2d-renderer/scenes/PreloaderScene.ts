@@ -1,5 +1,6 @@
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { Room } from "../../../../../shared/types";
+import { use } from "matter";
 
 export class Preloader extends Phaser.Scene {
   constructor() {
@@ -55,6 +56,8 @@ export class Preloader extends Phaser.Scene {
   }
 
   loadCharacters32() {
+    const { user } = useRendererStore.getState();
+
     this.load.spritesheet("adam", "/assets/sprites/characters/new32/adam.png", {
       frameWidth: 32,
       frameHeight: 48,

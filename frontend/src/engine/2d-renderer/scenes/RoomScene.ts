@@ -13,7 +13,7 @@ import {
 
 import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
 import { clamp } from "framer-motion";
-import { registerSpriteAnimations32 } from "../anims";
+import { registerCustomSpriteAnimations } from "../anims";
 import Player from "../entities/Player";
 import { WS_MESSAGE } from "../events";
 import { NavKeys, ProxmityActionType } from "../types";
@@ -69,7 +69,6 @@ export class RoomScene extends Phaser.Scene {
     registerKeys(this);
     registerSprites(this);
     registerMapObjects(this);
-    registerSpriteAnimations32(this);
     registerGridEngineEvents(this);
     registerRendererEvents(this);
     registerItems(this);

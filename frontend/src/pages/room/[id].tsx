@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef } from "react";
 import { Room } from "../../../../shared/types";
 import Whiteboard from "@/engine/2d-renderer/items/WhiteBoard";
+import Loader from "@/components/global/Loader";
+import { Grid } from "@/components/ui/grid";
 
 type RoomProps = {};
 
@@ -101,18 +103,22 @@ const RoomPage: React.FC<RoomProps> = () => {
     </>
   ) : (
     <>
+      <Grid />
       <div className="w-screen h-screen flex items-center justify-center bg-void">
-        <div className="animate-bounce">
-          <Logo size="md" withLogo />
+        <div className="flex flex-col space-y-5 items-center">
+          <div className="flex items-center justify-center">
+            <img src="/login_infog.png" className="w-2/4" />
+          </div>
+          <div className="animate-bounce">
+            <Logo size="md" withLogo />
+          </div>
         </div>
+
         <div className="text-[12px] opacity-30 font-logo w-[500px] text-center absolute bottom-5">
           By Joining Holoverse you agree to the Terms of Service and Privacy
           Policy, and confirm you are 18 and over
         </div>
       </div>
-      {/* <div className="hidden">
-        <TwoDViewComponent />
-      </div> */}
     </>
   );
 };

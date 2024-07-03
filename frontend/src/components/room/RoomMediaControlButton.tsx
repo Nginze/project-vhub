@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { TooltipArrow } from "@radix-ui/react-tooltip";
 import { Button } from "../ui/button";
 import { RotatingLines } from "react-loader-spinner";
+import Loader from "../global/Loader";
 
 type RoomMediaControlButtonProps = {
   isOn?: boolean;
@@ -16,6 +17,7 @@ type RoomMediaControlButtonProps = {
   hoverColor?: string;
   textColor?: string;
   tooltipText?: string;
+  useDefaultBg?: boolean;
 };
 
 export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
@@ -27,14 +29,21 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
   hoverColor,
   textColor,
   tooltipText,
+  useDefaultBg,
   onClick,
 }) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
+          disabled={isLoading}
           onClick={onClick}
-          className="flex items-center overflow-hidden bg-light  rounded-full px-0 py-0 w-auto h-auto hover:text-white shadow-appShadow"
+          className={
+            "flex items-center overflow-hidden bg-light  rounded-full px-0 py-0 w-auto h-auto hover:text-white shadow-appShadow" +
+            (isLoading ? " bg-appRed/50" : "") +
+            (isOn && !useDefaultBg ? " bg-appGreen/30" : "") +
+            (!isOn && !useDefaultBg ? " bg-appRed/30" : "")
+          }
         >
           {isOn == true ? (
             <div
@@ -45,17 +54,7 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {isLoading ? (
-                <RotatingLines
-                  width={"16"}
-                  animationDuration="0.75"
-                  strokeColor="grey"
-                  strokeWidth="5"
-                  visible={true}
-                />
-              ) : (
-                iconOn
-              )}
+              {isLoading ? <Loader width={22} alt /> : iconOn}
             </div>
           ) : (
             <div
@@ -66,17 +65,7 @@ export const RoomMediaControlButton: React.FC<RoomMediaControlButtonProps> = ({
                 textColor && textColor
               )}
             >
-              {isLoading ? (
-                <RotatingLines
-                  width={"16"}
-                  animationDuration="0.75"
-                  strokeColor="grey"
-                  strokeWidth="5"
-                  visible={true}
-                />
-              ) : (
-                iconOff
-              )}
+              {isLoading ? <Loader alt width={22} /> : iconOff}
             </div>
           )}
         </Button>

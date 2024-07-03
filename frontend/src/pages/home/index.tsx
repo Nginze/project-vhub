@@ -9,6 +9,10 @@ import { NextPage } from "next";
 import React from "react";
 
 const Home: NextPage = () => {
+  const [activeTab, setActiveTab] = React.useState("spaces");
+  const [activeFilter, setActiveFilter] = React.useState("public");
+  const [filterQuery, setFilterQuery] = React.useState("");
+
   const { data: publicRooms, isLoading: publicRoomsLoading } = useQuery({
     queryKey: ["rooms-public"],
     queryFn: async () => {
@@ -26,11 +30,26 @@ const Home: NextPage = () => {
   return (
     <main className="w-screen h-auto bg-[#202225] flex justify-center py-5">
       <HomeLayout
-        navbar={<HomeNav />}
+        navbar={<HomeNav activeTab={activeTab} setActiveTab={setActiveTab} />}
         content={
-          <HomeGrid rooms={publicRooms} roomsLoading={publicRoomsLoading} />
+          activeTab === "spaces" ? (
+            <HomeGrid filterQuery={filterQuery} rooms={publicRooms} roomsLoading={publicRoomsLoading} />
+          ) : (
+            <>
+              <div className="flex w-full h-full justify-center items-center">
+                Coming Soon
+              </div>
+            </>
+          )
         }
-        optionbar={<HomeOptionsBar />}
+        optionbar={
+          <HomeOptionsBar
+            activeFilter={activeFilter}
+            setActiveFilter={setActiveFilter}
+            filterQuery={filterQuery}
+            setFilterQuery={setFilterQuery}
+          />
+        }
       />
     </main>
   );

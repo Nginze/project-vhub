@@ -47,6 +47,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { localStream } = useMediaStore();
   const { user } = useContext(userContext);
   const { set } = useRoomStore();
   const { scene } = useRendererStore();
@@ -164,19 +165,25 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
           />
           <RoomMediaControlButton
             isOn={!myRoomStatus.isMuted as boolean}
-            iconOn={<BiSolidMicrophone size={22} color="white" fill="white" />}
-            iconOff={
-              <BiSolidMicrophoneOff size={22} color="white" fill="white" />
+            isLoading={!localStream || !localStream.active}
+            iconOn={
+              <BiSolidMicrophone size={22} color="#43b581" fill="#43b581" />
             }
-            tooltipText="Micorphone"
+            iconOff={
+              <BiSolidMicrophoneOff size={22} color="#f04747" fill="#f04747" />
+            }
+            tooltipText="Microphone"
             onClick={async () => {
               await handleMute();
             }}
           />
           <RoomMediaControlButton
             isOn={!myRoomStatus.isVideoOff as boolean}
-            iconOn={<BiSolidVideo size={22} color="white" fill="white" />}
-            iconOff={<BiSolidVideoOff size={22} color="white" fill="white" />}
+            isLoading={!localStream || !localStream.active}
+            iconOn={<BiSolidVideo size={22} color="#43b581" fill="#43b581" />}
+            iconOff={
+              <BiSolidVideoOff size={22} color="#f04747" fill="#f04747" />
+            }
             tooltipText="Camera"
             onClick={async () => {
               await handleVideo();
@@ -218,6 +225,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
             title={<span>People</span>}
           >
             <RoomMediaControlButton
+              useDefaultBg
               onClick={() => {
                 set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
               }}

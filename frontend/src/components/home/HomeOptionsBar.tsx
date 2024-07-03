@@ -9,13 +9,23 @@ import {
 import { Earth, Search, ShieldCheck } from "lucide-react";
 import { Input } from "../ui/input";
 
-type HomeOptionsBarProps = {};
+type HomeOptionsBarProps = {
+  filterQuery: string;
+  activeFilter: string;
+  setActiveFilter: (filter: string) => void;
+  setFilterQuery: (query: string) => void;
+};
 
-export const HomeOptionsBar: React.FC<HomeOptionsBarProps> = () => {
+export const HomeOptionsBar: React.FC<HomeOptionsBarProps> = ({
+  filterQuery,
+  activeFilter,
+  setActiveFilter,
+  setFilterQuery,
+}) => {
   return (
     <div>
       <div className="w-full flex items-center gap-6 justify-end">
-        <Select>
+        <Select onValueChange={(v) => setActiveFilter(v)}>
           <SelectTrigger className="w-[120px] px-5 py-6 rounded-xl bg-void hover:bg-deep border-none ring-0 outline-none focus:outline-none focus:ring-0">
             <SelectValue
               placeholder={
@@ -56,6 +66,8 @@ export const HomeOptionsBar: React.FC<HomeOptionsBarProps> = () => {
             <Search size={18} />
           </div>
           <Input
+            value={filterQuery}
+            onChange={(e) => setFilterQuery(e.target.value)}
             className="w-full bg-transparent py-6 text-[14px] border-veryLight bg-deep rounded-xl placeholder:text-white placeholder:text-[16px] placeholder:opacity-60 outline-none text-white pl-10 pr-3"
             placeholder="Filter spaces"
           />

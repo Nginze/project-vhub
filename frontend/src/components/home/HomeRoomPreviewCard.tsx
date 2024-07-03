@@ -23,14 +23,16 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
       </div>
       <div className="flex flex-col items-start gap-2 py-4">
         <div className="w-full flex items-center justify-between">
-          <span className="font-semibold text-[16px]">Groovy Room</span>
+          <span className="font-semibold text-[16px]">{room.roomName}</span>
           <AppDropDownMenu content={<HomePreviewCardMenu />}>
             <button className="hover:bg-light rounded-xl p-3">
               <EllipsisVertical size={15} />
             </button>
           </AppDropDownMenu>
         </div>
-        <span className="text-[13px] opacity-70">{room.roomDesc}</span>
+        <span className="text-[13px] opacity-70 overflow-hidden overflow-ellipsis h-10 w-full">
+          {room.roomDesc}
+        </span>
         <span className="text-[13px] opacity-70 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-appGreen"></div>
           66,560 online

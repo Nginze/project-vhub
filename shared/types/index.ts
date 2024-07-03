@@ -142,6 +142,7 @@ export interface UserData {
   userName?: string | null;
   email?: string | null;
   displayName?: string | null;
+  spriteUrl?: string | null;
   avatarUrl?: string | null;
   bio?: string | null;
   currentRoomId?: string | null;

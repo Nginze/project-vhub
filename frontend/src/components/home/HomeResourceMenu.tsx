@@ -36,16 +36,16 @@ export const HomeResourceMenu: React.FC<HomeResourceMenuProps> = () => {
   return (
     <div>
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <MdBrowserUpdated className="mr-2 h-4 w-4" />
+        <DropdownMenuItem className="py-2">
+          {/* <MdBrowserUpdated className="mr-2 h-4 w-4" /> */}
           <span>Product Updates</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <CreditCard className="mr-2 h-4 w-4" />
+        <DropdownMenuItem className="py-2">
+          {/* <CreditCard className="mr-2 h-4 w-4" /> */}
           <span>Pricing</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <HelpCircle className="mr-2 h-4 w-4" />
+        <DropdownMenuItem className="py-2">
+          {/* <HelpCircle className="mr-2 h-4 w-4" /> */}
           <span>Help Center</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>

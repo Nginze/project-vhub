@@ -4,12 +4,12 @@ import { redis } from "../config/redis";
 
 let REDIS_STORE = new Store({
   client: redis,
-  prefix: "myapp:",
+  prefix: "holo:",
 });
 
 export const sessionMiddleware = {
   secret: "secret",
-  resave: false,
+  resave: true,
   store: REDIS_STORE,
   saveUninitialized: true,
   cookie: {

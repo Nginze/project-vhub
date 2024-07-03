@@ -65,3 +65,33 @@ router.patch(
     }
   }
 );
+
+router.patch(
+  "/update/sprite",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // const { userId } = req.user as UserData;
+
+      const { spriteUrl, userId } = req.body;
+
+      if (!userId || !req.body) {
+        return res
+          .status(400)
+          .json({ msg: "Bad request, incorrect credentials sent" });
+      }
+
+      await pool.query(
+        `
+          UPDATE user_data
+          SET sprite_url = $1
+          WHERE user_id = $2
+        `,
+        [spriteUrl, userId]
+      );
+
+      res.status(200).json({ msg: "updated user data" });
+    } catch (error) {
+      next(error);
+    }
+  }
+);

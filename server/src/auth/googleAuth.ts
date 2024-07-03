@@ -9,12 +9,13 @@ import { logger } from "../config/logger";
 import { UserData } from "../../../shared/types";
 import { generateUsername } from "../utils";
 
-const parseToUserDTO = (params: Record<any, any>): Partial<UserData> => {
+export const parseToUserDTO = (params: Record<any, any>): any => {
   const parsed = {
     userId: params.user_id,
     email: params.email,
     userName: params.user_name,
     avatarUrl: params.avatar_url,
+    spriteUrl: params.sprite_url,
     displayName: params.display_name,
     bio: params.bio,
     currentRoomId: params.current_room_id,
@@ -58,8 +59,10 @@ const googleStrategyMiddleware = new GoogleStrategy(
     );
     if (rows.length > 0) {
       const parsedUser = parseToUserDTO(rows[0]);
+      console.log("parsed User", parsedUser);
       done(null, parsedUser);
     } else {
+      console.log("User doesn't exist creating it now ...");
       if (profile.photos && profile.emails) {
         const client = await pool.connect();
         try {
@@ -72,7 +75,7 @@ const googleStrategyMiddleware = new GoogleStrategy(
             `,
             [
               profile.emails[0].value,
-              generateUsername(profile._json.family_name.toLowerCase()), //generte unique handle by default
+              generateUsername(profile._json.family_name?.toLowerCase() ?? ""), //generte unique handle by default
               profile.photos[0].value,
               profile.displayName,
               profile._json.bio,
@@ -110,23 +113,27 @@ const googleStrategyMiddleware = new GoogleStrategy(
 );
 
 const serializeMiddleware = (user: Partial<UserData>, done: any) => {
-  done(null, user.userId);
+  process.nextTick(() => {
+    done(null, user.userId);
+  });
 };
 
 const deserializeMiddleware = async (userId: string, done: any) => {
   try {
-    const { rows } = await pool.query(
-      `
-      SELECT u.*, ap.google_id
+    process.nextTick(async () => {
+      const { rows } = await pool.query(
+        `
+      SELECT u.*,ap.google_id
       FROM user_data u
       JOIN auth_provider ap
       ON u.user_id = ap.user_id
       WHERE u.user_id = $1;
       `,
-      [userId]
-    );
-    const parsedUserData = parseToUserDTO(rows[0]);
-    done(null, parsedUserData);
+        [userId]
+      );
+      const parsedUserData = parseToUserDTO(rows[0]);
+      done(null, parsedUserData);
+    });
   } catch (err) {
     logger.log({ level: "error", message: `${err}` });
     done(err, null);

@@ -17,6 +17,7 @@ import Computer from "../items/Computer";
 import Whiteboard from "../items/WhiteBoard";
 import Chair from "../items/Chair";
 import { SITTING_OFFSET } from "../utils/constants";
+import { registerCustomSpriteAnimations } from "../anims";
 
 export default class Player extends Phaser.GameObjects.Container {
   public playerSprite: Phaser.GameObjects.Sprite;
@@ -34,8 +35,9 @@ export default class Player extends Phaser.GameObjects.Container {
     super(scene, posX, posY);
     this.playerData = user;
     this.playerBehavior = PlayerBehaviour.IDLE;
+
     this.playerSprite = scene.physics.add
-      .sprite(0, 0, skin.toLowerCase())
+      .sprite(0, 0, `player-${user.userId}`)
       .setInteractive();
 
     this.playerName = scene.add
@@ -63,17 +65,21 @@ export default class Player extends Phaser.GameObjects.Container {
       this.playerContainer.y
     );
 
-    this.playAnimation(AnimationType.IDLE, dir as Direction);
-
     if (user.userId == useRendererStore.getState().user.userId) {
       this.setCtxMenu();
     }
+
+    this.lazyLoadSprite();
   }
 
   update() {
-    this.playerIcon.x = this.playerSprite.x + this.playerSprite.width / 2;
-    this.playerIcon.y = this.playerSprite.y - this.playerSprite.height / 2 - 10; // 20 is the desired distance from the player's head
+    this.updateIconPosition();
     this.handleUserInput();
+  }
+
+  updateIconPosition() {
+    this.playerIcon.x = this.playerSprite.x + this.playerSprite.width / 2;
+    this.playerIcon.y = this.playerSprite.y - this.playerSprite.height / 2 - 10; // Adjust the distance if needed
   }
 
   setCtxMenu() {
@@ -93,6 +99,7 @@ export default class Player extends Phaser.GameObjects.Container {
   }
 
   playAnimation(animationType: AnimationType, direction: Direction) {
+    console.log("play animation", animationType, direction);
     switch (animationType) {
       case AnimationType.IDLE:
         this.playerSprite.anims.play(
@@ -140,6 +147,8 @@ export default class Player extends Phaser.GameObjects.Container {
     this.playerIcon.setVisible(true);
     this.playerName.setVisible(false);
 
+    this.updateIconPosition();
+
     // Clear any existing timeout
     if (this.reactionTimeoutId) {
       clearTimeout(this.reactionTimeoutId);
@@ -164,6 +173,9 @@ export default class Player extends Phaser.GameObjects.Container {
     this.playerIcon.setHTML(_createPlayerIcon(this.playerData, reaction));
     this.playerIcon.setVisible(true);
     this.playerName.setVisible(false);
+
+    this.playerIcon.x = this.playerSprite.x - 2.5;
+    this.playerIcon.y = this.playerSprite.y - this.playerSprite.height / 2 - 15; // Adjust the distance if needed
 
     // Clear any existing timeout
     if (this.reactionTimeoutId) {
@@ -212,6 +224,33 @@ export default class Player extends Phaser.GameObjects.Container {
       ]);
     }
   }
+
+  lazyLoadSprite = () => {
+    const { posX, posY, skin, dir } = this.playerData;
+    const user = this.playerData;
+    const scene = this.scene as RoomScene;
+
+    this.scene.load.spritesheet(
+      `player-${this.playerData.userId}`,
+      this.playerData.spriteUrl as string,
+      {
+        frameWidth: 32,
+        frameHeight: 64,
+      }
+    );
+
+    console.log(`player-${this.playerData.userId}`);
+
+    this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+      console.log("[LOGGING]: Done loading sprite texture");
+      this.playerSprite.setTexture(`player-${this.playerData.userId}`);
+
+      registerCustomSpriteAnimations(scene);
+      this.playAnimation(AnimationType.IDLE, dir as Direction);
+    });
+
+    this.scene.load.start();
+  };
 
   handleUserInput = () => {
     const scene = this.scene as RoomScene;

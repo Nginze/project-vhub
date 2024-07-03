@@ -8,6 +8,7 @@ type Props = {
   width?: number;
   height?: number;
   strokeWidth?: string;
+  strokeColor?: string;
   alt?: boolean;
 };
 
@@ -18,6 +19,7 @@ const Loader = ({
   width,
   height,
   strokeWidth,
+  strokeColor,
   alt,
 }: Props) => {
   if (alt) {
@@ -26,7 +28,7 @@ const Loader = ({
         <RotatingLines
           width={width ? `${width}` : "70"}
           animationDuration="0.75"
-          strokeColor="white"
+          strokeColor={strokeColor ?? "white"}
           strokeWidth="5"
           visible={true}
         />

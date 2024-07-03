@@ -28,10 +28,17 @@ import { FaCalendarDays } from "react-icons/fa6";
 import { AppCtxMenu } from "../global/AppCtxMenu";
 import { HomeResourceMenu } from "./HomeResourceMenu";
 import { AppDropDownMenu } from "../global/AppDropDownMenu";
+import { cn } from "@/lib/utils";
 
-type HomeNavProps = {};
+type HomeNavProps = {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+};
 
-export const HomeNav: React.FC<HomeNavProps> = () => {
+export const HomeNav: React.FC<HomeNavProps> = ({
+  activeTab,
+  setActiveTab,
+}) => {
   const { set, selectFormOpen, createFormOpen } = useCreateFormStore();
   const { user } = useContext(userContext);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -41,11 +48,23 @@ export const HomeNav: React.FC<HomeNavProps> = () => {
         <div className="flex items-center gap-5">
           <Logo withLogo={true} withText={false} size="lg" />
           <div className="flex items-center gap-4">
-            <button className="flex gap-2 items-center px-5 p-3 hover:bg-light rounded-xl font-semibold">
+            <button
+              onClick={() => setActiveTab("events")}
+              className={cn(
+                "flex gap-2 items-center px-5 p-3 hover:bg-light active:bg-deep rounded-xl font-semibold transform transition-transform duration-150",
+                activeTab === "events" && `bg-light active:scale-90`
+              )}
+            >
               <FaCalendarDays size={16} />
               Events
             </button>
-            <button className="flex gap-2 items-center px-5 p-3 bg-light hover:bg-light rounded-xl font-semibold">
+            <button
+              onClick={() => setActiveTab("spaces")}
+              className={cn(
+                "flex gap-2 items-center px-5 p-3 hover:bg-light active:bg-deep rounded-xl font-semibold transform transition-transform duration-150",
+                activeTab === "spaces" && `bg-light active:scale-90`
+              )}
+            >
               <HiSparkles />
               Spaces
             </button>
@@ -53,7 +72,7 @@ export const HomeNav: React.FC<HomeNavProps> = () => {
         </div>
         <div className="flex items-center gap-10">
           <AppDropDownMenu content={<HomeResourceMenu />}>
-            <button className="flex gap-2 items-center px-5 p-3  hover:bg-light rounded-xl font-semibold">
+            <button className="flex gap-2 items-center px-5 p-3 active:bg-deep hover:bg-light rounded-xl font-semibold">
               <HiQuestionMarkCircle size={26} />
               Resources
             </button>

@@ -30,8 +30,15 @@ export const CreateSpaceForm: React.FC = () => {
       <div className="flex flex-col gap-5">
         <div>
           <Input
-            className="w-full bg-transparent py-6 border-appPrimary outline-none text-white"
-            placeholder="Enter your email address"
+            className="w-full bg-transparent py-6 text-[14px] border-[hsla(0,0%,100%,.1)] bg-void placeholder:text-white placeholder:opacity-60 outline-none text-white pl-3 pr-10"
+            placeholder="Enter Space Name"
+          />
+        </div>
+
+        <div>
+          <Input
+            className="w-full bg-transparent py-6 text-[14px] border-[hsla(0,0%,100%,.1)] bg-void placeholder:text-white placeholder:opacity-60 outline-none text-white pl-3 pr-10"
+            placeholder="Enter Space Description"
           />
         </div>
         <div className="w-full">
@@ -92,9 +99,11 @@ export const CreateSpaceSelectMapTemplateForm: React.FC = () => {
   return (
     <div className={cn("w-full flex flex-col gap-6")}>
       <div className="flex items-end gap-7">
-        <div className="flex flex-col items-start w-3/5 gap-4">
-          <span className="text-[24px]">Choose your space template</span>
-          <span className="text-[14px] opacity-45">
+        <div className="flex flex-col items-start w-3/5">
+          <span className="text-[24px] font-sans">
+            Choose your space template
+          </span>
+          <span className="text-[14px] opacity-45 mb-3">
             Select the size and theme of your office. You can change this later!
           </span>
           <div className="flex-grow min-h-72 h-72 w-full bg-dark rounded-2xl cursor-pointer overflow-hidden">

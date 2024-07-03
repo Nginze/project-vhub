@@ -178,6 +178,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
 
                 <AppDialog
                   width={"sm:max-w-[450px]"}
+                  className="p-0"
                   content={<HomeCharacterCustomizer />}
                 >
                   <button className="flex items-center gap-2  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none">

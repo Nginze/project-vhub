@@ -61,12 +61,12 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
         </div>
       </SheetHeader>
       <div className="w-full mb-5">
-        <div className="flex bg-deep px-4 py-0 rounded-lg gap-2 items-center border-2 border-appPrimary">
+        <div className="flex bg-deep px-4 py-0 rounded-lg gap-2 items-center border-2 border-light focus-within:border-appPrimary">
           <AiOutlineSearch size={20} />
           <Input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-transparent py-0 outline-none border-none focus:outline-none placeholder:text-white/70"
+            className="w-full bg-transparent py-0 outline-none border-none focus:outline-none focus:outline-0 placeholder:text-white/70"
             placeholder="Search Participants"
           />
         </div>

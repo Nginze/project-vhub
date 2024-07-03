@@ -15,6 +15,7 @@ import { RoomScene } from "../scenes/RoomScene";
 import { AnimationType, ItemType, Keyboard, PlayerBehaviour } from "../types";
 import { SITTING_OFFSET } from "./constants";
 import Player from "../entities/Player";
+import { registerCustomSpriteAnimations } from "../anims";
 
 export const registerRendererEvents = (scene: RoomScene) => {
   const { conn } = scene;
@@ -37,6 +38,8 @@ export const registerRendererEvents = (scene: RoomScene) => {
       container: player.playerContainer,
       startPosition: { x: posX, y: posY },
     });
+
+    registerCustomSpriteAnimations(scene);
   });
 
   conn.on(WS_MESSAGE.WS_PARTICIPANT_LEFT, (d: any) => {

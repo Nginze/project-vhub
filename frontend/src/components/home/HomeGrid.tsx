@@ -5,11 +5,16 @@ import {
 } from "./HomeRoomPreviewCard";
 
 type HomeGridProps = {
+  filterQuery: string;
   rooms: any;
   roomsLoading: boolean;
 };
 
-export const HomeGrid: React.FC<HomeGridProps> = ({ rooms, roomsLoading }) => {
+export const HomeGrid: React.FC<HomeGridProps> = ({
+  rooms,
+  filterQuery,
+  roomsLoading,
+}) => {
   return roomsLoading ? (
     <div className="grid grid-cols-5 gap-10 overflow-y-auto h-full">
       <HomeRoomPreviewCardSkeleton />
@@ -27,9 +32,15 @@ export const HomeGrid: React.FC<HomeGridProps> = ({ rooms, roomsLoading }) => {
     </div>
   ) : (
     <div className="grid grid-cols-5 gap-10 overflow-y-auto">
-      {rooms && rooms.map((room: any) => (
-        <HomeRoomPreviewCard key={room.id} room={room} />
-      ))}
+      {rooms &&
+        rooms
+          .filter(
+            (room: any) => room.roomDesc.includes(filterQuery)
+            // room.roomname.includes(filterQuery)
+          )
+          .map((room: any) => (
+            <HomeRoomPreviewCard key={room.id} room={room} />
+          ))}
     </div>
   );
 };

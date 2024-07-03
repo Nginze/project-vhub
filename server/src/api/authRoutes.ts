@@ -4,6 +4,9 @@ import passport from "passport";
 import "../auth/githubAuth";
 import "../auth/googleAuth";
 import createHttpError from "http-errors";
+import { pool } from "../config/psql";
+import { parseToUserDTO } from "../auth/googleAuth";
+import { UserData } from "../../../shared/types";
 
 export const router = Router();
 
@@ -31,8 +34,19 @@ router.get(
   })
 );
 
-router.get("/me", (req: Request, res: Response) => {
-  res.status(200).json(req.user ? { ...req.user } : {});
+router.get("/me", async (req: Request, res: Response) => {
+  const { rows } = await pool.query(
+    `
+      SELECT u.*,ap.google_id
+      FROM user_data u
+      JOIN auth_provider ap
+      ON u.user_id = ap.user_id
+      WHERE u.user_id = $1;
+      `,
+    [(req.user as UserData).userId]
+  );
+  const parsedUserData = parseToUserDTO(rows[0]);
+  res.status(200).json(parsedUserData ?? null);
 });
 
 router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
