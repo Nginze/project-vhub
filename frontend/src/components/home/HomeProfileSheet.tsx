@@ -31,6 +31,7 @@ import { Switch } from "../ui/switch";
 import { HomeCharacterCustomizer } from "./HomeCharacterCustomizer";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
+import { stat } from "fs";
 
 type HomeProfileSheetProps = {
   setSheetOpen: Dispatch<SetStateAction<boolean>>;
@@ -273,7 +274,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                   <SelectContent>
                     {microphones.map(({ value, label }) => (
                       <SelectItem
-                        key={value} 
+                        key={value}
                         value={value}
                         className="text-[16px] font-semibold opacity-70"
                       >
@@ -377,7 +378,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                 </label>
                 <Switch
                   checked={statsForNerds}
-                  onCheckedChange={() => updateStatsForNerds(!soundEffects)}
+                  onCheckedChange={() => updateStatsForNerds(!statsForNerds)}
                   id="stats_for_nerds"
                 />
               </div>

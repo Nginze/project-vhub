@@ -18,7 +18,7 @@ const SoundEffectPlayer = () => {
               add(key, ref);
             }
           }}
-          src={`/sound-effects/${
+          src={`/assets/sound-effects/${
             soundEffects[key as keyof typeof soundEffects]
           }`}
         />

@@ -32,6 +32,8 @@ import { Socket } from "socket.io-client";
 import AppDialog from "../global/AppDialog";
 import { RoomLeaveConfirmation } from "./RoomLeaveConfirmation";
 import { HomeProfileSheet } from "../home/HomeProfileSheet";
+import { useSettingStore } from "@/global-store/SettingStore";
+import { useSoundEffectStore } from "@/global-store/SoundFxStore";
 
 type RoomControlsProps = {
   room: Room;
@@ -53,6 +55,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   const { set } = useRoomStore();
   const { scene } = useRendererStore();
   const { mic, vid, set: setMedia } = useMediaStore();
+  const { playSoundEffect } = useSoundEffectStore();
 
   const statusMutation = useMutation({
     mutationFn: async (params: {
@@ -100,8 +103,12 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
       console.log("no conn or mic", conn, mic);
       return;
     }
+
     const event = myRoomStatus.isMuted ? "action:unmute" : "action:mute";
     // myRoomStatus.isMuted ? playSoundEffect("unmute") : playSoundEffect("mute");
+    event === "action:mute"
+      ? playSoundEffect("mute")
+      : playSoundEffect("unmute");
 
     conn.emit(event, { roomId, userId: user.userId });
     mic?.enabled ? (mic.enabled = false) : (mic.enabled = true);
@@ -122,6 +129,10 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
     const event = myRoomStatus.isVideoOff
       ? "action:videoOn"
       : "action:videoOff";
+
+    event === "action:videoOff"
+      ? playSoundEffect("mute")
+      : playSoundEffect("unmute");
 
     conn.emit(event, { roomId, userId: user.userId });
     vid?.enabled ? (vid.enabled = false) : (vid.enabled = true);
@@ -211,7 +222,6 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   <div className="flex items-center">
                     <VscReactions size={24} color="white" />
                     <ReactionBarSelector
-                      
                       onSelect={(reaction: string) => {
                         console.log(reaction);
                         set((s) => ({

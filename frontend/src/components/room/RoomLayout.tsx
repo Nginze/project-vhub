@@ -2,6 +2,7 @@ import React from "react";
 import { RoomVideoOverlay } from "./RoomVideoOverlay";
 import { Room } from "../../../../shared/types";
 import { RoomPerfStats } from "./RoomPerfStats";
+import { useSettingStore } from "@/global-store/SettingStore";
 
 type RoomLayoutProps = {
   room: Room;
@@ -14,6 +15,7 @@ export const RoomLayout: React.FC<RoomLayoutProps> = ({
   footer,
   room,
 }) => {
+  const { statsForNerds } = useSettingStore();
   return (
     <main className="relative w-screen h-screen">
       <RoomVideoOverlay room={room}>
@@ -23,7 +25,7 @@ export const RoomLayout: React.FC<RoomLayoutProps> = ({
             <div className="absolute bottom-0 w-full">{footer}</div>
           </div>
         </main>
-        <RoomPerfStats/>
+        {statsForNerds && <RoomPerfStats />}
       </RoomVideoOverlay>
     </main>
   );
