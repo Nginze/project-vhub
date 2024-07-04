@@ -180,6 +180,7 @@ export const registerSprites = (scene: RoomScene) => {
         );
       }
 
+
       return {
         id: participant.userId,
         sprite: player.playerSprite,

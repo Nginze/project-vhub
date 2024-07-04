@@ -17,7 +17,6 @@ import { registerCustomSpriteAnimations } from "../anims";
 import Player from "../entities/Player";
 import { WS_MESSAGE } from "../events";
 import { NavKeys, ProxmityActionType } from "../types";
-
 export class RoomScene extends Phaser.Scene {
   constructor() {
     super("room-scene");
@@ -33,6 +32,8 @@ export class RoomScene extends Phaser.Scene {
   // Colliders and Layers
   public gridEngine: GridEngine | null = null;
   public postFxPlugin: any = null;
+  public gesturesPlugin: any = null;
+  public camera = this.cameras;
   public objectGroups = new Map<string, Phaser.Physics.Arcade.StaticGroup>();
   public map: Phaser.Tilemaps.Tilemap | undefined;
 
@@ -59,7 +60,6 @@ export class RoomScene extends Phaser.Scene {
     // });
 
     this.postFxPlugin = this.plugins.get("rexoutlinepipelineplugin");
-
     this.map = this.make.tilemap({ key: "map" });
 
     // import other static layer ground layer to Phaser

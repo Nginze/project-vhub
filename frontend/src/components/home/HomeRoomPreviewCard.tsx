@@ -24,12 +24,12 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
       }}
       className="flex overflow-hidden flex-col group shadow-appShadow relative bg-deep/50 rounded-xl card car"
     >
-      <div className="bg-black bg-opacity-30 cursor-pointer  w-full h-full absolute overlay">
-        <button className="absolute p-3 button rounded-xl bg-deep right-2 top-2">
-          <Plus size={16} />
-        </button>
-      </div>
-      <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl rounded-b-none  cursor-pointer">
+      <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl relative rounded-b-none  cursor-pointer">
+        <div className="bg-black bg-opacity-30 cursor-pointer  w-full h-full absolute overlay">
+          <button className="absolute p-3 button rounded-xl bg-deep right-2 top-2">
+            <Plus size={16} />
+          </button>
+        </div>
         <img
           src="/mock_prev.jpg"
           className="w-full h-full object-cover rounded-xl rounded-b-none"

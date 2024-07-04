@@ -33,6 +33,7 @@ export const useCreateVideoCards = (
 
       return (
         <RoomVideoCard
+          key={participantId}
           className="w-40 h-[6rem]"
           indicatorOn={indicatorOn}
           userName={userName}

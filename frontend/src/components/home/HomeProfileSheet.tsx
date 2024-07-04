@@ -273,6 +273,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                   <SelectContent>
                     {microphones.map(({ value, label }) => (
                       <SelectItem
+                        key={value} 
                         value={value}
                         className="text-[16px] font-semibold opacity-70"
                       >

@@ -34,6 +34,7 @@
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^2.2.0",
     "clsx": "^2.1.1",
+    "fabric": "^6.0.1",
     "framer-motion": "^11.2.2",
     "grid-engine": "^2.44.2",
     "hark": "^1.2.3",

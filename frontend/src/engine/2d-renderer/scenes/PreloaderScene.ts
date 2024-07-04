@@ -1,6 +1,5 @@
 import { useRendererStore } from "@/engine/2d-renderer/store/RendererStore";
 import { Room } from "../../../../../shared/types";
-import { use } from "matter";
 
 export class Preloader extends Phaser.Scene {
   constructor() {

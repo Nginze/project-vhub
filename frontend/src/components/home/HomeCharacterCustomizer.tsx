@@ -34,7 +34,18 @@ export const HomeCharacterCustomizer: React.FC<
   }, []);
 
   useEffect(() => {
-    drawCharacter();
+    if (
+      !base &&
+      !eyes &&
+      !clothing &&
+      !hair &&
+      !accessories &&
+      user.spriteUrl
+    ) {
+      drawSpriteSheet();
+    } else {
+      drawCharacter();
+    }
   }, [base, eyes, clothing, hair, accessories]);
 
   const drawCharacter = () => {
@@ -58,6 +69,33 @@ export const HomeCharacterCustomizer: React.FC<
     });
   };
 
+  const drawSpriteSheet = () => {
+    const canvas = canvasRef.current;
+    if (!canvas || !user.spriteUrl) return;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const img = new Image();
+    img.src = user.spriteUrl;
+    img.onload = () => {
+      const frameWidth = 32;
+      const frameHeight = 64;
+      const scale = 1.4; // Increase this to increase the size of the image
+      const x = canvas.width / 2 - (frameWidth * scale) / 2;
+      const y = canvas.height / 2 - (frameHeight * scale) / 2;
+      ctx.drawImage(
+        img,
+        frameWidth * 3, // Start at the width of three frames to get the fourth frame
+        0,
+        frameWidth,
+        frameHeight,
+        x,
+        y,
+        frameWidth * scale,
+        frameHeight * scale
+      );
+    };
+  };
   const handleSelection = (setter: any) => (url: any) => {
     setter(url);
   };
