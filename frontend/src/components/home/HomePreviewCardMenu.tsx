@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -7,17 +7,44 @@ import {
 } from "../ui/dropdown-menu";
 import { CreditCard, HelpCircle } from "lucide-react";
 import { MdBrowserUpdated } from "react-icons/md";
+import { Room } from "../../../../shared/types";
+import { useRouter } from "next/router";
 
-type HomePreviewCardMenuProps = {};
+type HomePreviewCardMenuProps = {
+  room: Room;
+};
 
-export const HomePreviewCardMenu: React.FC<HomePreviewCardMenuProps> = () => {
+export const HomePreviewCardMenu: React.FC<HomePreviewCardMenuProps> = ({
+  room,
+}) => {
+  const router = useRouter();
+  const urlRef = useRef<string>("");
+
+  useEffect(() => {
+    urlRef.current = `http://localhost:3000/room/setup?roomId=${room.roomId}&roomName=${room.roomName}`;
+  }, [room]);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(urlRef.current);
+      console.log("Link copied to clipboard");
+    } catch (err) {
+      console.log("Failed to copy text: ", err);
+    }
+  };
   return (
     <div>
       <DropdownMenuGroup>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() =>
+            router.push(
+              `/room/setup?roomId= ${room.roomId} && roomName=${room.roomName}`
+            )
+          }
+        >
           <span>Visit</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => copyToClipboard()}>
           <span>Copy URL</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>

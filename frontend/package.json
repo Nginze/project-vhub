@@ -44,6 +44,7 @@
     "mediastream-support": "link:@types/https:/github.com/playkostudios/howler.js/tree/mediastream-support",
     "mini-svg-data-uri": "^1.4.4",
     "next": "14.1.4",
+    "nextjs-progressbar": "^0.0.16",
     "phaser": "^3.80.1",
     "phaser3-react": "^1.2.6",
     "react": "^18",

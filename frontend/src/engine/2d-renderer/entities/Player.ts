@@ -31,7 +31,7 @@ export default class Player extends Phaser.GameObjects.Container {
   reactionTimeoutId: NodeJS.Timeout | null = null;
 
   constructor(scene: RoomScene, user: UserData & RoomStatus) {
-    const { posX, posY, skin, dir } = user;
+    const { posX, posY, skin, dir, spaceName } = user;
     super(scene, posX, posY);
     this.playerData = user;
     this.playerBehavior = PlayerBehaviour.IDLE;

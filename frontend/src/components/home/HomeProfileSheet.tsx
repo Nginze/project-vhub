@@ -1,7 +1,7 @@
 import { api } from "@/api";
 import { userContext } from "@/context/UserContext";
 import { getMicrophones, useSettingStore } from "@/global-store/SettingStore";
-import { GitBranch } from "lucide-react";
+import { GitBranch, Speaker } from "lucide-react";
 import { useRouter } from "next/router";
 import React, {
   Dispatch,
@@ -11,8 +11,18 @@ import React, {
   useState,
 } from "react";
 import { LiveAudioVisualizer } from "react-audio-visualize";
-import { BiImageAdd, BiMicrophone, BiMicrophoneOff } from "react-icons/bi";
-import { BsWrench } from "react-icons/bs";
+import {
+  BiImageAdd,
+  BiMicrophone,
+  BiMicrophoneOff,
+  BiSpeaker,
+} from "react-icons/bi";
+import {
+  BsOpticalAudio,
+  BsSoundwave,
+  BsSpeaker,
+  BsWrench,
+} from "react-icons/bs";
 import { PiDressFill } from "react-icons/pi";
 import AppDialog from "../global/AppDialog";
 import FileUploader from "../global/AppFileUploader";
@@ -30,8 +40,9 @@ import { Separator } from "../ui/separator";
 import { Switch } from "../ui/switch";
 import { HomeCharacterCustomizer } from "./HomeCharacterCustomizer";
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { stat } from "fs";
+import { useSoundEffectStore } from "@/global-store/SoundFxStore";
 
 type HomeProfileSheetProps = {
   setSheetOpen: Dispatch<SetStateAction<boolean>>;
@@ -54,7 +65,9 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
   const [bioOpen, setBioOpen] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
   const [blob, setBlob] = useState<Blob>();
+  const { playSoundEffect } = useSoundEffectStore();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {
     spatialAudio,
@@ -78,6 +91,9 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
       } catch (error) {
         console.log(error);
       }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
 
@@ -293,16 +309,30 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                   </span>
 
                   {!isTestingAudio ? (
-                    <button
-                      className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
-                      onClick={() => {
-                        handleAudioTest();
-                        setIsTestingAudio(true);
-                      }}
-                    >
-                      <BsWrench />
-                      Test Audio
-                    </button>
+                    <div className="flex items-center gap-5">
+                      <button
+                        className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
+                        onClick={() => {
+                          handleAudioTest();
+                          setIsTestingAudio(true);
+                        }}
+                      >
+                        <BsWrench />
+                        Test Mic
+                      </button>
+
+                      <button
+                        className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
+                        onClick={() => {
+                          handleAudioTest();
+                          setIsTestingAudio(true);
+                          playSoundEffect("roomChatMention");
+                        }}
+                      >
+                        <BsSoundwave />
+                        Test Audio
+                      </button>
+                    </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center">
                       <button
@@ -325,7 +355,8 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                         )}
 
                         <span className="text-[13px] opacity-30 mt-2">
-                          Check for playing waveforms
+                          Check for playing waveforms or Fx play back (for audio
+                          test)
                         </span>
                       </div>
                     </div>
@@ -411,7 +442,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
           <h1 className="font-logo text-[1.5rem] leading-[2.3rem] opacity-10 flex items-center relative">
             <Logo withLogo={false} size="sm" />
           </h1>
-          {!dontShowXtra && (
+          {!dontShowXtra && false && (
             <div className="flex items-center space-x-10  leading=[2.3em]">
               <a className="text-sm flex items-center text-[#424549] ">
                 <GitBranch className="mr-1" color="#424549" size={17} />

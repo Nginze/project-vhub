@@ -22,6 +22,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Room } from "../../../../shared/types";
 
 type AppDropDownMenuProps = {
   children: React.ReactNode;

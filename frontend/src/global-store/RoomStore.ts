@@ -1,4 +1,3 @@
-import { Socket } from "socket.io-client";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
@@ -8,9 +7,9 @@ export const useRoomStore = create(
       roomSheetOpen: false,
       roomIframeOpen: false,
       currentReaction: "",
+      spaceName: "",
     },
     (set) => ({
-      
       set,
     })
   )

@@ -10,6 +10,7 @@ import { Tooltip } from "@radix-ui/react-tooltip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import WebrtcApp from "@/engine/rtc/WebRTCApp";
 import SoundEffectPlayer from "@/engine/global/SoundFxPlayer";
+import NextNProgress from "nextjs-progressbar";
 import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -22,6 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <UserProvider>
             <WebSocketProvider>
               <MainWsHandler>
+                <NextNProgress  />
                 <Component {...pageProps} />;
               </MainWsHandler>
               <SoundEffectPlayer />

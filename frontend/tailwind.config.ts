@@ -48,6 +48,7 @@ const config = {
         appRed: "#f04747",
         appGreen: "#43b581",
         appPrimary: "#7289da",
+        appYellow: "#fbb848",
 
         // Default Shadcn colors
         border: "hsl(var(--border))",

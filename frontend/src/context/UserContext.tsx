@@ -25,7 +25,11 @@ const UserProvider = ({ children }: Props) => {
     return user;
   };
 
-  const { data: user, isLoading: userLoading } = useQuery({
+  const {
+    data: user,
+    isLoading: userLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ["user"],
     queryFn: getUser,
     staleTime: 90000,

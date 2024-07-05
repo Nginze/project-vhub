@@ -25,6 +25,20 @@
   z-index: 1;
 }
 
+@keyframes zoomReveal {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.zoomReveal > div {
+  display: inline-block;
+  animation: zoomReveal 0.5s ease-in-out;
+}
+
 .button {
   transition: all 0.2s ease-in-out 0s;
   transform: scale(1);

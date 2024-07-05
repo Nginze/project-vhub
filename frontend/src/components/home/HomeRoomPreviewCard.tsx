@@ -6,6 +6,7 @@ import { Room } from "../../../../shared/types";
 import { AppDropDownMenu } from "../global/AppDropDownMenu";
 import { HomePreviewCardMenu } from "./HomePreviewCardMenu";
 import { useRouter } from "next/router";
+import { FaPlay } from "react-icons/fa";
 
 type HomeRoomPreviewCardProps = {
   room: Room;
@@ -25,9 +26,14 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
       className="flex overflow-hidden flex-col group shadow-appShadow relative bg-deep/50 rounded-xl card car"
     >
       <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl relative rounded-b-none  cursor-pointer">
-        <div className="bg-black bg-opacity-30 cursor-pointer  w-full h-full absolute overlay">
-          <button className="absolute p-3 button rounded-xl bg-deep right-2 top-2">
-            <Plus size={16} />
+        <div className="bg-black bg-opacity-30 cursor-pointer flex items-center justify-center  w-full h-full absolute overlay">
+          <div className="zoomReveal">
+            <div>
+              <FaPlay size={32} className="button" />
+            </div>
+          </div>
+          <button className="absolute p-3 button rounded-xl hover:text-appYellow group bg-deep right-2 top-2">
+            <Plus size={16} className="" />
           </button>
         </div>
         <img
@@ -38,7 +44,7 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
       <div className="flex flex-col items-start gap-2 py-4 px-3 cursor-pointer ">
         <div className="w-full flex items-center justify-between z-30">
           <span className="font-semibold text-[16px]">{room.roomName}</span>
-          <AppDropDownMenu content={<HomePreviewCardMenu />}>
+          <AppDropDownMenu content={<HomePreviewCardMenu room={room} />}>
             <button className="hover:bg-light rounded-xl p-3 button">
               <EllipsisVertical size={15} />
             </button>
@@ -49,7 +55,7 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
         </span>
         <span className="text-[13px] opacity-90 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-appGreen"></div>
-          66,560 online
+          {room.participants ? room.participants.length : 0} online
         </span>
       </div>
     </div>

@@ -17,7 +17,7 @@ const init = (
     WS_MESSAGE.WS_ROOM_JOIN,
     async ({
       roomId,
-      roomMeta: { isAutospeaker, isCreator, posX, posY, skin, dir },
+      roomMeta: { isAutospeaker, isCreator, posX, posY, skin, dir, spaceName },
     }) => {
       logger.info(`Peer (${socket.id}) joined room ${roomId}`);
 
@@ -42,6 +42,7 @@ const init = (
               posY,
               dir,
               skin,
+              spaceName
             },
           },
         };

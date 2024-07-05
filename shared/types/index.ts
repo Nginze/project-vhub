@@ -135,6 +135,7 @@ export interface RoomStatus {
   posY: number;
   dir: string;
   skin: string;
+  spaceName: string;
 }
 
 export interface UserData {

@@ -17,14 +17,12 @@ import {
 import { EllipsisVertical } from "lucide-react";
 import { RoomParticipant } from "../../../../shared/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { AppDropDownMenu } from "../global/AppDropDownMenu";
-import { RoomParticipantProfileMenu } from "./RoomParticipantProfileMenu";
 
-type RoomParticipantProfileProps = {
+type RoomChatProfileProps = {
   roomParticipant: RoomParticipant;
 };
 
-export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
+export const RoomChatProfile: React.FC<RoomChatProfileProps> = ({
   roomParticipant,
 }) => {
   return (
@@ -83,11 +81,9 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
           </Tooltip>
         </div>
         <div className="flex items-center">
-          <AppDropDownMenu content={<RoomParticipantProfileMenu />}>
-            <button className="hover:bg-light p-1.5 rounded-lg button">
-              <HiEllipsisHorizontal size={16} className="text-white/50" />
-            </button>
-          </AppDropDownMenu>
+          <button className="hover:bg-light p-1.5 rounded-lg button">
+            <HiEllipsisHorizontal size={16} className="text-white/50" />
+          </button>
         </div>
       </div>
     </div>

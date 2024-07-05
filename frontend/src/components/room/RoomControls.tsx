@@ -270,7 +270,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                 tooltipText="Leave"
                 iconOn={<BiExit size={24} />}
                 iconOff={<BiExit size={24} />}
-                bgColor="bg-appRed/30"
+                bgColor="bg-appRed"
                 textColor="text-white"
               />
             </AppDialog>

@@ -209,7 +209,7 @@ router.get(
 
       const { rows } = await pool.query(
         `
-          SELECT u.user_id, is_speaker, is_mod, raised_hand, is_muted,is_video_off, pos_x, pos_y, skin, dir
+          SELECT u.user_id, is_speaker, is_mod, raised_hand, is_muted,is_video_off, pos_x, pos_y, skin, dir 
           FROM room_status rs
           INNER JOIN user_data u ON rs.user_id = u.user_id
           WHERE rs.user_id = $1 AND room_id = $2

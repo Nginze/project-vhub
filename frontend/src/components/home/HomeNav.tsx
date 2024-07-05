@@ -29,6 +29,7 @@ import { AppCtxMenu } from "../global/AppCtxMenu";
 import { HomeResourceMenu } from "./HomeResourceMenu";
 import { AppDropDownMenu } from "../global/AppDropDownMenu";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 type HomeNavProps = {
   activeTab: string;
@@ -42,11 +43,15 @@ export const HomeNav: React.FC<HomeNavProps> = ({
   const { set, selectFormOpen, createFormOpen } = useCreateFormStore();
   const { user } = useContext(userContext);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const router = useRouter();
+
   return (
     <>
       <div className="flex justify-between items-center border-b border-light/50 pb-5">
         <div className="flex items-center gap-5">
-          <Logo withLogo={true} withText={false} size="lg" />
+          <div onClick={() => router.push("/home")}>
+            <Logo withLogo={true} withText={false} size="lg" />
+          </div>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setActiveTab("events")}

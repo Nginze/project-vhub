@@ -18,19 +18,11 @@ import { RoomInvite } from "./RoomInvite";
 import { RoomParticipant } from "../../../../shared/types";
 import { TbMessage2 } from "react-icons/tb";
 
-type RoomSheetProps = {
+type RoomSheetChatProps = {
   room: any;
 };
 
-export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const filteredParticipants = room.participants.filter(
-    (participant: RoomParticipant) =>
-      participant.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      participant.displayName?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+export const RoomSheetChat: React.FC<RoomSheetChatProps> = ({ room }) => {
   return (
     <div className="w-full h-full flex flex-col px-3.5 font-logo">
       <SheetHeader className="flex flex-row w-full mb-8 items-center space-y-0 justify-between">

@@ -95,3 +95,32 @@ router.patch(
     }
   }
 );
+
+router.patch(
+  "/update/spacename",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { userId } = req.user as UserData;
+      const { spaceName } = req.body;
+
+      if (!userId || !req.body) {
+        return res
+          .status(400)
+          .json({ msg: "Bad request, incorrect credentials sent" });
+      }
+
+      await pool.query(
+        `
+        UPDATE user_data 
+        SET space_name = $1
+        WHERE user_id = $2
+      `,
+        [spaceName, userId]
+      );
+
+      res.status(200).json({ msg: "updated user data" });
+    } catch (error) {
+      next(error);
+    }
+  }
+);

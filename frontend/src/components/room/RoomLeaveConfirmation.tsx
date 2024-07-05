@@ -26,6 +26,7 @@ export const RoomLeaveConfirmation: React.FC<
           onClick={async () => {
             setLoading(true);
             await router.push("/home");
+            router.reload();
             setLoading(false);
           }}
           className="flex items-center gap-2 py-6 w-full bg-appRed"

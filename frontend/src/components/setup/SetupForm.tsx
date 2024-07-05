@@ -19,11 +19,15 @@ import {
 } from "react-icons/bi";
 import { useRouter } from "next/router";
 import Loader from "../global/Loader";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/api";
+import { useRoomStore } from "@/global-store/RoomStore";
 
 type SetupFormProps = {};
 
 export const SetupForm: React.FC<SetupFormProps> = () => {
   const { user } = useContext(userContext);
+  const [spaceName, setSpaceName] = useState(user.userName);
 
   const [isTestingAudio, setIsTestingAudio] = useState(false);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
@@ -33,6 +37,7 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
   const router = useRouter();
   const { roomId } = router.query;
   const [joinLoading, setJoinLoading] = useState(false);
+  const { set } = useRoomStore();
 
   const handleAudioTest = async () => {
     if (!selectedMicDevice) {
@@ -96,6 +101,8 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
           </AppDialog>
           <div className="flex flex-col items-start gap-2 w-full">
             <Input
+              value={spaceName}
+              onChange={(e) => setSpaceName(e.target.value)}
               className="w-full bg-deep rounded-lg placeholder:text-white/50 border-light outline-none text-white"
               placeholder="Enter your username"
             />
@@ -110,8 +117,10 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
             size={"lg"}
             className="bg-[#43B581] rounded-xl text-white w-full flex items-center  gap-2 justify-center"
             onClick={async () => {
+              set({ spaceName });
               setJoinLoading(true);
               await router.push(`/room/${roomId}`);
+              // profileMutation.mutateAsync({ spaceName });
             }}
           >
             {joinLoading ? (
