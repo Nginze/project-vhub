@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "cloudinary": "^2.2.0",
-    "sharp": "^0.33.4"
-  }
-}

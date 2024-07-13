@@ -50,13 +50,13 @@ app.use("/worker", workerRoutes);
 app.use("/me", meRoutes);
 
 app.use(notFoundHandler);
-// app.use(errorHandler);
+app.use(errorHandler);
 
 io.use(wrap(session(sessionMiddleware)));
 io.use(wrap(passport.initialize()));
 io.use(wrap(passport.session()));
 
-server.listen(process.env.PORT || 8000, () => {
+server.listen(process.env.SERVER_PORT || 8080, () => {
   (async function () {
     try {
       setupWs(io);
@@ -64,6 +64,7 @@ server.listen(process.env.PORT || 8000, () => {
       logger.error(error);
     }
   })();
-  logger.debug("Server Running ...");
+  logger.debug(`Server Running ...`);
+  logger.debug(`Server on Port ${process.env.SERVER_PORT}...`);
   logger.debug(`Environment: ${process.env.NODE_ENV}`);
 });
