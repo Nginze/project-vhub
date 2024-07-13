@@ -52,5 +52,5 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USERNAME }}
           key: ${{ secrets.REMOTE_SSH_KEY }}
-          script: cd home/azureuser/app && set -a; source .env.production; set +a; docker compose up -d && rm -rf /home/azureuser/app/frontend /home/azureuser/app/previews
+          script: cd /home/azureuser/app; set -a; source .env.production; set +a; docker-compose up -d; rm -rf /home/azureuser/app/frontend /home/azureuser/app/previews
     
