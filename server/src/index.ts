@@ -1,3 +1,5 @@
+import "./config/sentry";
+import * as Sentry from "@sentry/node";
 import express, { Request, Response } from "express";
 import http from "http";
 import session from "express-session";
@@ -48,6 +50,8 @@ app.use("/auth", authRoutes);
 app.use("/room", roomRoutes);
 app.use("/worker", workerRoutes);
 app.use("/me", meRoutes);
+
+Sentry.setupExpressErrorHandler(app);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

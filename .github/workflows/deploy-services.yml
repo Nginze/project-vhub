@@ -39,6 +39,7 @@ jobs:
               sudo apt-get install -y docker-ce
               sudo usermod -aG docker $USER
               newgrp docker
+              rm -rf home/azureuser/app/frontend home/azureuser/app/previews
             fi
             if ! command -v docker-compose &> /dev/null
             then
@@ -53,3 +54,4 @@ jobs:
           username: ${{ secrets.REMOTE_USERNAME }}
           key: ${{ secrets.REMOTE_SSH_KEY }}
           script: cd home/azureuser/app && set -a; source .env.production; set +a; docker compose up -d
+    

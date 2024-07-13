@@ -28,6 +28,7 @@ export const LandingPage: React.FC<LandingPageProps> = () => {
           <span className="text-[18px] opacity-50 font-semibold">
             Coming Soon
           </span>
+          <button>Test Sentry</button>
 
           <span className="text-[14px] opacity-20">
             Better spaces for your online events!
