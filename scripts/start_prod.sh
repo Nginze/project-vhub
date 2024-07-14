@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load environment variables from .env.production
-docker-compose up -d
+docker-compose --env-file .env.production up -d
 
 # Change directory to webrtc-server
 cd webrtc-server
