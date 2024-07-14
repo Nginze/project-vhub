@@ -13,7 +13,8 @@ NGINX_CONF_FILE="${NGINX_CONF_PATH}/default.conf.template"
 SERVER_NAME="api.holoverse.me"
 
 # Add the server block for HTTPS
-echo "server {
+cat << 'EOF' >> ${NGINX_CONF_FILE}
+server {
     listen 443 ssl;
     server_name ${SERVER_NAME};
 
@@ -29,11 +30,14 @@ echo "server {
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_cache_bypass \$http_upgrade;
     }
-}" >> ${NGINX_CONF_FILE}
+}
+EOF
 
 # Add the server block for HTTP to HTTPS redirect
-echo "server {
+cat << 'EOF' >> ${NGINX_CONF_FILE}
+server {
     listen 80;
     server_name ${SERVER_NAME};
     return 301 https://\$server_name\$request_uri;
-}" >> ${NGINX_CONF_FILE}
+}
+EOF
