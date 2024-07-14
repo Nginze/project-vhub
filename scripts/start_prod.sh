@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#setup ssh
+./scripts/install_ssl.sh
+
 # Load environment variables from .env.production
 docker-compose --env-file .env.production up -d
 
