@@ -68,8 +68,9 @@ jobs:
           script: |
             cd ~/home/${{ secrets.REMOTE_USERNAME }}/app
             chmod +x scripts/install_ssl.sh
+            docker-compose --env-file .env.production build
             pm2 kill
-      
+
       - name: Run Docker Compose on remote
         uses: appleboy/ssh-action@master
         with:
