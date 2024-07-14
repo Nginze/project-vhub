@@ -37,7 +37,7 @@ EOF
 cat << 'EOF' >> ${NGINX_CONF_FILE}
 server {
     listen 80;
-    server_name \${SERVER_NAME};
-    return 301 https://\$server_name\$request_uri;
+    server_name ${SERVER_NAME};
+    return 301 https://$server_name\$request_uri;
 }
 EOF
