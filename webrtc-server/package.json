@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "start:prod": "pm2-runtime -n webrtc-server-c start  dist/webrtc-server/src/index.js",
+    "start:prod": "pm2-runtime -n webrtc-server-c start  dist/webrtc-server/src/index.js -d",
     "start": "ts-node ./src/index.ts",
     "dev": "nodemon ./src/index.ts",
     "test": "yarn jest"
