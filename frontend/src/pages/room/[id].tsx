@@ -183,9 +183,9 @@ const RoomPage: React.FC<RoomProps> = () => {
       <Grid />
       <div className="w-screen h-screen flex items-center justify-center bg-void">
         <div className="flex flex-col space-y-5 items-center">
-          <div className="flex items-center justify-center">
+          {/* <div className="flex items-center justify-center">
             <img src="/login_infog.png" className="w-2/4" />
-          </div>
+          </div> */}
           <div className="animate-bounce">
             <Logo size="md" withLogo />
           </div>

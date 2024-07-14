@@ -3,7 +3,7 @@ import axios from "axios";
 export const api = axios.create({
   baseURL:
     process.env.NODE_ENV == "development"
-      ? process.env.DEV_API
-      : process.env.PROD_API,
+      ? `http://${process.env.NGINX_HOST}`
+      : `http://${process.env.NGINX_HOST}`,
   withCredentials: true,
 });

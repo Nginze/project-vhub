@@ -22,7 +22,7 @@ export const cleanUp = async (
 ) => {
   const client = await pool.connect();
 
-  console.log("cleaning up user's room session", userId);
+  logger.debug("cleaning up user's room session", userId);
 
   try {
     await client.query("BEGIN");
@@ -56,7 +56,6 @@ export const cleanUp = async (
       );
 
       const dbTimeStamp = new Date(roomStatus[0].created_at).getTime();
-      console.log(timeStamp, dbTimeStamp, timeStamp < dbTimeStamp);
 
       // If the user's room status is older than the current room status (race-condition avoidance with main server)
       if (dbTimeStamp < timeStamp) {

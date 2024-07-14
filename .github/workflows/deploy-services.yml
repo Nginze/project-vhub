@@ -46,11 +46,32 @@ jobs:
               sudo chmod +x /usr/local/bin/docker-compose
             fi
 
+      - name: Install mediasoup build essentials and pnpm on remote
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          script: |
+            sudo apt-get update
+            sudo apt-get install -y build-essential python3
+            sudo npm install -g pnpm
+
+      - name: Give execute permissions and run install_ssl script on remote
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          script: |
+            cd ~/home/${{ secrets.REMOTE_USERNAME }}/app
+            chmod +x scripts/install_ssl.sh
+            ./scripts/install_ssl.sh
+
       - name: Run Docker Compose on remote
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USERNAME }}
           key: ${{ secrets.REMOTE_SSH_KEY }}
-          script: cd ~/home/${{ secrets.REMOTE_USERNAME }}/app; set -a; source .env.production; set +a; docker-compose up -d; rm -rf frontend previews
-    
+          script: cd ~/home/${{ secrets.REMOTE_USERNAME }}/app; rm -rf frontend previews; chmod+x ./scripts/start_prod.sh; ./scripts/start_prod.sh

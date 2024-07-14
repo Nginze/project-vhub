@@ -55,8 +55,13 @@ export type SendDTO = {
   id?: string;
 };
 
+export type ErrorDTO = {
+  op: string;
+  message: string;
+};
+
 export type SendParams = {
   op: string;
   peerId?: String;
-  d: SendDTO | string;
+  d: SendDTO | ErrorDTO | string;
 };

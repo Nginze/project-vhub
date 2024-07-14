@@ -2,12 +2,7 @@ import { Queue, Worker } from "bullmq";
 import "dotenv/config";
 import { api } from "../config/api";
 import { logger } from "../config/logger";
-import {
-  deleteRoom,
-  getPeerId,
-  cleanUp,
-  getRoomParticipants,
-} from "../helpers";
+import { cleanUp } from "../helpers";
 
 export const connection = {
   host: process.env.QUEUE_HOST as string,
@@ -26,34 +21,16 @@ export const setupWsWorker = () => {
       const { userId, roomId } = job.data;
       try {
         if (job.name == "clean_up") {
-          console.log("new ws job", job.data);
-
+          logger.debug("new ws job", job.data);
           await cleanUp(userId, roomId, job.data.timeStamp);
-
-          const peerId = await getPeerId(userId!);
-
-          // await api.post("/worker/invalidate", {
-          //   peerId,
-          // });
-
-          // const participants = await getRoomParticipants(roomId);
-
-          // if (participants.length < 1) {
-          //   sendQueue.add("destroy_room", {
-          //     op: "destroy-room",
-          //     d: { roomId },
-          //   });
-          //   await deleteRoom(roomId);
-          // }
         } else {
           const event = job.data;
-
           await api.post("/worker/process", {
             event,
           });
         }
       } catch (error) {
-        logger.error(error);
+        console.log(error)
         throw error;
       }
     },

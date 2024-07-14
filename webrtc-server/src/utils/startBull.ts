@@ -21,7 +21,7 @@ export const sendQueue = new Queue("sendqueue", {
 });
 
 export const startBull = (handler: HandlerMap) => {
-  console.log("worker created");
+  logger.debug("worker created");
   new Worker(
     "recvqueue",
     async (job) => {

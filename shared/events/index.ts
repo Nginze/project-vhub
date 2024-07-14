@@ -52,6 +52,7 @@ export enum RTC_MESSAGE {
   RTC_MS_SEND_NEW_PEER_SPEAKER = "new-peer-speaker",
   RTC_MS_SEND_SEND_TRACK_DONE = "@send-track-done",
   RTC_MS_SEND_ERROR = "error",
+  RTC_MS_SEND_SUCCESS = "success",
 }
 
 export type MESSAGE = WS_MESSAGE | RTC_MESSAGE;
