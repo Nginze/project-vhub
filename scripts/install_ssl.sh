@@ -13,16 +13,16 @@ NGINX_CONF_FILE="${NGINX_CONF_PATH}/default.conf.template"
 SERVER_NAME="api.holoverse.me"
 
 # Add the server block for HTTPS
-cat << 'EOF' >> ${NGINX_CONF_FILE}
+cat << EOF >> ${NGINX_CONF_FILE}
 server {
     listen 443 ssl;
-    server_name ${SERVER_NAME};
+    server_name \${SERVER_NAME};
 
     ssl_certificate ${SSL_CERT_FILE};
     ssl_certificate_key ${SSL_KEY_FILE};
 
     location / {
-        proxy_pass http://${SERVER_HOST}:${SERVER_PORT}; 
+        proxy_pass http://\${SERVER_HOST}:\${SERVER_PORT}; 
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -37,7 +37,7 @@ EOF
 cat << 'EOF' >> ${NGINX_CONF_FILE}
 server {
     listen 80;
-    server_name ${SERVER_NAME};
+    server_name \${SERVER_NAME};
     return 301 https://\$server_name\$request_uri;
 }
 EOF
