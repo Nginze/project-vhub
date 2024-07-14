@@ -74,4 +74,4 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USERNAME }}
           key: ${{ secrets.REMOTE_SSH_KEY }}
-          script: cd ~/home/${{ secrets.REMOTE_USERNAME }}/app; rm -rf frontend previews; chmod+x ./scripts/start_prod.sh; ./scripts/start_prod.sh
+          script: cd ~/home/${{ secrets.REMOTE_USERNAME }}/app; rm -rf frontend previews; chmod +x ./scripts/start_prod.sh; ./scripts/start_prod.sh
