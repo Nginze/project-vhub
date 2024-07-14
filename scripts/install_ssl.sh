@@ -16,7 +16,7 @@ SERVER_NAME="api.holoverse.me"
 cat << EOF >> ${NGINX_CONF_FILE}
 server {
     listen 443 ssl;
-    server_name \${SERVER_NAME};
+    server_name ${SERVER_NAME};
 
     ssl_certificate ${SSL_CERT_FILE};
     ssl_certificate_key ${SSL_KEY_FILE};
@@ -34,10 +34,10 @@ server {
 EOF
 
 # Add the server block for HTTP to HTTPS redirect
-cat << 'EOF' >> ${NGINX_CONF_FILE}
+cat << EOF >> ${NGINX_CONF_FILE}
 server {
     listen 80;
-    server_name ${SERVER_NAME};
-    return 301 https://$server_name\$request_uri;
+    server_name ${SERVER_NAME} www.${SERVER_NAME};
+    return 301 https://${SERVER_NAME}\$request_uri;
 }
 EOF
