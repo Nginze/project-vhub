@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source .env.production
+
 #setup ssh
 ./scripts/install_ssl.sh
 
