@@ -51,7 +51,9 @@ export const HomeCharacterCustomizer: React.FC<
   const drawCharacter = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    //@ts-ignore
     const ctx = canvas.getContext("2d");
+    //@ts-ignore
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const parts = [base, eyes, hair, clothing, accessories];
@@ -61,7 +63,9 @@ export const HomeCharacterCustomizer: React.FC<
         img.src = part;
         img.onload = () => {
           const scale = 1.4; // Increase this to increase the size of the image
+          //@ts-ignore
           const x = canvas.width / 2 - (img.width * scale) / 2;
+          //@ts-ignore
           const y = canvas.height / 2 - (img.height * scale) / 2;
           ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
         };
@@ -72,7 +76,11 @@ export const HomeCharacterCustomizer: React.FC<
   const drawSpriteSheet = () => {
     const canvas = canvasRef.current;
     if (!canvas || !user.spriteUrl) return;
+
+    //@ts-ignore
     const ctx = canvas.getContext("2d");
+
+    //@ts-ignore
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const img = new Image();
@@ -81,7 +89,11 @@ export const HomeCharacterCustomizer: React.FC<
       const frameWidth = 32;
       const frameHeight = 64;
       const scale = 1.4; // Increase this to increase the size of the image
+
+      //@ts-ignore
       const x = canvas.width / 2 - (frameWidth * scale) / 2;
+
+      //@ts-ignore
       const y = canvas.height / 2 - (frameHeight * scale) / 2;
       ctx.drawImage(
         img,

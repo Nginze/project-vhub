@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { FaPlay } from "react-icons/fa";
 
 type HomeRoomPreviewCardProps = {
-  room: Room;
+  room: any;
 };
 
 export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({

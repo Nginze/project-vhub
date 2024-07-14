@@ -27,7 +27,9 @@ type SetupFormProps = {};
 
 export const SetupForm: React.FC<SetupFormProps> = () => {
   const { user } = useContext(userContext);
-  const [spaceName, setSpaceName] = useState(user.userName);
+  const [spaceName, setSpaceName] = useState<string | undefined | null>(
+    user.userName
+  );
 
   const [isTestingAudio, setIsTestingAudio] = useState(false);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
@@ -101,7 +103,7 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
           </AppDialog>
           <div className="flex flex-col items-start gap-2 w-full">
             <Input
-              value={spaceName}
+              value={spaceName as string}
               onChange={(e) => setSpaceName(e.target.value)}
               className="w-full bg-deep rounded-lg placeholder:text-white/50 border-light outline-none text-white"
               placeholder="Enter your username"
@@ -117,7 +119,7 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
             size={"lg"}
             className="bg-[#43B581] rounded-xl text-white w-full flex items-center  gap-2 justify-center"
             onClick={async () => {
-              set({ spaceName });
+              set({ spaceName: spaceName as string });
               setJoinLoading(true);
               await router.push(`/room/${roomId}`);
               // profileMutation.mutateAsync({ spaceName });

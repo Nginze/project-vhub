@@ -10,6 +10,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+//@ts-ignore
 import { LiveAudioVisualizer } from "react-audio-visualize";
 import {
   BiImageAdd,

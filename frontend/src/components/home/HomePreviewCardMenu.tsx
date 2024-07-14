@@ -11,7 +11,7 @@ import { Room } from "../../../../shared/types";
 import { useRouter } from "next/router";
 
 type HomePreviewCardMenuProps = {
-  room: Room;
+  room: any;
 };
 
 export const HomePreviewCardMenu: React.FC<HomePreviewCardMenuProps> = ({
