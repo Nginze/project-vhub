@@ -9,7 +9,7 @@ let REDIS_STORE = new Store({
 
 export const sessionMiddleware = {
   secret: "secret",
-  resave: true,
+  resave: false,
   store: REDIS_STORE,
   saveUninitialized: true,
   cookie: {
