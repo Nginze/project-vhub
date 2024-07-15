@@ -6,7 +6,7 @@ source .env.production
 ./scripts/install_ssl.sh
 
 # Load environment variables from .env.production
-docker-compose --env-file .env.production up -d
+docker compose --env-file .env.production up -d
 
 # Change directory to webrtc-server
 cd webrtc-server
