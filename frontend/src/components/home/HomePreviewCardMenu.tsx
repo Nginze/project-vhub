@@ -9,6 +9,8 @@ import { CreditCard, HelpCircle } from "lucide-react";
 import { MdBrowserUpdated } from "react-icons/md";
 import { Room } from "../../../../shared/types";
 import { useRouter } from "next/router";
+import { BiLinkExternal } from "react-icons/bi";
+import { IoCopyOutline } from "react-icons/io5";
 
 type HomePreviewCardMenuProps = {
   room: any;
@@ -36,16 +38,22 @@ export const HomePreviewCardMenu: React.FC<HomePreviewCardMenuProps> = ({
     <div>
       <DropdownMenuGroup>
         <DropdownMenuItem
+          className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]"
           onClick={() =>
             router.push(
               `/room/setup?roomId= ${room.roomId} && roomName=${room.roomName}`
             )
           }
         >
+          <BiLinkExternal size={20} className="mr-4" />
           <span>Visit</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => copyToClipboard()}>
-          <span>Copy URL</span>
+        <DropdownMenuItem
+          className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]"
+          onClick={() => copyToClipboard()}
+        >
+          <IoCopyOutline size={20} className="mr-4" />
+          <span>Copy Link</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </div>

@@ -23,9 +23,9 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
           `/room/setup?roomId=${room.roomId}&&roomName=${room.roomName}`
         );
       }}
-      className="flex overflow-hidden flex-col group shadow-appShadow relative bg-deep/50 rounded-xl card car"
+      className="flex overflow-hidden flex-col group shadow-appShadow relative bg-ultra/50 rounded-lg card car"
     >
-      <div className="flex-grow h-44 bg-dark overflow-hidden rounded-xl relative rounded-b-none  cursor-pointer">
+      <div className="flex-grow h-44 bg-dark overflow-hidden  relative rounded-b-none  cursor-pointer">
         <div className="bg-black bg-opacity-30 cursor-pointer flex items-center justify-center  w-full h-full absolute overlay">
           <div className="zoomReveal">
             <div>
@@ -38,25 +38,31 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
         </div>
         <img
           src="/mock_prev.jpg"
-          className="w-full h-full object-cover rounded-xl rounded-b-none"
+          className="w-full h-full object-cover  rounded-b-none"
         />
       </div>
-      <div className="flex flex-col items-start gap-2 py-4 px-3 cursor-pointer ">
+      <div className="flex flex-col items-start py-4 px-3 cursor-pointer ">
         <div className="w-full flex items-center justify-between z-30">
           <span className="font-semibold text-[16px]">{room.roomName}</span>
-          <AppDropDownMenu content={<HomePreviewCardMenu room={room} />}>
+          <AppDropDownMenu
+            className="bg-dark border border-light text-white rounded-xl w-[160px]"
+            content={<HomePreviewCardMenu room={room} />}
+          >
             <button className="hover:bg-light rounded-xl p-3 button">
               <EllipsisVertical size={15} />
             </button>
           </AppDropDownMenu>
         </div>
-        <span className="text-[13px] opacity-90 font-sans overflow-hidden overflow-ellipsis h-10 w-full">
-          {room.roomDesc}
-        </span>
-        <span className="text-[13px] opacity-90 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-appGreen"></div>
-          {room.participants ? room.participants.length : 0} online
-        </span>
+        <div className="w-full flex flex-col gap-14">
+          <span className="text-[13px] opacity-80 font-sans overflow-hidden overflow-ellipsis h-10 w-full">
+            {/* {room.roomDesc} */}A space for developers and enthusiasts to
+            and share creations built with openAIs powerful models
+          </span>
+          <span className="text-[13px] opacity-90 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-appGreen"></div>
+            {room.participants ? room.participants.length : 0} online
+          </span>
+        </div>
       </div>
     </div>
   );

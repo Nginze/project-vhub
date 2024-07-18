@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const svgToDataUri = require("mini-svg-data-uri");
-
+const twAnimate = require("tailwindcss-animate");
 const colors = require("tailwindcss/colors");
 const {
   default: flattenColorPalette,
@@ -38,6 +38,8 @@ const config = {
       },
       colors: {
         // Backgrounds
+        ultra: "#1e2124",
+        semiUltra: "#282b30",
         void: "#202225",
         deep: "#2a2c31",
         dark: "#2f3136",
@@ -130,6 +132,7 @@ const config = {
         { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
       );
     },
+    require("tailwindcss-animate"),
   ],
 } satisfies Config;
 

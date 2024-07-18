@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Logo } from "../global/Logo";
 import { Button } from "../ui/button";
 import {
   Calendar,
   CalendarRange,
+  Check,
   CircleHelp,
   CircleUser,
   Info,
@@ -28,8 +29,12 @@ import { FaCalendarDays } from "react-icons/fa6";
 import { AppCtxMenu } from "../global/AppCtxMenu";
 import { HomeResourceMenu } from "./HomeResourceMenu";
 import { AppDropDownMenu } from "../global/AppDropDownMenu";
-import { cn } from "@/lib/utils";
+import { cn, getSpritePreview } from "@/lib/utils";
 import { useRouter } from "next/router";
+import { get } from "http";
+import { HomeCharacterCustomizer } from "./HomeCharacterCustomizer";
+import { useUIStore } from "@/global-store/UIStore";
+import Loader from "../global/Loader";
 
 type HomeNavProps = {
   activeTab: string;
@@ -42,8 +47,16 @@ export const HomeNav: React.FC<HomeNavProps> = ({
 }) => {
   const { set, selectFormOpen, createFormOpen } = useCreateFormStore();
   const { user } = useContext(userContext);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [spritePreviewUrl, setSpritePreviewUrl] = useState<string>("");
   const router = useRouter();
+  const { set: setUI, sheetOpen } = useUIStore();
+
+  useEffect(() => {
+    console.log(spritePreviewUrl);
+    getSpritePreview(3, user).then((previewUrl) =>
+      setSpritePreviewUrl(previewUrl as string)
+    );
+  }, [user]);
 
   return (
     <>
@@ -76,8 +89,35 @@ export const HomeNav: React.FC<HomeNavProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-10">
-          <AppDropDownMenu content={<HomeResourceMenu />}>
-            <button className="flex gap-2 items-center button px-5 p-3 active:bg-deep hover:bg-light rounded-xl font-semibold">
+          <AppDialog
+            width={"sm:max-w-[450px]"}
+            className="p-0"
+            content={<HomeCharacterCustomizer />}
+          >
+            <div className="relative">
+              <button className="w-10 h-10 bg-black hover:opacity-55 transition-opacity relative border rounded-full border-light overflow-hidden flex items-center justify-center">
+                {spritePreviewUrl ? (
+                  <img
+                    src={spritePreviewUrl}
+                    className="w-14 h-14 object-contain transform scale-110 "
+                  />
+                ) : null}
+              </button>
+
+              <div className="bg-blue-400 p-0.5 border border-light absolute bottom-0 -right-1 rounded-full">
+                {spritePreviewUrl ? (
+                  <Check size={10} />
+                ) : (
+                  <Loader width={10} alt />
+                )}
+              </div>
+            </div>
+          </AppDialog>
+          <AppDropDownMenu
+            className="bg-dark border border-light text-white w-[190px] rounded-xl"
+            content={<HomeResourceMenu />}
+          >
+            <button className="flex gap-2 items-center px-5 p-3 active:bg-deep hover:bg-light rounded-xl font-semibold">
               <HiQuestionMarkCircle size={26} />
               Resources
             </button>
@@ -96,9 +136,14 @@ export const HomeNav: React.FC<HomeNavProps> = ({
             </Button>
           </AppDialog>
           <AppSheet
+            className="w-[500px] p-0"
             open={sheetOpen}
-            onOpenChange={setSheetOpen}
-            content={<HomeProfileSheet setSheetOpen={setSheetOpen} />}
+            onOpenChange={(open: boolean) => setUI({ sheetOpen: !sheetOpen })}
+            content={
+              <HomeProfileSheet
+              // setSheetOpen={(open: boolean) => setUI({ sheetOpen: false })}
+              />
+            }
           >
             <Avatar className="w-8 h-8 cursor-pointer ring ">
               <AvatarImage

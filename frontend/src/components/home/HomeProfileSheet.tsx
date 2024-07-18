@@ -1,6 +1,11 @@
 import { api } from "@/api";
 import { userContext } from "@/context/UserContext";
-import { getMicrophones, useSettingStore } from "@/global-store/SettingStore";
+import {
+  getMicrophones,
+  getCameras,
+  getSpeakers,
+  useSettingStore,
+} from "@/global-store/SettingStore";
 import { GitBranch, Speaker } from "lucide-react";
 import { useRouter } from "next/router";
 import React, {
@@ -13,10 +18,12 @@ import React, {
 //@ts-ignore
 import { LiveAudioVisualizer } from "react-audio-visualize";
 import {
+  BiCamera,
   BiImageAdd,
   BiMicrophone,
   BiMicrophoneOff,
   BiSpeaker,
+  BiWrench,
 } from "react-icons/bi";
 import {
   BsOpticalAudio,
@@ -44,9 +51,17 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { stat } from "fs";
 import { useSoundEffectStore } from "@/global-store/SoundFxStore";
+import {
+  HiMicrophone,
+  HiMiniSpeakerWave,
+  HiMiniVideoCamera,
+} from "react-icons/hi2";
+import { CgLogOut } from "react-icons/cg";
+import { HomeKeyboardShortcuts } from "./HomeKeyboardShortcuts";
+import { appToast } from "@/lib/utils";
 
 type HomeProfileSheetProps = {
-  setSheetOpen: Dispatch<SetStateAction<boolean>>;
+  setSheetOpen?: Dispatch<SetStateAction<boolean>>;
   dontShowXtra?: boolean;
 };
 
@@ -60,9 +75,15 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
   const [uploaderOpen, setUploaderOpen] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [isTestingAudio, setIsTestingAudio] = useState(false);
+  const [isTestingMic, setIsTestingMic] = useState(false);
   const [microphones, setMicrophones] = useState<
     { value: string; label: string }[]
   >([]);
+
+  const [speakers, setSpeakers] =
+    useState<{ value: string; label: string }[]>();
+  const [cameras, setCameras] = useState<{ value: string; label: string }[]>();
+
   const [bioOpen, setBioOpen] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>();
   const [blob, setBlob] = useState<Blob>();
@@ -76,6 +97,8 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
     noiseCancellation,
     soundEffects,
     selectedMicDevice,
+    selectedCameraDevice,
+    selectedSpeakerDevice,
     updateNoiseCancellation,
     updateSoundEffects,
     updateSpatialAudio,
@@ -95,27 +118,16 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["user"] });
+      appToast("Bio Updated", null, "bottom-center");
+    },
+    onError: async () => {
+      appToast("Bio Update Failed", null, "bottom-center");
     },
   });
 
   const handleBioChange = async () => {
     if (user.bio !== newBio) {
-      await toast.promise(
-        profileMutation.mutateAsync(),
-        {
-          loading: "Syncing Bio",
-          success: "Bio Updated",
-          error: "Sync failed",
-        },
-        {
-          style: {
-            borderRadius: "100px",
-            background: "#333",
-            padding: "14px",
-            color: "#fff",
-          },
-        }
-      );
+      profileMutation.mutateAsync();
     }
   };
 
@@ -135,20 +147,16 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
     }
   };
 
-  const handleAudioTest = async () => {
+  const handleMicTest = async () => {
     if (!selectedMicDevice) {
-      return toast("No Mic Selected", {
-        icon: <BiMicrophoneOff size={19} />,
-        style: {
-          borderRadius: "100px",
-          background: "#333",
-          padding: "14px",
-          color: "#fff",
-        },
-      });
+      return appToast(
+        "No Mic Selected",
+        <BiMicrophoneOff size={19} />,
+        "bottom-center"
+      );
     }
 
-    if (isTestingAudio && mediaStream) {
+    if (isTestingMic && mediaStream) {
       mediaStream.getTracks().forEach((track) => track.stop());
       setMediaStream(null);
       setMediaRecorder(null);
@@ -161,26 +169,97 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
       setMediaRecorder(recorder);
       recorder.start();
     }
-    setIsTestingAudio(!isTestingAudio);
+    setIsTestingAudio(!isTestingMic);
+  };
+
+  const handleAudioTest = async () => {
+    setIsTestingAudio(true);
+    if (!selectedSpeakerDevice) {
+      return appToast(
+        "No Speaker Selected",
+        <BiMicrophoneOff size={19} />,
+        "bottom-center"
+      );
+    }
+
+    if (isTestingAudio && mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop());
+      setMediaStream(null);
+      setMediaRecorder(null);
+    } else {
+      playSoundEffect("roomInvite");
+      setTimeout(() => {
+        setIsTestingAudio(false);
+      }, 1000);
+    }
   };
 
   useEffect(() => {
     (async () => {
       const microphones = await getMicrophones();
+      const cameras = await getCameras();
+      const speakers = await getSpeakers();
+
+      if (!microphones || !cameras || !speakers) {
+        appToast("No devices found", <BiWrench size={19} />, "bottom-center");
+      }
+
+      if (
+        selectedMicDevice === "default" ||
+        selectedMicDevice === "undefined"
+      ) {
+        setSettings({ selectedMicDevice: microphones[0].value });
+      }
+
+      if (
+        selectedCameraDevice === "default" ||
+        selectedCameraDevice === "undefined"
+      ) {
+        setSettings({ selectedCameraDevice: cameras[0].value});
+      }
+
+      if (
+        selectedSpeakerDevice === "default" ||
+        selectedSpeakerDevice === "undefined"
+      ) {
+        setSettings({ selectedSpeakerDevice: speakers[0].value });
+      }
+
       setMicrophones(microphones);
+      setCameras(cameras);
+      setSpeakers(speakers);
     })();
   }, []);
 
+  if (!user || !microphones || !cameras || !speakers) {
+    return (
+      <>
+        <div className="mt-5 w-full  relative font-sans">
+          <div
+            style={{
+              height: !dontShowXtra
+                ? "calc(100vh - 6rem)"
+                : "calc(100vh - 15rem)",
+            }}
+            className="chat w-full sheet overflow-auto px-5 flex items-center justify-center py-4 scrollable"
+          >
+            <Loader alt width={20} />
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      <div className="mt-5 w-full relative px-3 font-sans">
+      <div className="mt-5 w-full  relative font-sans">
         <div
           style={{
             height: !dontShowXtra
               ? "calc(100vh - 6rem)"
               : "calc(100vh - 15rem)",
           }}
-          className="chat w-full sheet overflow-auto"
+          className="chat w-full sheet overflow-auto px-5 py-4 scrollable"
         >
           <div className="space-y-3 mb-5">
             <div className="flex items-center space-x-5">
@@ -191,7 +270,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                   alt=""
                 />
                 <AppDialog
-                  width={"sm:max-w-[450px]"}
+                  width={"sm:max-w-[600px]"}
                   open={uploaderOpen}
                   setOpenChange={setUploaderOpen}
                   content={<FileUploader setUploaderOpen={setUploaderOpen} />}
@@ -203,7 +282,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
               </div>
             </div>
             <div className="flex flex-col items-start w-full mt-4 mb-7 text-sm">
-              <div className="flex items-center w-full justify-between">
+              <div className="flex items-start w-full justify-between">
                 <div className="flex flex-col items-staPt space-y-1 mb-5">
                   <span className="font-semibold text-[20px]">
                     {user.displayName}
@@ -213,16 +292,27 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                   </span>
                 </div>
 
-                <AppDialog
-                  width={"sm:max-w-[450px]"}
-                  className="p-0"
-                  content={<HomeCharacterCustomizer />}
-                >
-                  <button className="flex items-center gap-2  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none">
-                    <PiDressFill />
-                    Customize
-                  </button>
-                </AppDialog>
+                <div className="flex gap-2">
+                  <AppDialog
+                    width={"sm:max-w-[450px]"}
+                    className="p-0"
+                    content={<HomeCharacterCustomizer />}
+                  >
+                    <button className="flex items-center gap-2  text-white rounded-xl active:bg-void bg-void hover:bg-dark transition-all px-3 border border-light  py-2  outline-none focus:outline-none">
+                      ✨
+                    </button>
+                  </AppDialog>
+
+                  <AppDialog
+                    width={"sm:max-w-[450px]"}
+                    className="p-0"
+                    content={<HomeKeyboardShortcuts />}
+                  >
+                    <button className="flex items-center gap-2  text-white rounded-xl active:bg-void bg-void hover:bg-dark transition-all px-3 border border-light  py-2  outline-none focus:outline-none">
+                      🖮
+                    </button>
+                  </AppDialog>
+                </div>
               </div>
 
               <Separator className="bg-light opacity-40 w-full mx-auto" />
@@ -230,7 +320,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
           </div>
           <div className="w-full space-y-1 mb-4">
             <span className="font-semibold text-[15px] flex flex-col items-start space-y-2">
-              <span className="flex items-center flex-col"> 🌟 About </span>
+              <span className="flex items-center flex-col"> About </span>
               <span className="text-[13px] font-sans font-normal opacity-30">
                 Describe yourself
               </span>
@@ -251,7 +341,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                 </div>
               ) : (
                 <textarea
-                  className="chat cursor-text bg-transparent italic text-[14px] text-white outline-none  border-none w-full rounded-md hover:shadow-sm"
+                  className="chat cursor-text border bg-transparent italic text-[14px] text-white outline-none  border-none w-full rounded-md hover:shadow-sm"
                   value={newBio as string}
                   onChange={(e) => {
                     setBio(e.target.value);
@@ -263,59 +353,143 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
           </div>
           <div className="space-y-3">
             <span className="font-semibold text-[15px] flex items-center">
-              ⚙ Preferences{/* <Settings2Icon className="ml-2" /> */}
+              Devices
             </span>
+
             <div className="flex flex-col items-start space-y-3">
-              <div className="w-full flex flex-col items-start space-y-2">
-                <Select
-                  onValueChange={(v) => {
-                    setSettings({ selectedMicDevice: v });
-                  }}
-                  defaultValue={selectedMicDevice}
-                >
-                  <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-light hover:bg-deep border-none ring-0 outline-none focus:outline-none focus:ring-0">
-                    <SelectValue
-                      placeholder={
-                        <div className="flex items-center gap-2">
-                          <BiMicrophone size={20} />
-                          <span className="flex items-center gap-2">
-                            <span className="text-[16px] font-semibold opacity-70">
-                              Select a Microphone
+              <div className="w-full flex flex-col space-y-2">
+                <div className="flex items-center gap-4">
+                  <HiMicrophone size={20} />
+                  <Select
+                    onValueChange={(v) => {
+                      setSettings({ selectedMicDevice: v });
+                    }}
+                    defaultValue={selectedMicDevice}
+                  >
+                    <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-[#282b30] hover:bg-light border-none ring-0 outline-none focus:outline-none focus:ring-0">
+                      <SelectValue
+                        placeholder={
+                          <div className="flex items-center gap-2">
+                            <BiMicrophone size={20} />
+                            <span className="flex items-center gap-2">
+                              <span className="text-[16px] font-semibold opacity-70">
+                                Select a Microphone
+                              </span>
+                            </span>
+                          </div>
+                        }
+                      />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {microphones?.map(({ value, label }) => (
+                        <SelectItem
+                          key={value}
+                          value={value}
+                          className="text-[16px] font-semibold opacity-70"
+                        >
+                          <span className="flex items-center text-left w-full gap-2">
+                            <span className="text-[16px] font-semibold opacity-70 truncate">
+                              {label}
                             </span>
                           </span>
-                        </div>
-                      }
-                    />
-                  </SelectTrigger>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-4">
+                  <HiMiniVideoCamera size={20} />
+                  <Select
+                    onValueChange={(v) => {
+                      setSettings({ selectedCameraDevice: v });
+                    }}
+                    defaultValue={selectedCameraDevice}
+                  >
+                    <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-[#282b30] hover:bg-light border-none ring-0 outline-none focus:outline-none focus:ring-0">
+                      <SelectValue
+                        placeholder={
+                          <div className="flex items-center gap-2">
+                            <BiCamera size={20} />
+                            <span className="flex items-center gap-2">
+                              <span className="text-[16px] font-semibold opacity-70 truncate">
+                                Select a Camera
+                              </span>
+                            </span>
+                          </div>
+                        }
+                      />
+                    </SelectTrigger>
 
-                  <SelectContent>
-                    {microphones.map(({ value, label }) => (
-                      <SelectItem
-                        key={value}
-                        value={value}
-                        className="text-[16px] font-semibold opacity-70"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-[16px] font-semibold opacity-70">
-                            {label}
+                    <SelectContent>
+                      {cameras?.map(({ value, label }) => (
+                        <SelectItem
+                          key={value}
+                          value={value}
+                          className="text-[16px] font-semibold opacity-70"
+                        >
+                          <span className="flex items-center text-left w-full gap-2">
+                            <span className="text-[16px] font-semibold text-left w-full opacity-70 truncate">
+                              {label}
+                            </span>
                           </span>
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-4">
+                  <HiMiniSpeakerWave size={20} />
+                  <Select
+                    onValueChange={(v) => {
+                      setSettings({ selectedSpeakerDevice: v });
+                    }}
+                    defaultValue={selectedSpeakerDevice}
+                  >
+                    <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-[#282b30] hover:bg-light border-none ring-0 outline-none focus:outline-none focus:ring-0">
+                      <SelectValue
+                        placeholder={
+                          <div className="flex items-center gap-2">
+                            <BiSpeaker size={20} />
+                            <span className="flex items-center gap-2">
+                              <span className="text-[16px] font-semibold opacity-70 truncate">
+                                Select a Speaker
+                              </span>
+                            </span>
+                          </div>
+                        }
+                      />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {speakers?.map(({ value, label }) => (
+                        <SelectItem
+                          key={value}
+                          value={value}
+                          className="text-[16px] font-semibold opacity-70"
+                        >
+                          <span className="flex items-start text-left w-full gap-2">
+                            <span className="text-[16px] font-semibold text-left opacity-70 truncate">
+                              {label}
+                            </span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="flex items-center justify-between w-full flex-col">
                   <span className="text-[13px] opacity-30 ">
                     Control your audio & video input
                   </span>
 
-                  {!isTestingAudio ? (
+                  {!isTestingMic || !isTestingAudio ? (
                     <div className="flex items-center gap-5">
                       <button
                         className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
                         onClick={() => {
-                          handleAudioTest();
-                          setIsTestingAudio(true);
+                          handleMicTest();
+                          setIsTestingMic(true);
                         }}
                       >
                         <BsWrench />
@@ -326,12 +500,20 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                         className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
                         onClick={() => {
                           handleAudioTest();
-                          setIsTestingAudio(true);
-                          playSoundEffect("roomChatMention");
                         }}
                       >
-                        <BsSoundwave />
-                        Test Audio
+                        {isTestingAudio ? (
+                          <>
+                            <BsSoundwave />
+                            Testing Audio
+                            <Loader alt width={13} />
+                          </>
+                        ) : (
+                          <>
+                            <BsSoundwave />
+                            Test Audio
+                          </>
+                        )}
                       </button>
                     </div>
                   ) : (
@@ -339,8 +521,8 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       <button
                         className="flex items-center gap-2 opacity-100  text-blue-600 rounded-xl  py-3 outline-none focus:outline-none"
                         onClick={() => {
-                          handleAudioTest();
-                          setIsTestingAudio(false);
+                          handleMicTest();
+                          setIsTestingMic(false);
                         }}
                       >
                         Cancel Test
@@ -365,9 +547,19 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                 </div>
               </div>
 
+              <span className="font-semibold text-[15px] flex items-center">
+                Preferences
+              </span>
+
               <div className="flex items-center justify-between w-full">
-                <label className="cursor-pointer text-sm" htmlFor="invites">
+                <label
+                  className="cursor-pointer text-sm flex flex-col items-start"
+                  htmlFor="invites"
+                >
                   Spatial Audio
+                  <span className="opacity-30 text-[13px]">
+                    Turn on to hear based on direction{" "}
+                  </span>
                 </label>
                 <Switch
                   checked={spatialAudio}
@@ -376,8 +568,14 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                 />
               </div>
               <div className="flex items-center justify-between w-full">
-                <label className="cursor-pointer text-sm" htmlFor="invites">
+                <label
+                  className="cursor-pointer flex flex-col items-start text-sm"
+                  htmlFor="invites"
+                >
                   Noise Cancelation
+                  <span className="opacity-30 text-[13px]">
+                    Enhanced audio with AI
+                  </span>
                 </label>
                 <Switch
                   checked={noiseCancellation}
@@ -389,10 +587,13 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
               </div>
               <div className="flex items-center justify-between w-full">
                 <label
-                  className="cursor-pointer text-sm"
+                  className="cursor-pointer text-sm flex flex-col items-start"
                   htmlFor="sound-effects"
                 >
                   Sound FX
+                  <span className="opacity-30 text-[13px]">
+                    Enable/Disable sound effects
+                  </span>
                 </label>
                 <Switch
                   checked={soundEffects}
@@ -403,10 +604,13 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
 
               <div className="flex items-center justify-between w-full">
                 <label
-                  className="cursor-pointer text-sm"
+                  className="cursor-pointer text-sm flex flex-col items-start"
                   htmlFor="sound-effects"
                 >
-                  Stats For Nerds
+                  Debug Mode
+                  <span className="opacity-30 text-[13px]">
+                    Show extra stats for nerds
+                  </span>
                 </label>
                 <Switch
                   checked={statsForNerds}
@@ -418,28 +622,35 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
           </div>
 
           {!dontShowXtra && (
-            <div className="w-full mt-16 space-y-3">
+            <div className="w-full mt-6 space-y-3">
               <Button
                 disabled={logoutLoading}
                 onClick={async () => {
                   await handleLogout();
                 }}
-                className="w-full rounded-sm flex-1 py-1 px-2 bg-appRed"
+                className="w-full rounded-lg flex-1 py-1 px-2 bg-appRed"
               >
-                {logoutLoading ? <Loader alt={true} width={15} /> : "Logout"}
+                {logoutLoading ? (
+                  <Loader alt={true} width={15} />
+                ) : (
+                  <>
+                    <CgLogOut size={20} className="mr-2" />
+                    Logout
+                  </>
+                )}
               </Button>
 
-              <Button
+              {/* <Button
                 onClick={() => setSheetOpen(false)}
                 className="rounded-sm flex-1 py-1 px-2 bg-light w-full shadow-app_shadow"
               >
                 Close
-              </Button>
+              </Button> */}
             </div>
           )}
         </div>
 
-        <div className="py-4 absolute bottom-0 w-full flex items-center justify-between">
+        <div className="absolute px-5 py-6 w-full flex items-center justify-between">
           <h1 className="font-logo text-[1.5rem] leading-[2.3rem] opacity-10 flex items-center relative">
             <Logo withLogo={false} size="sm" />
           </h1>

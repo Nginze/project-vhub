@@ -23,21 +23,26 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Room } from "../../../../shared/types";
+import { cn } from "@/lib/utils";
 
 type AppDropDownMenuProps = {
   children: React.ReactNode;
   content: React.ReactNode;
+  className?: string;
 };
 
 export const AppDropDownMenu: React.FC<AppDropDownMenuProps> = ({
   children,
   content,
+  className,
 }) => {
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent className="w-40">{content}</DropdownMenuContent>
+        <DropdownMenuContent className={cn("w-40", className)}>
+          {content}
+        </DropdownMenuContent>
       </DropdownMenu>
     </>
   );

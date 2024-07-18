@@ -3,6 +3,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import passport from "passport";
 import "../auth/githubAuth";
 import "../auth/googleAuth";
+import "../auth/magicAuth";
 import createHttpError from "http-errors";
 import { pool } from "../config/psql";
 import { parseToUserDTO } from "../auth/googleAuth";
@@ -32,6 +33,18 @@ router.get(
         : process.env.CLIENT_URI_CALLBACK,
     failureRedirect: "/failure",
   })
+);
+
+router.get("/email", passport.authenticate("magiclink"), async (req, res) => {
+  res.status(200).json({ message: "Verfication Email sent" });
+});
+
+router.get(
+  "/email/verify",
+  passport.authenticate("magiclink"),
+  async (req, res) => {
+    res.status(200).json({ message: "Email verified" });
+  }
 );
 
 router.get("/me", async (req: Request, res: Response, next: NextFunction) => {

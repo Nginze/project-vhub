@@ -47,6 +47,9 @@ dependencies:
   '@radix-ui/react-tooltip':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.23)(@types/react@18.2.73)(react-dom@18.2.0)(react@18.2.0)
+  '@reaviz/ctrl-keys':
+    specifier: ^1.0.0
+    version: 1.0.0
   '@sentry/nextjs':
     specifier: ^8
     version: 8.17.0(@opentelemetry/api@1.9.0)(@opentelemetry/core@1.25.1)(@opentelemetry/instrumentation@0.52.1)(@opentelemetry/sdk-trace-base@1.25.1)(next@14.1.4)(react@18.2.0)(webpack@5.91.0)
@@ -3923,6 +3926,11 @@ packages:
     resolution: {integrity: sha512-fyrgCaedtvMg9NK3en0pnOYJdtfwxUcNolezkNPUsoX57X8oQk+NkqcvzHXD2uKNij6GXmWU9NDru2IWjrO4BQ==}
     dependencies:
       '@babel/runtime': 7.24.1
+    dev: false
+
+  /@reaviz/ctrl-keys@1.0.0:
+    resolution: {integrity: sha512-NYjTYVV7Mnd4uRnvQFrp8JskBzrvak1Owi2BAYlZQdBloIittg7lbz+T7CCFKjEYD69bwLckoI98rFrFO3a1Uw==}
+    engines: {node: '>=10'}
     dev: false
 
   /@rollup/plugin-babel@5.3.1(@babel/core@7.24.5)(rollup@2.79.1):

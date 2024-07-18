@@ -1,5 +1,6 @@
 import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "../ui/sheet";
+import { cn } from "@/lib/utils";
 
 type AppSheetProps = {
   children: React.ReactNode;
@@ -8,6 +9,7 @@ type AppSheetProps = {
   defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  className?: string;
 };
 
 export const AppSheet: React.FC<AppSheetProps> = ({
@@ -16,13 +18,14 @@ export const AppSheet: React.FC<AppSheetProps> = ({
   title,
   defaultOpen,
   open,
+  className,
   onOpenChange,
 }) => {
   return (
     <>
       <Sheet defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
         <SheetTrigger>{children}</SheetTrigger>
-        <SheetContent className="bg-[#202225] text-white">
+        <SheetContent className={cn("bg-[#1e2124] text-white", className)}>
           {content}
         </SheetContent>
       </Sheet>

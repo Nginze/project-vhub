@@ -11,6 +11,9 @@ import { userContext } from "@/context/UserContext";
 import axios from "axios";
 import { Grid } from "../ui/grid";
 import { api } from "@/api";
+import toast from "react-hot-toast";
+import { FaPerson } from "react-icons/fa6";
+import Loader from "../global/Loader";
 
 type HomeCharacterCustomizerProps = {};
 
@@ -26,6 +29,7 @@ export const HomeCharacterCustomizer: React.FC<
   const [hairstyleSelected, setHairstyleSelected] = useState(false);
   const { user, userLoading } = useContext(userContext);
   const canvasRef = useRef(null);
+  const [savingLoading, setSavingLoading] = useState(false);
 
   useEffect(() => {
     fetch("/preview_mappings.json")
@@ -67,6 +71,20 @@ export const HomeCharacterCustomizer: React.FC<
           const x = canvas.width / 2 - (img.width * scale) / 2;
           //@ts-ignore
           const y = canvas.height / 2 - (img.height * scale) / 2;
+
+          // Draw the shadow
+          const shadowRadius = (img.width * scale) / 3; // Slightly increase the radius of the shadow
+          const shadowX = x + (img.width * scale) / 2;
+          const shadowY = y + img.height * scale;
+          ctx.save();
+          ctx.scale(1.5, 1); // Stretch the circle horizontally
+          ctx.beginPath();
+          ctx.arc(shadowX / 1.5, shadowY, shadowRadius, 0, Math.PI * 2);
+          ctx.fillStyle = "white"; // Set the color of the shadow
+          ctx.fill();
+          ctx.restore();
+
+          // Draw the part
           ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
         };
       }
@@ -88,13 +106,27 @@ export const HomeCharacterCustomizer: React.FC<
     img.onload = () => {
       const frameWidth = 32;
       const frameHeight = 64;
-      const scale = 1.4; // Increase this to increase the size of the image
+      const scale = 1.5; // Increase this to increase the size of the image
 
       //@ts-ignore
       const x = canvas.width / 2 - (frameWidth * scale) / 2;
 
       //@ts-ignore
       const y = canvas.height / 2 - (frameHeight * scale) / 2;
+
+      // Draw the shadow
+      const shadowRadius = (frameWidth * scale) / 3; // Slightly increase the radius of the shadow
+      const shadowX = x + (frameWidth * scale) / 2;
+      const shadowY = y + frameHeight * scale;
+      ctx.save();
+      ctx.scale(1.5, 1); // Stretch the circle horizontally
+      ctx.beginPath();
+      ctx.arc(shadowX / 1.5, shadowY, shadowRadius, 0, Math.PI * 2);
+      ctx.fillStyle = "white"; // Set the color of the shadow
+      ctx.fill();
+      ctx.restore();
+
+      // Draw the character
       ctx.drawImage(
         img,
         frameWidth * 3, // Start at the width of three frames to get the fourth frame
@@ -114,6 +146,7 @@ export const HomeCharacterCustomizer: React.FC<
 
   const handleFinishEditing = async () => {
     try {
+      setSavingLoading(true);
       const bodyParts = [
         mappings[base],
         mappings[eyes],
@@ -131,8 +164,29 @@ export const HomeCharacterCustomizer: React.FC<
         userId: user.userId,
       });
 
+      toast("Character Updated", {
+        icon: <FaPerson size={19} />,
+        style: {
+          borderRadius: "100px",
+          background: "#333",
+          padding: "14px",
+          color: "#fff",
+        },
+      });
+
+      setSavingLoading(false);
+
       console.log(data.spriteSheetUrl);
     } catch (error) {
+      toast("Save Failed", {
+        icon: <FaPerson size={19} />,
+        style: {
+          borderRadius: "100px",
+          background: "#333",
+          padding: "14px",
+          color: "#fff",
+        },
+      });
       console.log(error);
     }
   };
@@ -157,20 +211,31 @@ export const HomeCharacterCustomizer: React.FC<
 
   return (
     <>
-      <div className="flex h-[550px] items-center flex-col">
-        <div className="w-full h-1/3 px-5 bg-dark rounded-t-lg">
+      <div className="flex h-[530px] items-center flex-col">
+        <div className="w-full relative border-b border-b-light h-1/3 px-5 bg-deep rounded-t-lg">
           <canvas
-            className="w-full flex items-center justify-center"
+            className="w-full flex items-center -mt-8 justify-center"
             ref={canvasRef}
           />
+          <div className="absolute top-2 bg-void p-1 px-4 text-[12px] rounded-xl left-3 border border-light truncate-div w-[80px]">
+            <span className="truncate-span">{user ? user.userName : ""}</span>
+          </div>
         </div>
-        <div className="w-full flex-grow p-6 overflow-y-hidden">
+        <div className="w-full flex-grow p-6 overflow-y-hidden ">
           <Tabs defaultValue="Base" className="w-full ">
-            <TabsList className="grid w-full grid-cols-4 bg-deep  text-white border border-light ">
-              <TabsTrigger value="Base">Base</TabsTrigger>
-              <TabsTrigger value="Eyes">Eyes</TabsTrigger>
-              <TabsTrigger value="Outfits">Outfits</TabsTrigger>
-              <TabsTrigger value="Accessories">Accessories</TabsTrigger>
+            <TabsList className="w-3/4 mx-auto bg-void rounded-xl  text-white border border-light ">
+              <TabsTrigger className="rounded-xl" value="Base">
+                Base
+              </TabsTrigger>
+              <TabsTrigger className="rounded-xl" value="Eyes">
+                Eyes
+              </TabsTrigger>
+              <TabsTrigger className="rounded-xl" value="Outfits">
+                Outfits
+              </TabsTrigger>
+              <TabsTrigger className="rounded-xl" value="Accessories">
+                Accessories
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="Base" className="h-full overflow-y-auto">
               <div className="py-1">
@@ -179,7 +244,7 @@ export const HomeCharacterCustomizer: React.FC<
                     setHairstyleSelected(!hairstyleSelected);
                   }}
                   aria-label="Hairstyles"
-                  className="flex rounded-lg active:bg-deep  hover:text-white hover:bg-light px-3 py-3  items-center gap-1"
+                  className="flex rounded-xl active:bg-deep  hover:text-white hover:bg-light p-3  items-center gap-1"
                 >
                   <AiOutlineScissor size={16} className="opacity-70" />{" "}
                   <span className="opacity-70 font-semibold text-sm">Hair</span>{" "}
@@ -321,11 +386,18 @@ export const HomeCharacterCustomizer: React.FC<
 
       <DialogFooter className="flex px-6 pb-6">
         <Button
+          disabled={savingLoading}
           onClick={() => handleFinishEditing()}
           className="bg-appGreen gap-2 flex items-center px-4 py-6 rounded-lg w-full"
         >
-          <CircleCheckBig size={15} />
-          Finish Editing
+          {savingLoading ? (
+            <Loader width={20} alt />
+          ) : (
+            <>
+              <CircleCheckBig size={15} />
+              Save Changes
+            </>
+          )}
         </Button>
       </DialogFooter>
     </>

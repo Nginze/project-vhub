@@ -25,6 +25,14 @@
   z-index: 1;
 }
 
+.page-content {
+  transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.page-content.shifted {
+  transform: translateX(-60px); /* Adjust this value to control the shift */
+}
+
 @keyframes zoomReveal {
   from {
     transform: scale(0);
@@ -34,6 +42,16 @@
   }
 }
 
+.truncate-div {
+  max-width: 200px; /* Adjust this value to control when the text should start truncating */
+}
+
+.truncate-span {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .zoomReveal > div {
   display: inline-block;
   animation: zoomReveal 0.5s ease-in-out;
@@ -71,7 +89,17 @@
 
 /* Define the state of the card on hover */
 .card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-3px);
+}
+
+.icon-button {
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(0);
+}
+
+/* Define the state of the card on hover */
+.icon-button:hover {
+  transform: translateY(-4px);
 }
 
 .slide-enter {
@@ -91,16 +119,22 @@
 
 .key {
   display: inline-block;
-  padding: 1.5px 4.5px;
-  font: 10px "Lucida Console", Monaco, monospace;
-  background-color: #f7f7f7;
+  padding: 5px 10px;
+  font: 12px "Lucida Console", Monaco, monospace;
   font-weight: bolder;
-  border: 1px solid #b4b4b4;
-  color: #333;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
-  border-radius: 3px;
-  margin: 0 2px;
+  color: white;
+  border-radius: 5px;
+  margin: 0 5px;
   white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.truncate {
+  display: inline-block;
+  width: 250px; /* adjust this value to your needs */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item-dialog {
@@ -145,6 +179,26 @@
   left: 0;
   width: 100%;
   background-color: green;
+}
+
+.abbrev {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+
+.scrollable::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background-color: #383938;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: #616061;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes popIn {

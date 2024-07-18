@@ -12,6 +12,7 @@ import WebrtcApp from "@/engine/rtc/WebRTCApp";
 import SoundEffectPlayer from "@/engine/global/SoundFxPlayer";
 import NextNProgress from "nextjs-progressbar";
 import { Toaster } from "react-hot-toast";
+import { KeyBindHandler } from "@/engine/global/KeyBindHandler";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
@@ -23,10 +24,11 @@ export default function App({ Component, pageProps }: AppProps) {
           <UserProvider>
             <WebSocketProvider>
               <MainWsHandler>
-                <NextNProgress  />
+                <NextNProgress />
                 <Component {...pageProps} />;
               </MainWsHandler>
               <SoundEffectPlayer />
+              <KeyBindHandler />
               <WebrtcApp />
               <Toaster position="bottom-center" reverseOrder={false} />
             </WebSocketProvider>

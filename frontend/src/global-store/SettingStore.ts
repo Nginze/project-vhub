@@ -7,6 +7,44 @@ export async function getMicrophones() {
   return microphones.map((mic) => ({ label: mic.label, value: mic.deviceId }));
 }
 
+export async function getCameras() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const cameras = devices.filter((device) => device.kind === "videoinput");
+  return cameras.map((camera) => ({
+    label: camera.label,
+    value: camera.deviceId,
+  }));
+}
+
+export async function getSpeakers() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const speakers = devices.filter((device) => device.kind === "audiooutput");
+  return speakers.map((speaker) => ({
+    label: speaker.label,
+    value: speaker.deviceId,
+  }));
+}
+
+let microphones: any[] = [];
+let cameras: any[] = [];
+let speakers: any[] = [];
+
+try {
+  getMicrophones().then((res) => {
+    microphones = res;
+  });
+  getCameras().then((res) => {
+    cameras = res;
+  });
+  getSpeakers().then((res) => {
+    speakers = res;
+
+    console.log(microphones, cameras, speakers);
+  });
+} catch (error) {
+  console.error(error);
+}
+
 export const useSettingStore = create(
   persist(
     combine(
@@ -16,6 +54,8 @@ export const useSettingStore = create(
         soundEffects: false,
         statsForNerds: false,
         selectedMicDevice: "default",
+        selectedSpeakerDevice: "default",
+        selectedCameraDevice: "default",
         micAsObj: {
           value: "default",
           label: "Default - Microphone (Realtek(R) Audio)",

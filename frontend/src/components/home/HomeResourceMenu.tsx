@@ -28,24 +28,28 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "../ui/dropdown-menu";
-import { MdBrowserUpdated } from "react-icons/md";
+import {
+  MdBrowserUpdated,
+  MdOutlinePayments,
+  MdOutlineTipsAndUpdates,
+} from "react-icons/md";
 
 type HomeResourceMenuProps = {};
 
 export const HomeResourceMenu: React.FC<HomeResourceMenuProps> = () => {
   return (
-    <div>
+    <div className="font-sans">
       <DropdownMenuGroup>
-        <DropdownMenuItem className="py-2">
-          {/* <MdBrowserUpdated className="mr-2 h-4 w-4" /> */}
-          <span>Product Updates</span>
+        <DropdownMenuItem className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]">
+          <MdOutlineTipsAndUpdates size={20} className="mr-4" />
+          <span>Updates</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="py-2">
-          {/* <CreditCard className="mr-2 h-4 w-4" /> */}
+        <DropdownMenuItem className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]">
+          <MdOutlinePayments size={20} className="mr-4" />
           <span>Pricing</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="py-2">
-          {/* <HelpCircle className="mr-2 h-4 w-4" /> */}
+        <DropdownMenuItem className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]">
+          <HelpCircle size={20} className="mr-4" />
           <span>Help Center</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
