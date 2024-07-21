@@ -393,7 +393,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       {microphones?.map(({ value, label }) => (
                         <SelectItem
                           key={value}
-                          value={value}
+                          value={value ? value : ""}
                           className="text-[16px] font-semibold opacity-70"
                         >
                           <span className="flex items-center text-left w-full gap-2">
@@ -433,7 +433,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       {cameras?.map(({ value, label }) => (
                         <SelectItem
                           key={value}
-                          value={value}
+                          value={value ? value : ""}
                           className="text-[16px] font-semibold opacity-70"
                         >
                           <span className="flex items-center text-left w-full gap-2">
@@ -473,7 +473,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       {speakers?.map(({ value, label }) => (
                         <SelectItem
                           key={value}
-                          value={value}
+                          value={value ? value : ""}
                           className="text-[16px] font-semibold opacity-70"
                         >
                           <span className="flex items-start text-left w-full gap-2">
