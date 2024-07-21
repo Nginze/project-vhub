@@ -25,25 +25,6 @@ export async function getSpeakers() {
   }));
 }
 
-let microphones: any[] = [];
-let cameras: any[] = [];
-let speakers: any[] = [];
-
-try {
-  getMicrophones().then((res) => {
-    microphones = res;
-  });
-  getCameras().then((res) => {
-    cameras = res;
-  });
-  getSpeakers().then((res) => {
-    speakers = res;
-
-    console.log(microphones, cameras, speakers);
-  });
-} catch (error) {
-  console.error(error);
-}
 
 export const useSettingStore = create(
   persist(
