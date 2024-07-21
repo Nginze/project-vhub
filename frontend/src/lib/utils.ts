@@ -22,7 +22,7 @@ export const getSpritePreview = (
 
     const img = new Image();
     img.crossOrigin = "Anonymous"; // This is needed to avoid CORS issues
-    img.src = user.spriteUrl;
+    img.src = user?.spriteUrl;
     img.onload = () => {
       const frameWidth = 32;
       const frameHeight = 64;

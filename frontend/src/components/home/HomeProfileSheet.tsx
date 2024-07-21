@@ -182,6 +182,14 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
       );
     }
 
+    if (!soundEffects) {
+      appToast(
+        "Fx Off: Turn On to Perform Test",
+        <BiMicrophoneOff size={19} />,
+        "bottom-center"
+      );
+    }
+
     if (isTestingAudio && mediaStream) {
       mediaStream.getTracks().forEach((track) => track.stop());
       setMediaStream(null);
@@ -215,7 +223,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
         selectedCameraDevice === "default" ||
         selectedCameraDevice === "undefined"
       ) {
-        setSettings({ selectedCameraDevice: cameras[0].value});
+        setSettings({ selectedCameraDevice: cameras[0].value });
       }
 
       if (
@@ -651,9 +659,11 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
         </div>
 
         <div className="absolute px-5 py-6 w-full flex items-center justify-between">
-          <h1 className="font-logo text-[1.5rem] leading-[2.3rem] opacity-10 flex items-center relative">
-            <Logo withLogo={false} size="sm" />
-          </h1>
+          {!dontShowXtra && (
+            <h1 className="font-logo text-[1.5rem] leading-[2.3rem] opacity-10 flex items-center relative">
+              <Logo withLogo={false} size="sm" />
+            </h1>
+          )}
           {!dontShowXtra && false && (
             <div className="flex items-center space-x-10  leading=[2.3em]">
               <a className="text-sm flex items-center text-[#424549] ">

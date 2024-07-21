@@ -1,3 +1,4 @@
+import { withProtectedRoute } from "@/components/global/ProtectedRoute";
 import { SetupForm } from "@/components/setup/SetupForm";
 import { SetupNav } from "@/components/setup/SetupNav";
 import { SetupPreview } from "@/components/setup/SetupPreview";
@@ -57,4 +58,4 @@ const Setup: NextPage = () => {
   );
 };
 
-export default Setup;
+export default withProtectedRoute(Setup);

@@ -105,6 +105,12 @@ router.get(
     }
 
     const posData = await getUserPosition(roomId, userId as string);
+    if (posData.posX == 3) {
+      posData.posX = 15;
+    }
+    if (posData.posY == 3) {
+      posData.posY = 17;
+    }
 
     const client = await pool.connect();
 
@@ -150,7 +156,7 @@ router.get(
       await client.query(
         `
           INSERT INTO room_status (room_id, user_id, is_speaker, is_mod, raised_hand, is_muted, pos_x, pos_y, skin, dir, is_video_off)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
         `,
         [
           roomId,
@@ -160,8 +166,8 @@ router.get(
           parseCamel(room[0])?.creatorId === userId,
           false,
           true,
-          posData && posData.posX >= 10 ? posData.posX : 15,
-          posData && posData.posY >= 10 ? posData.posY : 15,
+          posData ? posData.posX : 15,
+          posData ? posData.posY : 17,
           generateSkinName(),
           posData ? posData.dir : "down",
           true,

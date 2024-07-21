@@ -22,6 +22,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api";
 import toast from "react-hot-toast";
 import Head from "next/head";
+import { withProtectedRoute } from "@/components/global/ProtectedRoute";
 
 type RoomProps = {};
 
@@ -56,15 +57,11 @@ const RoomPage: React.FC<RoomProps> = () => {
       }
     },
 
-    onSuccess: async () => {
-      toast.success("Room ready", {
-        style: {
-          borderRadius: "100px",
-          background: "#333",
-          padding: "14px",
-          color: "#fff",
-        },
-      });
+    onSuccess: async (data, variables: { spaceName: string }) => {
+      console.log("Room Ready");
+
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
+      await queryClient.invalidateQueries({ queryKey: ["room"] });
 
       // for regular room join
       conn?.emit(WS_MESSAGE.WS_ROOM_JOIN, {
@@ -77,12 +74,12 @@ const RoomPage: React.FC<RoomProps> = () => {
           dir: roomStatus.dir,
           skin: roomStatus.skin,
           //@ts-ignore
-          spaceName: user.spaceName as string,
+          spaceName: spaceName as string,
         },
       });
     },
 
-    onError: () => {
+    onError: async () => {
       toast.error("Error Occured", {
         style: {
           borderRadius: "100px",
@@ -91,6 +88,8 @@ const RoomPage: React.FC<RoomProps> = () => {
           color: "#fff",
         },
       });
+
+      await router.push("/home");
     },
   });
   useEffect(() => {
@@ -166,7 +165,7 @@ const RoomPage: React.FC<RoomProps> = () => {
           whiteboard.broadcastUpdate(user.userId as string, "leave");
         }}
         width={"sm:max-w-full"}
-        content={<AppIFrame room={room} />}
+        content={<AppIFrame roomStatus={roomStatus} room={room} />}
         className="px-0 rounded-none bg-black h-screen"
       >
         <></>
@@ -183,12 +182,10 @@ const RoomPage: React.FC<RoomProps> = () => {
       <Grid />
       <div className="w-screen h-screen flex items-center justify-center bg-void">
         <div className="flex flex-col space-y-5 items-center">
-          {/* <div className="flex items-center justify-center">
-            <img src="/login_infog.png" className="w-2/4" />
-          </div> */}
-          <div className="animate-bounce">
+          <div className="">
             <Logo size="md" withLogo />
           </div>
+          <Loader alt width={20} />
         </div>
 
         <div className="text-[12px] opacity-30 font-logo w-[500px] text-center absolute bottom-5">
@@ -200,4 +197,4 @@ const RoomPage: React.FC<RoomProps> = () => {
   );
 };
 
-export default RoomPage;
+export default withProtectedRoute(RoomPage);

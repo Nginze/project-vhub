@@ -56,7 +56,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
     getSpritePreview(3, user).then((previewUrl) =>
       setSpritePreviewUrl(previewUrl as string)
     );
-  }, [user]);
+  }, [user, router]);
 
   return (
     <>

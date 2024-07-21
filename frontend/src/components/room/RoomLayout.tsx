@@ -3,6 +3,7 @@ import { RoomVideoOverlay } from "./RoomVideoOverlay";
 import { Room } from "../../../../shared/types";
 import { RoomPerfStats } from "./RoomPerfStats";
 import { useSettingStore } from "@/global-store/SettingStore";
+import { useUIStore } from "@/global-store/UIStore";
 
 type RoomLayoutProps = {
   room: Room;
@@ -16,12 +17,18 @@ export const RoomLayout: React.FC<RoomLayoutProps> = ({
   room,
 }) => {
   const { statsForNerds } = useSettingStore();
+  const { sheetOpen } = useUIStore();
+
   return (
     <main className="relative w-screen h-screen">
       <RoomVideoOverlay room={room}>
         <main className="w-full flex relative overflow-hidden">
           <div className="w-full">
-            <div className="w-full">{canvas}</div>
+            <div
+              className={`w-full page-content ${sheetOpen ? "shifted" : ""}`}
+            >
+              {canvas}
+            </div>
             <div className="absolute bottom-0 w-full">{footer}</div>
           </div>
         </main>

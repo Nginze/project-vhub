@@ -110,18 +110,18 @@ export default class PlayerSelector extends GameObjects.Rectangle {
         switch (selectedItem.itemType) {
           case ItemType.CHAIR:
             selectedItem.setDialogBox(
-              "<span>Press <kbd class='key'>E</kbd> to interact</span>"
+              "<span>Press <kbd class='key-cap'>E</kbd> to interact</span>"
             );
             break;
           case ItemType.COMPUTER:
             const computer = selectedItem as Computer;
             if (computer.currentUsers.size === 0) {
               computer.setDialogBox(
-                "<span>Press <kbd class='key'>R</kbd> to use computer</span>"
+                "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>"
               );
             } else {
               selectedItem.setDialogBox(
-                "<span>Press <kbd class='key'>R</kbd> to join</span>"
+                "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>"
               );
             }
             break;
@@ -133,7 +133,7 @@ export default class PlayerSelector extends GameObjects.Rectangle {
                 whiteboard.currentUsers.size
               );
               whiteboard.setDialogBox(
-                "<span>Press <kbd class='key'>R</kbd> to use whiteboard</span>"
+                "<span>Press <kbd class='key-cap'>R</kbd> to use</span>"
               );
             } else {
               console.log(
@@ -141,14 +141,14 @@ export default class PlayerSelector extends GameObjects.Rectangle {
                 whiteboard.currentUsers.size
               );
               whiteboard.setDialogBox(
-                "<span>Press <kbd class='key'>R</kbd> to join</span>"
+                "<span>Press <kbd class='key-cap'>R</kbd> to join</span>"
               );
             }
 
             break;
           case ItemType.VENDINGMACHINE:
             selectedItem.setDialogBox(
-              "<span>Press <kbd class='key'>R</kbd> to interact</span>"
+              "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>"
             );
             break;
           default:

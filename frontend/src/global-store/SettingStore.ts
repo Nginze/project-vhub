@@ -56,6 +56,9 @@ export const useSettingStore = create(
         selectedMicDevice: "default",
         selectedSpeakerDevice: "default",
         selectedCameraDevice: "default",
+        hasMicIssue: false,
+        hasCameraIssue: false,
+        hasSpeakerIssue: false,
         micAsObj: {
           value: "default",
           label: "Default - Microphone (Realtek(R) Audio)",

@@ -18,7 +18,7 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
       gameRef.current = new Phaser.Game({
         type: Phaser.AUTO,
         title: "2D-view",
-        backgroundColor: "#000000",
+        backgroundColor: "#0096c7",
         pixelArt: true,
         scale: {
           mode: Phaser.Scale.ScaleModes.RESIZE,
@@ -27,15 +27,15 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
           autoRound: true,
         },
         fps: {
-          target: 30,
-          limit: 30,
+          target: 60,
+          limit: 60,
           forceSetTimeOut: true,
         },
 
         physics: {
           default: "arcade",
           arcade: {
-            debug: process.env.NODE_ENV === "development",
+            debug: process.env.NODE_ENV === "development" && false,
           },
         },
         dom: {

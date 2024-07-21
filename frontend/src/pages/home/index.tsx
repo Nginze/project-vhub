@@ -1,10 +1,14 @@
 import { api } from "@/api";
+import AppDialog from "@/components/global/AppDialog";
+import { withProtectedRoute } from "@/components/global/ProtectedRoute";
+import { HomeDeviceIssue } from "@/components/home/HomeDeviceIssue";
 import { HomeGrid } from "@/components/home/HomeGrid";
 import { HomeLayout } from "@/components/home/HomeLayout";
 import { HomeNav } from "@/components/home/HomeNav";
 import { HomeOptionsBar } from "@/components/home/HomeOptionsBar";
 import { HomeRoomPreviewCard } from "@/components/home/HomeRoomPreviewCard";
 import { useRoomStore } from "@/global-store/RoomStore";
+import { useSettingStore } from "@/global-store/SettingStore";
 import { useUIStore } from "@/global-store/UIStore";
 import { useQuery } from "@tanstack/react-query";
 import { NextPage } from "next";
@@ -16,6 +20,7 @@ const Home: NextPage = () => {
   const [activeFilter, setActiveFilter] = React.useState("public");
   const [filterQuery, setFilterQuery] = React.useState("");
   const { set, sheetOpen } = useUIStore();
+  const { hasCameraIssue, hasMicIssue, hasSpeakerIssue } = useSettingStore();
 
   const { data: publicRooms, isLoading: publicRoomsLoading } = useQuery({
     queryKey: ["rooms-public"],
@@ -30,6 +35,12 @@ const Home: NextPage = () => {
       }
     },
   });
+
+  const hasDeviceIssue = hasCameraIssue || hasMicIssue || hasSpeakerIssue;
+  console.log("hasDeviceIssue", hasDeviceIssue);
+  console.log("hasCameraIssue", hasCameraIssue);
+  console.log("hasMicIssue", hasMicIssue);
+  console.log("hasSpeakerIssue", hasSpeakerIssue);
 
   return (
     <>
@@ -51,6 +62,14 @@ const Home: NextPage = () => {
           sheetOpen ? "shifted" : ""
         }`}
       >
+        <AppDialog
+          open={hasDeviceIssue}
+          width={"sm:max-w-[400px] p-0"}
+          dontShowClose
+          content={<HomeDeviceIssue />}
+        >
+          <></>
+        </AppDialog>
         <HomeLayout
           navbar={<HomeNav activeTab={activeTab} setActiveTab={setActiveTab} />}
           content={
@@ -82,4 +101,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default withProtectedRoute(Home);

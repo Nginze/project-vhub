@@ -22,6 +22,7 @@ import Loader from "../global/Loader";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/api";
 import { useRoomStore } from "@/global-store/RoomStore";
+import { appToast } from "@/lib/utils";
 
 type SetupFormProps = {};
 
@@ -59,20 +60,15 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
       setMediaStream(null);
       setMediaRecorder(null);
     } else {
-      toast(
-        `Using ${
-          selectedMicDevice == "Default" ? "Default" : "Custom"
-        } Microphone`,
-        {
-          icon: <BsWrench size={19} />,
-          style: {
-            borderRadius: "100px",
-            background: "#333",
-            padding: "14px",
-            color: "#fff",
-          },
-        }
-      );
+      toast(`Audio Test Started`, {
+        icon: <BsWrench size={19} />,
+        style: {
+          borderRadius: "100px",
+          background: "#333",
+          padding: "14px",
+          color: "#fff",
+        },
+      });
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: { exact: selectedMicDevice } },
       });
@@ -116,13 +112,16 @@ export const SetupForm: React.FC<SetupFormProps> = () => {
         </div>
         <div className="w-full">
           <Button
+            disabled={joinLoading}
             size={"lg"}
             className="bg-[#43B581] rounded-xl text-white w-full flex items-center  gap-2 justify-center"
             onClick={async () => {
+              if (!user || !user.spriteUrl) {
+                appToast("Avatar Not Setup", null, "bottom-center");
+              }
               set({ spaceName: spaceName as string });
               setJoinLoading(true);
               await router.push(`/room/${roomId}`);
-              // profileMutation.mutateAsync({ spaceName });
             }}
           >
             {joinLoading ? (

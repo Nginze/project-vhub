@@ -19,6 +19,7 @@ import { RoomParticipant } from "../../../../shared/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { AppDropDownMenu } from "../global/AppDropDownMenu";
 import { RoomParticipantProfileMenu } from "./RoomParticipantProfileMenu";
+import { cn } from "@/lib/utils";
 
 type RoomParticipantProfileProps = {
   roomParticipant: RoomParticipant;
@@ -31,7 +32,12 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
     <div className="w-full flex items-center justify-between  py-3 rounded-lg cursor-pointer">
       <div className="flex items-center gap-4">
         <div>
-          <Avatar className="w-9 h-9 cursor-pointer">
+          <Avatar
+            className={cn(
+              "w-9 h-9 cursor-pointer ",
+              roomParticipant.indicatorOn && "border-2 border-appGreen"
+            )}
+          >
             <AvatarImage
               className="object-cover"
               src={roomParticipant.avatarUrl as string}
@@ -83,7 +89,10 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
           </Tooltip>
         </div>
         <div className="flex items-center">
-          <AppDropDownMenu content={<RoomParticipantProfileMenu />}>
+          <AppDropDownMenu
+            className="bg-dark border border-light text-white rounded-xl w-[160px]"
+            content={<RoomParticipantProfileMenu />}
+          >
             <button className="hover:bg-light p-1.5 rounded-lg button">
               <HiEllipsisHorizontal size={16} className="text-white/50" />
             </button>

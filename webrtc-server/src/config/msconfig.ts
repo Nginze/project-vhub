@@ -39,7 +39,10 @@ export const config = {
     webRtcTransport: {
       listenIps: [
         {
-          ip: process.env.MEDIASOUP_LISTEN_IP || "0.0.0.0",
+          ip:
+            process.env.NODE_ENV == "development"
+              ? "0.0.0.0"
+              : process.env.MEDIASOUP_LISTEN_IP,
           announcedIp:
             process.env.NODE_ENV == "development"
               ? "127.0.0.1"

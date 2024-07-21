@@ -129,6 +129,22 @@
   transition: all 0.3s ease;
 }
 
+.key-cap {
+  display: inline-block;
+  padding: 1.5px 4.5px;
+  font: 10px "Lucida Console", Monaco, monospace;
+  background-color: #e0e0e0; /* Lighter gray for a plastic look */
+  font-weight: bolder;
+  border: 1px solid #b4b4b4;
+  color: #333;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1),
+    /* Slight outer shadow for depth */ 0 0 0 2px #fff inset,
+    /* Inner highlight for a 3D effect */ 0 2px 2px rgba(0, 0, 0, 0.2) inset; /* Inner shadow for a 3D effect */
+  border-radius: 4px; /* Slightly rounder corners */
+  margin: 0 2px;
+  white-space: nowrap;
+}
+
 .truncate {
   display: inline-block;
   width: 250px; /* adjust this value to your needs */
@@ -145,7 +161,7 @@
   font-size: 10px;
   font-family: Inter;
   background: rgba(0, 0, 0, 0.6);
-  padding: 4px 10px;
+  padding: 2.5px 10px;
   border-radius: 50px;
   overflow: hidden;
 }

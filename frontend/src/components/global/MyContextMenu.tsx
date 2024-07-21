@@ -148,8 +148,8 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = ({
         <ContextMenuTrigger>
           <div id="ctx-menu-trigger"></div>
         </ContextMenuTrigger>
-        <ContextMenuContent className="">
-          <ContextMenuItem className="cursor-pointer flex items-center gap-2">
+        <ContextMenuContent className="bg-dark border border-light font-sans text-white rounded-xl w-[200px]">
+          <ContextMenuItem className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]">
             <UserRoundCog size={16} className=" opacity-70" />
             <span className="opacity-70 font-semibold">Edit Skin</span>
           </ContextMenuItem>
@@ -158,7 +158,7 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = ({
             onClick={() => {
               handleMute();
             }}
-            className="cursor-pointer flex items-center gap-2 "
+            className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]"
           >
             {mic?.enabled ? (
               <>
@@ -177,7 +177,7 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = ({
             onClick={() => {
               handleVideo();
             }}
-            className="cursor-pointer flex items-center gap-2 "
+            className="cursor-pointer py-2 px-3 rounded-xl gap-4 focus:bg-light focus:text-white text-[16px]"
           >
             {vid?.enabled ? (
               <>
@@ -192,11 +192,11 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = ({
             )}
           </ContextMenuItem>
           <Separator className="bg-black w-full mx-auto" />
-          <ContextMenuItem className="cursor-pointer flex items-center gap-2 ">
+          <ContextMenuItem className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]">
             <BsFillGearFill className="opacity-70 " size={16} />
             <span className="opacity-70 font-semibold">Settings</span>
           </ContextMenuItem>
-          <ContextMenuItem className="cursor-pointer flex items-center gap-2 ">
+          <ContextMenuItem className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]">
             <BiExit className="opacity-70 " size={16} />
             <span className="opacity-70 font-semibold">Leave Room</span>
           </ContextMenuItem>

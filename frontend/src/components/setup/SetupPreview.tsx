@@ -10,6 +10,7 @@ import {
 import { HiMicrophone } from "react-icons/hi2";
 import { RotatingLines } from "react-loader-spinner";
 import { cn } from "@/lib/utils";
+import { useSettingStore } from "@/global-store/SettingStore";
 
 type SetupPreviewProps = {};
 
@@ -22,6 +23,8 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const { selectedCameraDevice, selectedMicDevice } = useSettingStore();
 
   useEffect(() => {
     if (videoRef.current && videoStream) {
@@ -42,7 +45,11 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
         videoStream.getTracks().forEach((track) => track.stop());
         setVideoStream(null);
       } else {
-        const constraints = { video: true };
+        const constraints = {
+          video: {
+            deviceId: { exact: selectedCameraDevice },
+          },
+        };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         setVideoStream(stream);
       }
@@ -63,7 +70,11 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
         audioStream.getTracks().forEach((track) => track.stop());
         setAudioStream(null);
       } else {
-        const constraints = { audio: true };
+        const constraints = {
+          audio: {
+            deviceId: selectedMicDevice,
+          },
+        };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         setAudioStream(stream);
       }
@@ -78,7 +89,7 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
 
   return (
     <div className="w-full flex flex-col items-center gap-3">
-      <div className="w-full border border-light relative overflow-hidden h-[200px] rounded-2xl bg-black/60 cursor-pointer gap-3 text-center flex flex-col items-center justify-center">
+      <div className="w-full border border-light relative overflow-hidden h-[200px] rounded-2xl bg-black/90 cursor-pointer gap-3 text-center flex flex-col items-center justify-center">
         <div className="flex flex-col w-full h-full absolute space-y-2 items-center justify-center ">
           {!audioStream && (
             <span className={cn("text-sm opacity-40 z-10")}>You are muted</span>

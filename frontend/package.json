@@ -11,6 +11,8 @@
   "dependencies": {
     "@bdub/react-sprite-animator": "^1.0.1",
     "@charkour/react-reactions": "^0.11.0",
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-context-menu": "^2.1.5",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -36,6 +38,7 @@
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^2.2.0",
     "clsx": "^2.1.1",
+    "emoji-mart": "^5.6.0",
     "fabric": "^6.0.1",
     "framer-motion": "^11.2.2",
     "grid-engine": "^2.44.2",

@@ -5,6 +5,7 @@ export const useUIStore = create(
   combine(
     {
       sheetOpen: false,
+      activeRoomSheet: "participant",
     },
     (set) => ({
       set,

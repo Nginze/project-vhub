@@ -19,6 +19,7 @@ export const parseToUserDTO = (params: Record<any, any>): any => {
     displayName: params.display_name,
     bio: params.bio,
     currentRoomId: params.current_room_id,
+    spaceName: params.space_name,
     lastSeen: params.last_seen,
     createdAt: params.created_at,
   };

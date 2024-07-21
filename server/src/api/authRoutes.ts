@@ -3,7 +3,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import passport from "passport";
 import "../auth/githubAuth";
 import "../auth/googleAuth";
-import "../auth/magicAuth";
+// import "../auth/magicAuth";
 import createHttpError from "http-errors";
 import { pool } from "../config/psql";
 import { parseToUserDTO } from "../auth/googleAuth";

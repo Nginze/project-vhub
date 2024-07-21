@@ -45,22 +45,17 @@ export class RoomScene extends Phaser.Scene {
 
   // Other constants
   public earshotDistance = 8;
+  public zoomLevel: number = 1;
+  public maxZoomIn: number = 2;
+  public minZoomOut: number = 0.5;
 
   create() {
-    // this.conn.emit(WS_MESSAGE.WS_ROOM_JOIN, {
-    //   roomId: this.room.roomId,
-    //   roomMeta: {
-    //     isAutospeaker: this.room.autoSpeaker,
-    //     isCreator: this.room.creatorId === this.user.userId,
-    //     posX: this.roomStatus.posX,
-    //     posY: this.roomStatus.posY,
-    //     dir: this.roomStatus.dir,
-    //     skin: this.roomStatus.skin,
-    //   },
-    // });
-
     this.postFxPlugin = this.plugins.get("rexoutlinepipelineplugin");
     this.map = this.make.tilemap({ key: "map" });
+
+    this.zoomLevel = 1; // Initialize zoom level
+    this.maxZoomIn = 2; // Set maximum zoom in level
+    this.minZoomOut = 0.5; // Set minimum zoom out level
 
     // import other static layer ground layer to Phaser
     this.map.addTilesetImage("FloorAndGround", "tiles_wall")!;
@@ -349,6 +344,20 @@ export class RoomScene extends Phaser.Scene {
         newProximityList.delete(userId);
         return { proximityList: newProximityList };
       });
+    }
+  }
+
+  zoomIn() {
+    if (this.zoomLevel < this.maxZoomIn) {
+      this.zoomLevel += 0.1; // Adjust this value to control the zoom speed
+      this.cameras.main.zoomTo(this.zoomLevel, 500); // 500 is the duration in ms
+    }
+  }
+
+  zoomOut() {
+    if (this.zoomLevel > this.minZoomOut) {
+      this.zoomLevel -= 0.1; // Adjust this value to control the zoom speed
+      this.cameras.main.zoomTo(this.zoomLevel, 500); // 500 is the duration in ms
     }
   }
 }

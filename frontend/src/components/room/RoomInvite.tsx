@@ -12,7 +12,11 @@ export const RoomInvite: React.FC<RoomInviteProps> = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const handleCopyLink = async () => {
-    const link = `http://localhost:3000/room/${roomId}`;
+    const link = `${
+      process.env.NODE_ENV == "development"
+        ? process.env.NEXT_PUBLIC_DEV_URL
+        : process.env.NEXT_PUBLIC_PROD_URL
+    }/room/${roomId}`;
     await navigator.clipboard.writeText(link);
     setButtonText("Link Copied!");
     setButtonDisabled(true);

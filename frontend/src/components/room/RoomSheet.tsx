@@ -17,6 +17,8 @@ import AppDialog from "../global/AppDialog";
 import { RoomInvite } from "./RoomInvite";
 import { RoomParticipant } from "../../../../shared/types";
 import { TbMessage2 } from "react-icons/tb";
+import { useUIStore } from "@/global-store/UIStore";
+import { cn } from "@/lib/utils";
 
 type RoomSheetProps = {
   room: any;
@@ -24,6 +26,7 @@ type RoomSheetProps = {
 
 export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { activeRoomSheet, set: setUI } = useUIStore();
 
   const filteredParticipants = room.participants.filter(
     (participant: RoomParticipant) =>
@@ -41,7 +44,13 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
           {room.roomName}
         </span>
         <div className="flex items-center gap-3">
-          <button className="hover:bg-light p-1.5 rounded-lg button">
+          <button
+            onClick={() => setUI({ activeRoomSheet: "message" })}
+            className={cn(
+              "hover:bg-light p-1.5 rounded-lg button",
+              activeRoomSheet === "message" ? "bg-light" : ""
+            )}
+          >
             <TbMessage2 size={20} className="opacity-70" />
           </button>
 
