@@ -368,7 +368,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
               Devices
             </span>
 
-            <div className="flex flex-col items-start space-y-3">
+            {/* <div className="flex flex-col items-start space-y-3">
               <div className="w-full flex flex-col space-y-2">
                 <div className="flex items-center gap-4">
                   <HiMicrophone size={20} />
@@ -489,7 +489,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-between w-full flex-col">
                   <span className="text-[13px] opacity-30 ">
                     Control your audio & video input
