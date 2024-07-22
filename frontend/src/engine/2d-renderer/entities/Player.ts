@@ -27,6 +27,7 @@ export default class Player extends Phaser.GameObjects.Container {
   public playerBehavior: PlayerBehaviour;
   public playerData: UserData & RoomStatus;
   public playerSelector: PlayerSelector;
+  public isShowingReaction: boolean = false;
 
   reactionTimeoutId: NodeJS.Timeout | null = null;
 
@@ -73,7 +74,7 @@ export default class Player extends Phaser.GameObjects.Container {
   }
 
   update() {
-    this.updateIconPosition();
+    // this.updateIconPosition();
     this.handleUserInput();
   }
 
@@ -135,6 +136,10 @@ export default class Player extends Phaser.GameObjects.Container {
   }
 
   showReaction() {
+    if (this.isShowingReaction) {
+      return;
+    }
+
     const { set } = useRoomStore.getState();
     const { conn } = this.scene as RoomScene;
     const {
@@ -147,6 +152,7 @@ export default class Player extends Phaser.GameObjects.Container {
     this.playerIcon.setVisible(true);
     this.playerName.setVisible(false);
 
+    this.isShowingReaction = true;
     this.updateIconPosition();
 
     // Clear any existing timeout
@@ -158,9 +164,11 @@ export default class Player extends Phaser.GameObjects.Container {
     this.reactionTimeoutId = setTimeout(() => {
       this.playerIcon.setVisible(false);
       this.playerName.setVisible(true);
-      set(() => ({ currentReaction: "" }));
       this.reactionTimeoutId = null; // Clear the timeout ID
-    }, 5000); // 5000 milliseconds = 5 seconds
+      this.isShowingReaction = false;
+      set(() => ({ currentReaction: "" }));
+      console.log("reaction timeout", this.isShowingReaction);
+    }, 1000); // 1000 milliseconds = 1 second
 
     conn.emit(WS_MESSAGE.WS_ROOM_REACTION, {
       roomId,

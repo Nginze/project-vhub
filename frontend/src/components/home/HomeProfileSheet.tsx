@@ -233,6 +233,10 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
         setSettings({ selectedSpeakerDevice: speakers[0].value });
       }
 
+      console.log("microphones", microphones)
+      console.log("webcams", cameras)
+      console.log("speakers", speakers)
+
       setMicrophones(microphones);
       setCameras(cameras);
       setSpeakers(speakers);
