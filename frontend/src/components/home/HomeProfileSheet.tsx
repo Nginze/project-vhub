@@ -233,9 +233,9 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
         setSettings({ selectedSpeakerDevice: speakers[0].value });
       }
 
-      console.log("microphones", microphones)
-      console.log("webcams", cameras)
-      console.log("speakers", speakers)
+      console.log("microphones", microphones);
+      console.log("webcams", cameras);
+      console.log("speakers", speakers);
 
       setMicrophones(microphones);
       setCameras(cameras);
@@ -397,7 +397,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       {microphones?.map(({ value, label }) => (
                         <SelectItem
                           key={value}
-                          value={value ? value : ""}
+                          value={value || value === "" ? value : "unassigned"}
                           className="text-[16px] font-semibold opacity-70"
                         >
                           <span className="flex items-center text-left w-full gap-2">
@@ -437,7 +437,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       {cameras?.map(({ value, label }) => (
                         <SelectItem
                           key={value}
-                          value={value ? value : ""}
+                          value={value || value === "" ? value : "unassigned"}
                           className="text-[16px] font-semibold opacity-70"
                         >
                           <span className="flex items-center text-left w-full gap-2">
@@ -477,7 +477,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                       {speakers?.map(({ value, label }) => (
                         <SelectItem
                           key={value}
-                          value={value ? value : ""}
+                          value={value || value === "" ? value : "unassigned"}
                           className="text-[16px] font-semibold opacity-70"
                         >
                           <span className="flex items-start text-left w-full gap-2">

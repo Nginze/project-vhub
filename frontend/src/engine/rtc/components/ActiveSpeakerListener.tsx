@@ -14,11 +14,10 @@ export const ActiveSpeakerListener: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     if (!localStream || !conn || userLoading) {
-      console.log("[LOGGING]: No mic stream or conn");
       return;
     }
 
-    console.log("[LOGGING]: Setting up harker");
+    // console.log("[LOGGING]: Setting up harker");
 
     const micStream = new MediaStream([localStream.getAudioTracks()[0]]);
     const harker = hark(micStream);

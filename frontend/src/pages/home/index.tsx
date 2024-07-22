@@ -27,8 +27,6 @@ const Home: NextPage = () => {
     queryFn: async () => {
       try {
         const { data } = await api.get(`/room/rooms/live`);
-
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error);
@@ -37,10 +35,6 @@ const Home: NextPage = () => {
   });
 
   const hasDeviceIssue = hasCameraIssue || hasMicIssue || hasSpeakerIssue;
-  console.log("hasDeviceIssue", hasDeviceIssue);
-  console.log("hasCameraIssue", hasCameraIssue);
-  console.log("hasMicIssue", hasMicIssue);
-  console.log("hasSpeakerIssue", hasSpeakerIssue);
 
   return (
     <>

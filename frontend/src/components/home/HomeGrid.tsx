@@ -17,18 +17,9 @@ export const HomeGrid: React.FC<HomeGridProps> = ({
 }) => {
   return roomsLoading ? (
     <div className="grid grid-cols-5 gap-10 overflow-y-auto h-full">
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
-      <HomeRoomPreviewCardSkeleton />
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((v, i) => {
+        return <HomeRoomPreviewCardSkeleton key={v} />;
+      })}
     </div>
   ) : (
     <div className="grid grid-cols-5 gap-10 overflow-visible">
