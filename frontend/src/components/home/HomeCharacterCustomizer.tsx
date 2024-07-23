@@ -14,6 +14,7 @@ import { api } from "@/api";
 import toast from "react-hot-toast";
 import { FaPerson } from "react-icons/fa6";
 import Loader from "../global/Loader";
+import { useQueryClient } from "@tanstack/react-query";
 
 type HomeCharacterCustomizerProps = {};
 
@@ -29,6 +30,7 @@ export const HomeCharacterCustomizer: React.FC<
   const [hairstyleSelected, setHairstyleSelected] = useState(false);
   const { user, userLoading } = useContext(userContext);
   const canvasRef = useRef(null);
+  const queryClient = useQueryClient();
   const [savingLoading, setSavingLoading] = useState(false);
 
   useEffect(() => {
@@ -61,34 +63,38 @@ export const HomeCharacterCustomizer: React.FC<
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const parts = [base, eyes, hair, clothing, accessories];
-    parts.forEach((part) => {
-      if (part) {
-        const img = new Image();
-        img.src = part;
-        img.onload = () => {
-          const scale = 1.4; // Increase this to increase the size of the image
-          //@ts-ignore
-          const x = canvas.width / 2 - (img.width * scale) / 2;
-          //@ts-ignore
-          const y = canvas.height / 2 - (img.height * scale) / 2;
+    const img = new Image();
+    img.src = parts[0]; // Assuming that base is always defined
+    img.onload = () => {
+      const scale = 1.4; // Increase this to increase the size of the image
+      //@ts-ignore
+      const x = canvas.width / 2 - (img.width * scale) / 2;
+      //@ts-ignore
+      const y = canvas.height / 2 - (img.height * scale) / 2;
 
-          // Draw the shadow
-          const shadowRadius = (img.width * scale) / 3; // Slightly increase the radius of the shadow
-          const shadowX = x + (img.width * scale) / 2;
-          const shadowY = y + img.height * scale;
-          ctx.save();
-          ctx.scale(1.5, 1); // Stretch the circle horizontally
-          ctx.beginPath();
-          ctx.arc(shadowX / 1.5, shadowY, shadowRadius, 0, Math.PI * 2);
-          ctx.fillStyle = "white"; // Set the color of the shadow
-          ctx.fill();
-          ctx.restore();
+      // Draw the shadow
+      const shadowRadius = (img.width * scale) / 3; // Slightly increase the radius of the shadow
+      const shadowX = x + (img.width * scale) / 2;
+      const shadowY = y + img.height * scale;
+      ctx.save();
+      ctx.scale(1.5, 1); // Stretch the circle horizontally
+      ctx.beginPath();
+      ctx.arc(shadowX / 1.5, shadowY, shadowRadius, 0, Math.PI * 2);
+      ctx.fillStyle = "white"; // Set the color of the shadow
+      ctx.fill();
+      ctx.restore();
 
-          // Draw the part
-          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-        };
-      }
-    });
+      // Draw the parts
+      parts.forEach((part) => {
+        if (part) {
+          const img = new Image();
+          img.src = part;
+          img.onload = () => {
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+          };
+        }
+      });
+    };
   };
 
   const drawSpriteSheet = () => {
@@ -173,6 +179,8 @@ export const HomeCharacterCustomizer: React.FC<
           color: "#fff",
         },
       });
+
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
 
       setSavingLoading(false);
 

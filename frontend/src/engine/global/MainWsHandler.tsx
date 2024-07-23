@@ -11,6 +11,7 @@ import { useConsumerStore } from "../rtc/store/ConsumerStore";
 import { useMediaStore } from "../rtc/store/MediaStore";
 import { useProducerStore } from "../rtc/store/ProducerStore";
 import { RoomParticipant } from "../../../../shared/types";
+import { RTC_MESSAGE, WS_MESSAGE } from "../2d-renderer/events";
 
 type Props = {
   children: React.ReactNode;
@@ -23,9 +24,10 @@ export const MainWsHandler = ({ children }: Props) => {
   const { userLoading, user } = useContext(userContext);
   const { conn } = useContext(WebSocketContext);
 
-  const { nullify, mic } = useMediaStore();
+  const { nullify, mic, vid, screenMic, screenVid } = useMediaStore();
   const { closeAll } = useConsumerStore();
   const { close } = useProducerStore();
+  const { proximityList } = useConsumerStore();
 
   useEffect(() => {
     if (!conn) {
@@ -36,7 +38,7 @@ export const MainWsHandler = ({ children }: Props) => {
       if (status == "speaking") {
         queryClient.setQueryData(["room"], (data: any) => ({
           ...data,
-          participants: data.participants.map((p: RoomParticipant) =>
+          participants: data?.participants.map((p: RoomParticipant) =>
             p.userId === userId
               ? {
                   ...p,
@@ -49,7 +51,7 @@ export const MainWsHandler = ({ children }: Props) => {
       } else {
         queryClient.setQueryData(["room"], (data: any) => ({
           ...data,
-          participants: data.participants.map((p: RoomParticipant) =>
+          participants: data?.participants.map((p: RoomParticipant) =>
             p.userId === userId
               ? {
                   ...p,
@@ -64,7 +66,7 @@ export const MainWsHandler = ({ children }: Props) => {
     conn.on("new-user-joined-room", ({ user, roomId }) => {
       console.log("new user joined fired");
       queryClient.setQueryData(["room"], (data: any) => {
-        const exists = data.participants.some(
+        const exists = data?.participants.some(
           (p: RoomParticipant) => p.userId === user.userId
         );
         if (!exists) {
@@ -82,7 +84,7 @@ export const MainWsHandler = ({ children }: Props) => {
       console.log("User muted mic");
       queryClient.setQueryData(["room"], (data: any) => ({
         ...data,
-        participants: data.participants.map((p: RoomParticipant) =>
+        participants: data?.participants.map((p: RoomParticipant) =>
           p.userId === userId
             ? {
                 ...p,
@@ -97,7 +99,7 @@ export const MainWsHandler = ({ children }: Props) => {
       console.log("User toggled vid");
       queryClient.setQueryData(["room"], (data: any) => ({
         ...data,
-        participants: data.participants.map((p: RoomParticipant) =>
+        participants: data?.participants.map((p: RoomParticipant) =>
           p.userId === userId
             ? {
                 ...p,
@@ -112,7 +114,7 @@ export const MainWsHandler = ({ children }: Props) => {
       console.log("user promoted to mod");
       queryClient.setQueryData(["room"], (data: any) => ({
         ...data,
-        participants: data.participants.map((p: RoomParticipant) =>
+        participants: data?.participants.map((p: RoomParticipant) =>
           p.userId === userId
             ? {
                 ...p,
@@ -127,7 +129,7 @@ export const MainWsHandler = ({ children }: Props) => {
       console.log("user demoted from mod");
       queryClient.setQueryData(["room"], (data: any) => ({
         ...data,
-        participants: data.participants.map((p: RoomParticipant) =>
+        participants: data?.participants.map((p: RoomParticipant) =>
           p.userId === userId
             ? {
                 ...p,
@@ -168,6 +170,37 @@ export const MainWsHandler = ({ children }: Props) => {
         handRaiseEnabled: !data.handRaiseEnabled,
       }));
     });
+
+    conn.on("invalidate-feed", async () => {
+      console.log("invalidating feed");
+      try {
+        await queryClient.refetchQueries({
+          queryKey: ["rooms-public"],
+          exact: true,
+        });
+      } catch (error) {
+        console.error('Error refetching "rooms-public":', error);
+      }
+      try {
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
+      } catch (error) {
+        console.error('Error invalidating "user":', error);
+      }
+      queryClient.removeQueries({ queryKey: ["room"] });
+      queryClient.removeQueries({ queryKey: ["room-status"] });
+    });
+
+    conn.on(WS_MESSAGE.WS_PARTICIPANT_LEFT, ({ roomId, participantId }) => {
+      console.log("participant left");
+      queryClient.setQueryData(["room"], (data: any) => ({
+        ...data,
+        participants: data.participants.filter(
+          (p: RoomParticipant) => p.userId !== participantId
+        ),
+      }));
+      proximityList.delete(participantId);
+    });
+
 
     return () => {
       conn.off("mod-added");

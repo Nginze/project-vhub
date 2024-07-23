@@ -6,6 +6,7 @@ export const useUIStore = create(
     {
       sheetOpen: false,
       activeRoomSheet: "participant",
+      roomLoadStatusMessage: "Connecting to Server",
     },
     (set) => ({
       set,

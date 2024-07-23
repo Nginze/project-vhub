@@ -369,7 +369,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
             </span>
 
             <div className="flex flex-col items-start space-y-3">
-              {/* <div className="w-full flex flex-col space-y-2">
+              <div className="w-full flex flex-col space-y-2">
                 <div className="flex items-center gap-4">
                   <HiMicrophone size={20} />
                   <Select
@@ -381,8 +381,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                     <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-[#282b30] hover:bg-light border-none ring-0 outline-none focus:outline-none focus:ring-0">
                       <SelectValue
                         placeholder={
-                          <div className="flex items-center gap-2">
-                            <BiMicrophone size={20} />
+                          <div className="flex items-center">
                             <span className="flex items-center gap-2">
                               <span className="text-[16px] font-semibold opacity-70">
                                 Select a Microphone
@@ -421,8 +420,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                     <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-[#282b30] hover:bg-light border-none ring-0 outline-none focus:outline-none focus:ring-0">
                       <SelectValue
                         placeholder={
-                          <div className="flex items-center gap-2">
-                            <BiCamera size={20} />
+                          <div className="flex items-center">
                             <span className="flex items-center gap-2">
                               <span className="text-[16px] font-semibold opacity-70 truncate">
                                 Select a Camera
@@ -461,8 +459,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                     <SelectTrigger className="w-full px-5 py-6 rounded-xl bg-[#282b30] hover:bg-light border-none ring-0 outline-none focus:outline-none focus:ring-0">
                       <SelectValue
                         placeholder={
-                          <div className="flex items-center gap-2">
-                            <BiSpeaker size={20} />
+                          <div className="flex items-center">
                             <span className="flex items-center gap-2">
                               <span className="text-[16px] font-semibold opacity-70 truncate">
                                 Select a Speaker
@@ -557,7 +554,7 @@ export const HomeProfileSheet: React.FC<HomeProfileSheetProps> = ({
                     </div>
                   )}
                 </div>
-              </div> */}
+              </div>
 
               <span className="font-semibold text-[15px] flex items-center">
                 Preferences

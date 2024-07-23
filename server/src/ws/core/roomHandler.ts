@@ -1,8 +1,9 @@
 import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { WS_MESSAGE } from "../../../../shared/events/index";
+import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
 import { logger } from "../../config/logger";
 import { broadcastExcludeSender, getUser, setUserPosition } from "../helpers";
+import { sendQueue, wsQueue } from "../../config/bull";
 
 type SocketDTO = {
   roomId: string;
@@ -17,7 +18,16 @@ const init = (
     WS_MESSAGE.WS_ROOM_JOIN,
     async ({
       roomId,
-      roomMeta: { isAutospeaker, isCreator, posX, posY, skin, dir, spaceName },
+      roomMeta: {
+        isAutospeaker,
+        isCreator,
+        posX,
+        posY,
+        skin,
+        dir,
+        spaceName,
+        spriteUrl,
+      },
     }) => {
       logger.info(`Peer (${socket.id}) joined room ${roomId}`);
 
@@ -42,12 +52,36 @@ const init = (
               posY,
               dir,
               skin,
-              spaceName
+              spaceName,
+              spriteUrl,
+            },
+          },
+        };
+
+        const joinEventNonRenderer = {
+          op: "new-user-joined-room",
+          peerId: socket.id,
+          d: {
+            roomId,
+            user: {
+              ...user,
+              isSpeaker: isAutospeaker || isCreator,
+              isMuted: true,
+              isVideoOff: true,
+              raisedHand: false,
+              isMod: isCreator,
+              posX,
+              posY,
+              dir,
+              skin,
+              spaceName,
+              spriteUrl,
             },
           },
         };
 
         broadcastExcludeSender(io, joinEvent);
+        broadcastExcludeSender(io, joinEventNonRenderer);
       } catch (error) {
         throw error;
       }
@@ -138,6 +172,27 @@ const init = (
 
   socket.on("item-update", (d) => {
     io.to(d.roomId).emit("item-update", d);
+  });
+
+  socket.on("leave-room", async ({ roomId, userId }: SocketDTO) => {
+    await wsQueue.add("clean_up", {
+      userId: userId,
+      roomId: roomId ?? "",
+      timeStamp: Date.now(),
+    });
+
+    io.to(roomId).emit(WS_MESSAGE.WS_PARTICIPANT_LEFT, {
+      roomId,
+      //@ts-ignore
+      participantId: user.userId,
+    });
+
+    socket.leave(roomId);
+
+    await sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER, {
+      op: RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER,
+      d: { peerId: socket.id, roomId: roomId, userId: userId },
+    });
   });
 };
 

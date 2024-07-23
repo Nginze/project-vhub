@@ -20,6 +20,7 @@ import { userContext } from "@/context/UserContext";
 import { WebSocketContext } from "@/context/WsContext";
 import { AudioRenderer } from "./components/AudioRenderer";
 import { RTC_MESSAGE } from "../2d-renderer/events";
+import { useUIStore } from "@/global-store/UIStore";
 
 interface Props {}
 
@@ -76,6 +77,7 @@ export function closeMediaConnections(_roomId: string | null) {
 const WebrtcApp: React.FC<Props> = () => {
   const { conn } = useContext(WebSocketContext);
   const { user, userLoading } = useContext(userContext);
+  const { set: setUI } = useUIStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -168,6 +170,7 @@ const WebrtcApp: React.FC<Props> = () => {
           return;
         }
 
+        setUI({ roomLoadStatusMessage: "Joined Server, Connecting Voice" });
         // Start consuming audio tracks of participants
         receiveMedia(conn, () => {}, user.userId as string);
       }
@@ -227,16 +230,23 @@ const WebrtcApp: React.FC<Props> = () => {
           d.recvTransportOptions as TransportOptions
         );
 
+        setUI({ roomLoadStatusMessage: "Joined Server, Connecting Voice" });
         // Consume audio of everyone in the room
         receiveMedia(conn, () => {}, user.userId as string);
       }
     );
+
+    conn.on(RTC_MESSAGE.RTC_MS_SEND_ERROR, () => {
+      console.log("Error from MS server");
+      setUI({ roomLoadStatusMessage: "Error occured during connection" });
+    });
 
     return () => {
       conn.off(RTC_MESSAGE.RTC_MS_SEND_NEW_PEER_SPEAKER);
       conn.off(RTC_MESSAGE.RTC_MS_SEND_YOU_ARE_NOW_A_SPEAKER);
       conn.off(RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_PEER);
       conn.off(RTC_MESSAGE.RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER);
+      conn.off(RTC_MESSAGE.RTC_MS_SEND_ERROR);
     };
   }, [conn, userLoading]);
 

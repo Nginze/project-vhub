@@ -70,8 +70,8 @@ const googleStrategyMiddleware = new GoogleStrategy(
           await client.query("BEGIN");
           const { rows: userDataRows } = await client.query(
             `
-            INSERT INTO user_data (email, user_name, avatar_url, display_name, bio)
-              VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO user_data (email, user_name, avatar_url, display_name, bio, sprite_url)
+              VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *
             `,
             [
@@ -80,6 +80,7 @@ const googleStrategyMiddleware = new GoogleStrategy(
               profile.photos[0].value,
               profile.displayName,
               profile._json.bio,
+              "https://res.cloudinary.com/hack-0/image/upload/v1721687034/user_sprites/c1a9d08b-da9e-4624-8c93-5d715f24af85_sprite.png",
             ]
           );
           const { rows: authProviderRows } = await client.query(

@@ -79,7 +79,7 @@ export const RoomVideoCard: React.FC<RoomVideoCardProps> = ({
           }}
         />
       ) : (
-        <div className="flex font-logo text-[12px] justify-center items-center h-full">
+        <div className="flex font-logo text-[10px] opacity-50 justify-center items-center h-full">
           <p>Connecting...</p>
         </div>
       )}

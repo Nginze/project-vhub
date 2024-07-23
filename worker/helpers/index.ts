@@ -58,18 +58,26 @@ export const cleanUp = async (
       const dbTimeStamp = new Date(roomStatus[0].created_at).getTime();
 
       // If the user's room status is older than the current room status (race-condition avoidance with main server)
-      if (dbTimeStamp < timeStamp) {
-        //Delete the user's room status
-        await client.query(
-          `
+    //   if (dbTimeStamp < timeStamp) {
+    //     //Delete the user's room status
+    //     await client.query(
+    //       `
+    //     DELETE FROM
+    //     room_status
+    //     WHERE user_id = $1 and room_id = $2
+    // `,
+    //       [userId, roomId]
+    //     );
+    //   }
+
+      await client.query(
+        `
         DELETE FROM
         room_status
         WHERE user_id = $1 and room_id = $2
     `,
-          [userId, roomId]
-        );
-      }
-
+        [userId, roomId]
+      );
       // Update last active log of room
       await client.query(
         `

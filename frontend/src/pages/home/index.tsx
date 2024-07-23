@@ -32,6 +32,8 @@ const Home: NextPage = () => {
         console.log(error);
       }
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 10000,
   });
 
   const hasDeviceIssue = hasCameraIssue || hasMicIssue || hasSpeakerIssue;

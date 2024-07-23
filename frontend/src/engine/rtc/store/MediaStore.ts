@@ -33,7 +33,6 @@ export const useMediaStore = create(
       screenVid: null as MediaStreamTrack | null,
       screenMic: null as MediaStreamTrack | null,
 
-
       recvTransport: null as Transport | null,
       sendTransport: null as Transport | null,
       device: getDevice(),
@@ -46,6 +45,8 @@ export const useMediaStore = create(
           roomId: "",
           mic: null,
           vid: null,
+          screenMic: null,
+          screenVid: null,
           localStream: null,
         }),
       set,

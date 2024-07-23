@@ -2,7 +2,7 @@ import { Queue, Worker } from "bullmq";
 import "dotenv/config";
 import { api } from "../config/api";
 import { logger } from "../config/logger";
-import { cleanUp } from "../helpers";
+import { cleanUp, getPeerId } from "../helpers";
 
 export const connection = {
   host: process.env.QUEUE_HOST as string,
@@ -21,7 +21,16 @@ export const setupWsWorker = () => {
       const { userId, roomId } = job.data;
       try {
         if (job.name == "clean_up") {
-          logger.debug("new ws job", job.data);
+          logger.debug("new ws job");
+
+          console.log(job.data);
+
+          const peerId = await getPeerId(userId!);
+
+          await api.post("/worker/invalidate", {
+            peerId,
+          });
+
           await cleanUp(userId, roomId, job.data.timeStamp);
         } else {
           const event = job.data;
@@ -30,7 +39,7 @@ export const setupWsWorker = () => {
           });
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
         throw error;
       }
     },

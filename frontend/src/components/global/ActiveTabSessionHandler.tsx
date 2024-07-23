@@ -49,6 +49,7 @@ export const ActiveTabSessionHandler = ({
 
   useEffect(() => {
     (async () => {
+
       try {
         const microphones = await getMicrophones();
         setSettings({ hasMicIssue: false });

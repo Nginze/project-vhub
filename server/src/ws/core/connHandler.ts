@@ -16,14 +16,12 @@ const init = (
       const user = socket.request?.user;
       const currentRoom = Array.from(socket.rooms)[1];
 
-      setUserOffline(user.userId, socket.id);
-
       if (!currentRoom) {
         logger.info(`Disconnection socket wasn't in a room`);
         return;
       }
 
-      wsQueue.add("clean_up", {
+      await wsQueue.add("clean_up", {
         userId: user.userId,
         roomId: currentRoom ?? "",
         timeStamp: Date.now(),
@@ -41,6 +39,8 @@ const init = (
         op: RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER,
         d: { peerId: socket.id, roomId: currentRoom, userId: user.userId },
       });
+
+      setUserOffline(user.userId, socket.id);
 
       logger.info(`Disconnecting socket is in room, ${currentRoom}`);
     } catch (error) {

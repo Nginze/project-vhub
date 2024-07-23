@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 import { RotatingLines } from "react-loader-spinner";
+import { connect } from "http2";
+import { WebSocketContext } from "@/context/WsContext";
+import { userAgent } from "next/server";
+import { userContext } from "@/context/UserContext";
+import { useMediaStore } from "@/engine/rtc/store/MediaStore";
 
 type RoomLeaveConfirmationProps = {};
 
@@ -11,6 +16,10 @@ export const RoomLeaveConfirmation: React.FC<
   const router = useRouter();
   const { id: roomId } = router.query;
   const [loading, setLoading] = React.useState(false);
+  const { conn } = useContext(WebSocketContext);
+  const { user } = useContext(userContext);
+  const { mic, vid, screenMic, screenVid } = useMediaStore();
+
   return (
     <div className="font-logo">
       <div className="w-full flex flex-col items-start gap-2 mb-5">
@@ -25,8 +34,14 @@ export const RoomLeaveConfirmation: React.FC<
         <Button
           onClick={async () => {
             setLoading(true);
+            mic?.stop();
+            vid?.stop();
+            screenMic?.stop();
+            screenVid?.stop();
             await router.push("/home");
-            router.reload();
+
+            conn?.emit("leave-room", { roomId, userId: user.userId });
+
             setLoading(false);
           }}
           className="flex items-center gap-2 py-6 w-full bg-appRed"

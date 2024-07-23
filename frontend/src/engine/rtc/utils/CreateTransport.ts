@@ -1,6 +1,7 @@
 import { TransportOptions } from "mediasoup-client/lib/types";
 import { useMediaStore } from "../store/MediaStore";
 import { RTC_MESSAGE, WS_MESSAGE } from "@/engine/2d-renderer/events";
+import { useUIStore } from "@/global-store/UIStore";
 
 export async function createTransport(
   conn: any,
@@ -12,6 +13,7 @@ export async function createTransport(
   console.log(`[LOGGING]: Creating my ${direction} transport`);
 
   const { device, set, roomId } = useMediaStore.getState();
+  const { set: setUI } = useUIStore.getState();
 
   console.log("[LOGGING]: Transport options (from MS)", transportOptions);
 
@@ -61,6 +63,7 @@ export async function createTransport(
         // failure.
         conn.once(RTC_MESSAGE.RTC_MS_SEND_SEND_TRACK_DONE, (d: any) => {
           console.log("[LOGGING]: @send-track-done");
+          setUI({ roomLoadStatusMessage: "Track Connected" });
           callback({ id: d.id });
         });
 

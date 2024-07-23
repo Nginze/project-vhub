@@ -23,6 +23,7 @@ import { api } from "@/api";
 import toast from "react-hot-toast";
 import Head from "next/head";
 import { withProtectedRoute } from "@/components/global/ProtectedRoute";
+import { useUIStore } from "@/global-store/UIStore";
 
 type RoomProps = {};
 
@@ -38,6 +39,7 @@ const RoomPage: React.FC<RoomProps> = () => {
   const { set: setRoom, spaceName } = useRoomStore();
   const { roomIframeOpen } = useRoomStore();
   const { localStream } = useMediaStore();
+  const { roomLoadStatusMessage } = useUIStore();
 
   const queryClient = useQueryClient();
 
@@ -75,6 +77,7 @@ const RoomPage: React.FC<RoomProps> = () => {
           skin: roomStatus.skin,
           //@ts-ignore
           spaceName: spaceName as string,
+          spriteUrl: user.spriteUrl,
         },
       });
     },
@@ -126,7 +129,8 @@ const RoomPage: React.FC<RoomProps> = () => {
     return <div>Room not found</div>;
   }
 
-  return room && roomStatus && localStream && localStream.active ? (
+  //add localstream.active for production (it blocks local tests)
+  return room && roomStatus && localStream && localStream.active ? (  
     <>
       <Head>
         <title>Holoverse | {room.roomName}</title>
@@ -183,9 +187,12 @@ const RoomPage: React.FC<RoomProps> = () => {
       <div className="w-screen h-screen flex items-center justify-center bg-void">
         <div className="flex flex-col space-y-5 items-center">
           <div className="">
-            <Logo size="md" withLogo />
+            <Logo size="md" withLogo={false} />
           </div>
           <Loader alt width={20} />
+          <span className="text-[13px] opacity-50 text-white">
+            {roomLoadStatusMessage}
+          </span>
         </div>
 
         <div className="text-[12px] opacity-30 font-logo w-[500px] text-center absolute bottom-5">
