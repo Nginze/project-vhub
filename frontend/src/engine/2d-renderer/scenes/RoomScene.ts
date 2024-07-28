@@ -13,7 +13,10 @@ import {
 
 import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
 import { clamp } from "framer-motion";
-import { registerCustomSpriteAnimations } from "../anims";
+import {
+  registerCustomSpriteAnimations,
+  registerSpriteAnimations32,
+} from "../anims";
 import Player from "../entities/Player";
 import { WS_MESSAGE } from "../events";
 import { NavKeys, ProxmityActionType } from "../types";
@@ -67,6 +70,8 @@ export class RoomScene extends Phaser.Scene {
     registerGridEngineEvents(this);
     registerRendererEvents(this);
     registerItems(this);
+    registerSpriteAnimations32(this);
+    
 
     console.log("[LOGGING]: Loading complete");
 
@@ -84,8 +89,8 @@ export class RoomScene extends Phaser.Scene {
     const myUserId = this.user.userId as string;
     const myPlayer = this.players.get(myUserId) as Player;
 
-    myPlayer.update();
-    myPlayer.playerSelector.update();
+    myPlayer?.update();
+    myPlayer?.playerSelector.update();
     this.proximityUpdateForMedia();
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {

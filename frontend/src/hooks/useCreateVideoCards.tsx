@@ -19,13 +19,13 @@ export const useCreateVideoCards = (
 
       const videoMuted = room.participants.find(
         (p: RoomParticipant) => p.userId === participantId
-      ).isVideoOff;
+      )?.isVideoOff;
       const audioMuted = room.participants.find(
         (p: RoomParticipant) => p.userId === participantId
-      ).isMuted;
+      )?.isMuted;
       const userName = room.participants.find(
         (p: RoomParticipant) => p.userId === participantId
-      ).userName;
+      )?.userName;
 
       const indicatorOn = room.participants.find(
         (p: RoomParticipant) => p.userId === participantId

@@ -23,17 +23,6 @@ services:
     env_file:
       - .env.production
 
-  # webrtc-server:
-  #   build:
-  #     context: .
-  #     dockerfile: webrtc-server/Dockerfile
-  #   container_name: ${WEBRTC_HOST}
-  #   depends_on:
-  #     - redis
-  #     - postgres
-  #   env_file:
-  #     - .env.production
-
   nginx:
     image: reverse-proxy
     build:

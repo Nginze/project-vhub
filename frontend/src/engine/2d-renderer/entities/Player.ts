@@ -34,12 +34,11 @@ export default class Player extends Phaser.GameObjects.Container {
   constructor(scene: RoomScene, user: UserData & RoomStatus) {
     const { posX, posY, skin, dir, spaceName } = user;
     super(scene, posX, posY);
+
     this.playerData = user;
     this.playerBehavior = PlayerBehaviour.IDLE;
 
-    this.playerSprite = scene.physics.add
-      .sprite(0, 0, `player-${user.userId}`)
-      .setInteractive();
+    this.playerSprite = scene.physics.add.sprite(0, 0, `adam`).setInteractive();
 
     this.playerName = scene.add
       .dom(0, -20)
@@ -100,7 +99,6 @@ export default class Player extends Phaser.GameObjects.Container {
   }
 
   playAnimation(animationType: AnimationType, direction: Direction) {
-    console.log("play animation", animationType, direction);
     switch (animationType) {
       case AnimationType.IDLE:
         this.playerSprite.anims.play(
@@ -238,6 +236,8 @@ export default class Player extends Phaser.GameObjects.Container {
     const user = this.playerData;
     const scene = this.scene as RoomScene;
 
+    console.log(`lazy loading sprite; player-${this.playerData.userId}`);
+
     this.scene.load.spritesheet(
       `player-${this.playerData.userId}`,
       this.playerData.spriteUrl as string,
@@ -247,14 +247,21 @@ export default class Player extends Phaser.GameObjects.Container {
       }
     );
 
-    console.log(`player-${this.playerData.userId}`);
-
     this.scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
       console.log("[LOGGING]: Done loading sprite texture");
       this.playerSprite.setTexture(`player-${this.playerData.userId}`);
 
+      scene.players.set(user.userId, this);
+
       registerCustomSpriteAnimations(scene);
       this.playAnimation(AnimationType.IDLE, dir as Direction);
+
+      scene.gridEngine?.addCharacter({
+        id: user.userId,
+        sprite: this.playerSprite,
+        container: this.playerContainer,
+        startPosition: { x: posX, y: posY },
+      });
     });
 
     this.scene.load.start();

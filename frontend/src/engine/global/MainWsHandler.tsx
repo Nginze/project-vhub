@@ -191,10 +191,10 @@ export const MainWsHandler = ({ children }: Props) => {
     });
 
     conn.on(WS_MESSAGE.WS_PARTICIPANT_LEFT, ({ roomId, participantId }) => {
-      console.log("participant left");
+      console.log("[MainWSHandler]: participant left");
       queryClient.setQueryData(["room"], (data: any) => ({
         ...data,
-        participants: data.participants.filter(
+        participants: data?.participants.filter(
           (p: RoomParticipant) => p.userId !== participantId
         ),
       }));

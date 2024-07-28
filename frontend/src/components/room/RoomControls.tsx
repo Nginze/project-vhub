@@ -296,11 +296,11 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   content={<RoomLeaveConfirmation />}
                 >
                   <RoomMediaControlButton
+                    useDefaultBg
+                    onClick={() => {}}
                     tooltipText="Leave"
-                    iconOn={<BiExit size={24} />}
-                    iconOff={<BiExit size={24} />}
-                    bgColor="bg-appRed"
-                    textColor="text-white"
+                    iconOn={<BiExit size={24} color="white" />}
+                    iconOff={<BiExit size={24} color="white" />}
                   />
                 </AppDialog>
               </div>

@@ -44,7 +44,6 @@ export const RoomPerfStats: React.FC<RoomPerfStatsProps> = () => {
     const pong = () => {
       const latency = Date.now() - startTime.current;
       setStats((prevStats) => ({ ...prevStats, latency: `${latency}ms` }));
-      console.log(`Latency is ${latency} ms`);
     };
 
     conn?.on("pong", pong);

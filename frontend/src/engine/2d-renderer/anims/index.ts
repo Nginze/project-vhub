@@ -557,7 +557,7 @@ export const registerCustomSpriteAnimations = (scene: RoomScene) => {
         end: 117,
       }),
       repeat: -1,
-      frameRate: ANIMS_FRAME_RATE * 0.6,
+      frameRate: ANIMS_FRAME_RATE ,
     });
 
     scene.anims.create({
@@ -567,7 +567,7 @@ export const registerCustomSpriteAnimations = (scene: RoomScene) => {
         end: 123,
       }),
       repeat: -1,
-      frameRate: ANIMS_FRAME_RATE * 0.6,
+      frameRate: ANIMS_FRAME_RATE,
     });
 
     scene.anims.create({
@@ -577,7 +577,7 @@ export const registerCustomSpriteAnimations = (scene: RoomScene) => {
         end: 129,
       }),
       repeat: -1,
-      frameRate: ANIMS_FRAME_RATE * 0.6,
+      frameRate: ANIMS_FRAME_RATE,
     });
 
     scene.anims.create({
@@ -587,7 +587,7 @@ export const registerCustomSpriteAnimations = (scene: RoomScene) => {
         end: 135,
       }),
       repeat: -1,
-      frameRate: ANIMS_FRAME_RATE * 0.6,
+      frameRate: ANIMS_FRAME_RATE ,
     });
 
     // scene.anims.create({

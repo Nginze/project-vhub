@@ -35,7 +35,7 @@ export const TwoDViewComponent: React.FC<TwoDViewComponentProps> = () => {
         physics: {
           default: "arcade",
           arcade: {
-            debug: process.env.NODE_ENV === "development" && false,
+            debug: true,
           },
         },
         dom: {

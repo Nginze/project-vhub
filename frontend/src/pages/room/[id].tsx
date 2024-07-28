@@ -60,7 +60,7 @@ const RoomPage: React.FC<RoomProps> = () => {
     },
 
     onSuccess: async (data, variables: { spaceName: string }) => {
-      console.log("Room Ready");
+      console.log("Profile Updated, Space Name Set");
 
       await queryClient.invalidateQueries({ queryKey: ["user"] });
       await queryClient.invalidateQueries({ queryKey: ["room"] });
@@ -130,7 +130,7 @@ const RoomPage: React.FC<RoomProps> = () => {
   }
 
   //add localstream.active for production (it blocks local tests)
-  return room && roomStatus && localStream && localStream.active ? (  
+  return room && roomStatus && true ? (
     <>
       <Head>
         <title>Holoverse | {room.roomName}</title>

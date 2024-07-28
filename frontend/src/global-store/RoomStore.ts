@@ -8,6 +8,8 @@ export const useRoomStore = create(
       roomIframeOpen: false,
       currentReaction: "",
       spaceName: "",
+      wantsMicOn: false,
+      wantsVideoOn: false,
     },
     (set) => ({
       set,
