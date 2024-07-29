@@ -8,13 +8,13 @@ type RoomZoomControlsProps = {};
 export const RoomZoomControls: React.FC<RoomZoomControlsProps> = () => {
   const { game } = useRendererStore();
   return (
-    <div className="absolute left-10 bottom-28 bg-white/10 rounded-xl overflow-hidden">
-      <div className="flex items-center gap-2 flex-col">
+    <div className="absolute left-10 bottom-8 bg-void/70 rounded-xl overflow-hidden">
+      <div className="flex items-center  flex-col">
         <button
           onClick={() => {
             (game?.scene.getScene("room-scene") as RoomScene).zoomIn();
           }}
-          className="button hover:bg-white/50 hover:text-black px-2 py-2"
+          className=" hover:bg-void/20 focus:border-none focus:outline-none outline-none  hover:text-white px-4 py-4"
         >
           <BiPlus size={20} />
         </button>
@@ -22,7 +22,7 @@ export const RoomZoomControls: React.FC<RoomZoomControlsProps> = () => {
           onClick={() => {
             (game?.scene.getScene("room-scene") as RoomScene).zoomOut();
           }}
-          className="button hover:bg-white/50 hover:text-black px-2 py-2"
+          className="hover:bg-void/20 focus:border-none focus:outline-none outline-none hover:text-white px-4 py-4"
         >
           <BiMinus size={20} />
         </button>

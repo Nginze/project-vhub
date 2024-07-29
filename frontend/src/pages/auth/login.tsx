@@ -141,6 +141,9 @@ const Login: NextPage = () => {
           Policy, and confirm you are 18 and over
         </div>
       </div>
+      {/* <div className="absolute bottom-0 right-0">
+        <img src="/cards.svg" className="w-96" />
+      </div> */}
     </>
   );
 };

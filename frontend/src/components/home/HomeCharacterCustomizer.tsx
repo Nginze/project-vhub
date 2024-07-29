@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 import { FaPerson } from "react-icons/fa6";
 import Loader from "../global/Loader";
 import { useQueryClient } from "@tanstack/react-query";
+import { IoReloadCircle } from "react-icons/io5";
+import { BiError } from "react-icons/bi";
 
 type HomeCharacterCustomizerProps = {};
 
@@ -160,6 +162,21 @@ export const HomeCharacterCustomizer: React.FC<
         mappings[clothing],
         mappings[accessories],
       ];
+
+      if (!mappings[base]) {
+        toast("Please select a base", {
+          icon: <BiError size={19} />,
+          style: {
+            borderRadius: "100px",
+            background: "#333",
+            padding: "14px",
+            color: "#fff",
+          },
+        });
+        setSavingLoading(false);
+        return;
+      }
+
       const { data } = await axios.post("/api/sprite", {
         bodyParts,
         userId: user.userId,
@@ -199,6 +216,14 @@ export const HomeCharacterCustomizer: React.FC<
     }
   };
 
+  const resetPreferences = () => {
+    setBase("");
+    setEyes("");
+    setHair("");
+    setClothing("");
+    setAccessories("");
+  };
+
   const filteredMappings = {
     Base: Object.keys(mappings).filter(
       (key) => key.includes("Bodies") && !key.includes("kid")
@@ -220,17 +245,29 @@ export const HomeCharacterCustomizer: React.FC<
   return (
     <>
       <div className="flex h-[530px] items-center flex-col">
-        <div className="w-full relative border-b border-b-light h-1/3 px-5 bg-deep rounded-t-lg">
+        <div className="w-full overflow-hidden relative border-b border-b-light h-1/3 px-5 bg-ultra  rounded-t-lg">
+          <Grid />
           <canvas
             className="w-full flex items-center -mt-8 justify-center"
             ref={canvasRef}
           />
-          <div className="absolute top-2 bg-void p-1 px-4 text-[12px] rounded-xl left-3 border border-light truncate-div w-[80px]">
-            <span className="truncate-span">{user ? user.userName : ""}</span>
+          <div className="absolute top-2 bg-void p-1 px-2 text-[12px] rounded-xl left-3 border border-light truncate-div ">
+            <span className="truncate-span">
+              {user ? "🌟 " + user.userName : ""}
+            </span>
           </div>
         </div>
-        <div className="w-full flex-grow p-6 overflow-y-hidden ">
-          <Tabs defaultValue="Base" className="w-full ">
+        <div className="relative w-full flex-1 p-6  overflow-y-hidden">
+          <div className="absolute right-4 top-8">
+            <button
+              onClick={resetPreferences}
+              className="flex active:opacity-40 hover:opacity-80 font-semibold font-sans items-center gap-2"
+            >
+              <IoReloadCircle size={25} />
+              Revert
+            </button>
+          </div>
+          <Tabs defaultValue="Base" className="w-full">
             <TabsList className="w-3/4 mx-auto bg-void rounded-xl  text-white border border-light ">
               <TabsTrigger className="rounded-xl" value="Base">
                 Base
@@ -245,7 +282,10 @@ export const HomeCharacterCustomizer: React.FC<
                 Accessories
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="Base" className="h-full overflow-y-auto">
+            <TabsContent
+              value="Base"
+              className="h-full overflow-y-auto scrollable"
+            >
               <div className="py-1">
                 <Toggle
                   onClick={() => {
@@ -338,7 +378,7 @@ export const HomeCharacterCustomizer: React.FC<
                 ))}
               </div>
             </TabsContent>
-            <TabsContent value="Outfits" className="h-full overflow-y-auto">
+            <TabsContent value="Outfits" className="h-full overflow-y-auto ">
               <div className="grid grid-cols-4 gap-2 max-h-[500px] overflow-y-auto py-2">
                 {
                   <button
@@ -394,7 +434,7 @@ export const HomeCharacterCustomizer: React.FC<
 
       <DialogFooter className="flex px-6 pb-6">
         <Button
-          disabled={savingLoading}
+          disabled={savingLoading || !mappings[base]}
           onClick={() => handleFinishEditing()}
           className="bg-appGreen gap-2 flex items-center px-4 py-6 rounded-lg w-full"
         >

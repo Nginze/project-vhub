@@ -38,7 +38,7 @@ export const registerRendererEvents = (scene: RoomScene) => {
 
       scene.players.set(d.user.userId, player);
 
-      registerCustomSpriteAnimations(scene);
+      // registerCustomSpriteAnimations(scene);
     } catch (error) {}
   });
 

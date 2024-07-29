@@ -65,24 +65,6 @@ export const RoomGlobalChatSheet: React.FC<RoomGlobalChatSheetProps> = ({
       <div className="flex-1 flex flex-col items-start overflow-auto scrollable gap-3  mb-5">
         <RoomMessage />
         <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
-        <RoomMessage />
       </div>
       <RoomChatInput message={message} setMessage={setMessage} />
     </div>
@@ -95,11 +77,9 @@ type RoomMessageProps = {
 export const RoomMessage: React.FC<RoomMessageProps> = ({ message }) => {
   return (
     <>
-      <div>
-        <span>xMany:</span>
-        <span>
-          this is a random message about pedofilia stop pedo PLEASE!!!
-        </span>
+      <div className="flex flex-col items-start">
+        <span>Parker</span>
+        <span className="font-sans text-[14px]">Hi everyone</span>
       </div>
     </>
   );

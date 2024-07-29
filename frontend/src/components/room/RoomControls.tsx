@@ -5,7 +5,7 @@ import { useRoomStore } from "@/global-store/RoomStore";
 import { REACTIONS_MAP, _REACTION_MAP } from "@/lib/emoji";
 import { ReactionBarSelector } from "@charkour/react-reactions";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   BiExit,
   BiSolidMicrophone,
@@ -26,7 +26,7 @@ import { RoomReactionsButton } from "./RoomReactionsButton";
 import { RoomSheet } from "./RoomSheet";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api";
-import { parseCamel } from "@/lib/utils";
+import { getSpritePreview, parseCamel } from "@/lib/utils";
 import { WebSocketContext } from "@/context/WsContext";
 import { Socket } from "socket.io-client";
 import AppDialog from "../global/AppDialog";
@@ -37,6 +37,10 @@ import { useSoundEffectStore } from "@/global-store/SoundFxStore";
 import { useUIStore } from "@/global-store/UIStore";
 import { RoomGlobalChatSheet } from "./RoomGlobalChatSheet";
 import { RoomZoomControls } from "./RoomZoomControls";
+import { Check, Monitor, Smile } from "lucide-react";
+import { FaHandPaper, FaSmile } from "react-icons/fa";
+import { RiUserShared2Fill } from "react-icons/ri";
+import { IoHandRightSharp } from "react-icons/io5";
 
 type RoomControlsProps = {
   room: Room;
@@ -60,6 +64,15 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   const { mic, vid, set: setMedia } = useMediaStore();
   const { playSoundEffect } = useSoundEffectStore();
   const { set: setUI, sheetOpen, activeRoomSheet } = useUIStore();
+
+  const [spritePreviewUrl, setSpritePreviewUrl] = useState<string>("");
+
+  useEffect(() => {
+    console.log(spritePreviewUrl);
+    getSpritePreview(3, user).then((previewUrl) =>
+      setSpritePreviewUrl(previewUrl as string)
+    );
+  }, [user, router]);
 
   const statusMutation = useMutation({
     mutationFn: async (params: {
@@ -155,13 +168,13 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
       <RoomZoomControls />
       <div className="w-full py-4 flex items-center">
         <div className="w-full px-10 flex items-center justify-between">
-          <div className="flex flex-col items-start opacity-80">
+          {/* <div className="flex flex-col items-start opacity-80">
             <Logo withLogo={false} size="sm" />
             <span className="text-[9px] opacity-60">{roomId}</span>
-          </div>
+          </div> */}
 
-          <div className="flex-1 flex justify-center -ml-16">
-            <div className="flex items-center pr-5 p-0.5 bg-ultra overflow-hidden rounded-full shadow-appShadow relative">
+          <div className="flex-1 flex justify-center">
+            <div className="flex items-center pr-5 p-0.5 bg-ultra shadow-canvasShadow overflow-hidden rounded-full relative">
               <AppDialog
                 width={"sm:max-w-[450px]"}
                 className="p-0 pb-5"
@@ -173,15 +186,18 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   />
                 }
               >
-                <div className="flex items-center gap-3 px-5 py-3 hover:bg-dark active:bg-deep cursor-pointer">
-                  <div>
+                <div className="flex items-center gap-3 px-5 py-3 hover:bg-dark active:bg-deep cursor-pointer w-[180px]">
+                  <div className="relative">
                     <Avatar className="w-8 h-8 cursor-pointer">
                       <AvatarImage
                         className="object-cover"
-                        src={user.avatarUrl as string}
+                        src={spritePreviewUrl as string}
                       />
                       <AvatarFallback />
                     </Avatar>
+                    <div className="bg-appGreen p-0.5 border border-light absolute bottom-0 -right-1 rounded-full">
+                      <Check size={10} />
+                    </div>
                   </div>
                   <div className="flex flex-col items-start">
                     <span className="text-[12px] opacity-70 font-body font-semibold">
@@ -195,8 +211,8 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                 orientation="vertical"
                 className="h-10 opacity-30 mr-5 bg-veryLight"
               />
-              <div className="flex items-center p-0.5 gap-5 bg-void overflow-hidden rounded-full">
-                <RoomMediaControlButton
+              <div className="flex items-center p-0.5 gap-2 bg-void overflow-hidden rounded-full">
+                {/* <RoomMediaControlButton
                   isOn={!myRoomStatus.isMuted as boolean}
                   isLoading={!localStream || !localStream.active}
                   iconOn={
@@ -263,14 +279,14 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                       </div>
                     }
                   />
-                </div>
+                </div> */}
 
                 <AppSheet
                   open={sheetOpen}
                   onOpenChange={(open: boolean) =>
                     setUI({ sheetOpen: !sheetOpen })
                   }
-                  className="px-0"
+                  className=""
                   content={
                     activeRoomSheet == "participant" ? (
                       <RoomSheet room={room} />
@@ -281,17 +297,17 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   title={<span>People</span>}
                 >
                   <RoomMediaControlButton
-                    useDefaultBg
+                    bgColor="bg-ultra"
                     onClick={() => {
                       set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
                     }}
                     tooltipText="Settings"
-                    iconOn={<FaPeopleGroup size={24} color="white" />}
-                    iconOff={<FaPeopleGroup size={24} color="white" />}
+                    iconOn={<RiUserShared2Fill size={24} color="white" />}
+                    iconOff={<RiUserShared2Fill size={24} color="white" />}
                   />
                 </AppSheet>
 
-                <AppDialog
+                {/* <AppDialog
                   width={"sm:max-w-[450px]"}
                   content={<RoomLeaveConfirmation />}
                 >
@@ -302,7 +318,56 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                     iconOn={<BiExit size={24} color="white" />}
                     iconOff={<BiExit size={24} color="white" />}
                   />
-                </AppDialog>
+                </AppDialog> */}
+
+                <RoomMediaControlButton
+                  bgColor="bg-ultra"
+                  onClick={() => {}}
+                  tooltipText="Share Screen"
+                  iconOn={<Monitor size={26} color="white" />}
+                  iconOff={<Monitor size={26} color="white" />}
+                />
+
+                <RoomMediaControlButton
+                  bgColor="bg-ultra"
+                  onClick={() => {}}
+                  tooltipText="Raise Hand"
+                  iconOn={<FaHandPaper size={24} color="white" />}
+                  iconOff={<FaHandPaper size={24} color="white" />}
+                />
+                <div>
+                  <RoomReactionsButton
+                    bgColor="bg-ultra"
+                    tooltipText="Emote"
+                    iconOff={<FaSmile size={24} color="white" />}
+                    iconOn={
+                      <div className="flex items-center">
+                        <FaSmile size={24} color="white" />
+                        <ReactionBarSelector
+                          onSelect={(reaction: string) => {
+                            console.log(reaction);
+                            set((s) => ({
+                              //@ts-ignore
+                              currentReaction: _REACTION_MAP[reaction],
+                            }));
+                            scene.players
+                              .get(user.userId as string)
+                              ?.showReaction();
+                          }}
+                          reactions={REACTIONS_MAP}
+                          iconSize={17}
+                          style={{
+                            background: "transparent",
+                            boxShadow: "none",
+                            padding: "0",
+                            margin: "0",
+                            boxSizing: "border-box",
+                          }}
+                        />
+                      </div>
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>

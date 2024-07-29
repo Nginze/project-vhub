@@ -22,7 +22,7 @@ export const LandingPage: React.FC<LandingPageProps> = () => {
       </Head>
 
       <div className="w-screen h-screen font-logo bg-ultra flex flex-col items-center">
-        <div>
+        <div className="w-full">
           <Grid />
           <div className="flex flex-col">
             <LandingNav />

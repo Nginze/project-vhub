@@ -63,7 +63,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
       <div className="flex justify-between items-center border-b border-light/50 pb-5">
         <div className="flex items-center gap-5">
           <div onClick={() => router.push("/home")}>
-            <Logo withLogo={true} withText={false} size="lg" />
+            <Logo withLogo={true} withText={false} size="md" />
           </div>
           <div className="flex items-center gap-4">
             <button
@@ -94,8 +94,8 @@ export const HomeNav: React.FC<HomeNavProps> = ({
             className="p-0"
             content={<HomeCharacterCustomizer />}
           >
-            <div className="relative">
-              <button className="w-10 h-10 bg-black hover:opacity-55 transition-opacity relative border rounded-full border-light overflow-hidden flex items-center justify-center">
+            <div className="relative sparkle-container">
+              <button className="w-10 h-10 bg-appYellow hover:opacity-55 transition-opacity relative border rounded-full border-light overflow-hidden flex items-center justify-center">
                 {spritePreviewUrl ? (
                   <img
                     src={spritePreviewUrl}
@@ -105,11 +105,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
               </button>
 
               <div className="bg-blue-400 p-0.5 border border-light absolute bottom-0 -right-1 rounded-full">
-                {spritePreviewUrl ? (
-                  <Check size={10} />
-                ) : (
-                  <Loader width={10} alt />
-                )}
+                <Check size={10} />
               </div>
             </div>
           </AppDialog>
@@ -129,7 +125,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
           >
             <Button
               onClick={() => set({ selectFormOpen: true })}
-              className="flex items-center gap-2 py-6 button bg-appGreen rounded-xl"
+              className="flex items-center gap-2 py-6 button bg-appPrimary rounded-xl"
             >
               <PlusCircle size={18} />
               <span className="font-semibold">Create Space</span>
@@ -145,7 +141,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
               />
             }
           >
-            <Avatar className="w-8 h-8 cursor-pointer ring ">
+            <Avatar className="w-8 h-8 cursor-pointer ring hover:opacity-80">
               <AvatarImage
                 className="object-cover"
                 src={user?.avatarUrl as string}

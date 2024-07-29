@@ -30,7 +30,7 @@ const AppDialog = ({
   dontShowClose,
 }: Props) => {
   return (
-    <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={setOpenChange}>
+    <Dialog defaultOpen={defaultOpen} open={open}  onOpenChange={setOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         className={cn("sm:max-w-[800px] bg-void", width, height, className)}

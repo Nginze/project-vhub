@@ -177,19 +177,20 @@ export const RoomPerfStats: React.FC<RoomPerfStatsProps> = () => {
         borderRadius: "5px",
         width: "300px",
       }}
-      className="absolute bg-black/50 p-3  top-2 left-2 font-sans text-xs z-50 "
+      className="absolute  top-5 left-10 font-sans text-xs z-50"
     >
       <p>FPS: {stats.fps}</p>
       <p>Latency: {stats.latency}</p>
       <p>Uptime: {stats.uptime}</p>
-      <p>CPU: {stats.cpu}</p>
-      <p>GPU: {stats.gpu}</p>
-      <p>MEM (GB): {stats.mem}</p>
-      <p>High FPS: {stats.highFps ? "🟢" : "🔴"}</p>
-      <p>Device: {stats.device}</p>
-      <p>Browser Size: {stats.browserSize}</p>
       <p>Audio Bandwidth: {stats.audioBandwidth}</p>
       <p>Video Bandwidth: {stats.videoBandwidth}</p>
+      {/* <p>CPU: {stats.cpu}</p>
+      <p>GPU: {stats.gpu}</p>
+      <p>MEM (GB): {stats.mem}</p> */}
+      {/* <p>High FPS: {stats.highFps ? "🟢" : "🔴"}</p>
+      <p>Device: {stats.device}</p>
+      <p>Browser Size: {stats.browserSize}</p>
+       */}
     </div>
   );
 };

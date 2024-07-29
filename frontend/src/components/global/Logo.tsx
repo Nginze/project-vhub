@@ -12,12 +12,12 @@ export const Logo: React.FC<LogoProps> = ({
   withText = true,
   size = "md",
 }) => {
-  const WIDTH = size == "sm" ? 20 : size == "md" ? 40 : 60;
-  const HEIGHT = size == "sm" ? 20 : size == "md" ? 40 : 60;
+  const WIDTH = size == "sm" ? 20 : size == "md" ? 35 : 60;
+  const HEIGHT = size == "sm" ? 20 : size == "md" ? 35 : 60;
 
   return (
     <div className="flex items-center gap-2 cursor-pointer">
-      {withLogo && <img src="/logo2.svg" width={WIDTH} />}
+      {withLogo && <img src="/logo3.svg" width={WIDTH} />}
       {withText && (
         <span className="text-[24px] relative text-white font-new">
           holoverse

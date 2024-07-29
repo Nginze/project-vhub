@@ -10,7 +10,7 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { Separator } from "../ui/separator";
 import AppDialog from "../global/AppDialog";
@@ -19,6 +19,7 @@ import { RoomParticipant } from "../../../../shared/types";
 import { TbMessage2 } from "react-icons/tb";
 import { useUIStore } from "@/global-store/UIStore";
 import { cn } from "@/lib/utils";
+import { RoomChatInput, RoomMessage } from "./RoomGlobalChatSheet";
 
 type RoomSheetProps = {
   room: any;
@@ -27,6 +28,7 @@ type RoomSheetProps = {
 export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const { activeRoomSheet, set: setUI } = useUIStore();
+  const [message, setMessage] = useState("");
 
   const filteredParticipants = room.participants.filter(
     (participant: RoomParticipant) =>
@@ -44,7 +46,7 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
           {room.roomName}
         </span>
         <div className="flex items-center gap-3">
-          <button
+          {/* <button
             onClick={() => setUI({ activeRoomSheet: "message" })}
             className={cn(
               "hover:bg-light p-1.5 rounded-lg button",
@@ -52,7 +54,7 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
             )}
           >
             <TbMessage2 size={20} className="opacity-70" />
-          </button>
+          </button> */}
 
           <AppDialog
             content={<RoomInvite />}
@@ -81,7 +83,7 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
           />
         </div>
       </div>
-      <div className="flex flex-col items-start flex-1">
+      <div className="flex flex-col items-start flex-1 h-1/2 max-h-1/2">
         <span className="flex gap-2 h-6 opacity-80 text-[16px] font-semibold mb-3">
           On the Call
           <span className="bg-light flex items-center justify-center px-2 py-0.5 rounded-sm text-[10px]">
@@ -93,6 +95,32 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
             <RoomParticipantProfile key={p.userId} roomParticipant={p} />
           ))}
         </div>
+      </div>
+      <Separator
+        className="opacity-30 mr-5 bg-veryLight"
+        orientation="horizontal"
+      />
+      <div className="flex-1 h-1/2 max-h-1/2">
+        <div
+          className="text-lg w-full flex flex-row items-center gap-2 py-3 opacity-80 "
+          // style={{ maxWidth: "270px" }}
+        >
+          <ChevronLeft />
+          <span> Global Chat</span>
+        </div>
+        <div className="flex h-full flex-col items-start overflow-auto gap-3  mb-5">
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+          <RoomMessage />
+        </div>
+        <RoomChatInput message={message} setMessage={setMessage} />
       </div>
     </div>
   );

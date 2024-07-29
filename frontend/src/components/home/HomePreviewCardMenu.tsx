@@ -32,7 +32,7 @@ export const HomePreviewCardMenu: React.FC<HomePreviewCardMenuProps> = ({
       await navigator.clipboard.writeText(urlRef.current);
       console.log("Link copied to clipboard");
       setCopied(true);
-      setTimeout(() => setCopied(false), 500);
+      setTimeout(() => setCopied(false), 1000);
     } catch (err) {
       console.log("Failed to copy text: ", err);
     }
@@ -46,7 +46,7 @@ export const HomePreviewCardMenu: React.FC<HomePreviewCardMenuProps> = ({
             e.preventDefault();
             e.stopPropagation();
             router.push(
-              `/room/setup?roomId= ${room.roomId} && roomName=${room.roomName}`
+              `/room/setup?roomId= ${room.roomId}&roomName=${room.roomName}`
             );
           }}
         >
