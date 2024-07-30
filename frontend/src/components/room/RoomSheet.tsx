@@ -37,6 +37,10 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room, chatMessages }) => {
       participant.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       participant.displayName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const chatEndRef = React.useRef<HTMLDivElement | null>(null);
+  React.useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
 
   return (
     <div className="w-full h-full flex flex-col font-logo">
@@ -102,7 +106,7 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room, chatMessages }) => {
         className="opacity-30 mr-5 bg-veryLight"
         orientation="horizontal"
       />
-      <div className="flex flex-col flex-1 overflow-y-auto  chat">
+      <div className="flex flex-col flex-1 overflow-y-auto  chat ">
         <div className="text-lg w-full flex flex-row items-center gap-2 py-3 px-5 opacity-80 ">
           <span className="text-[16px] flex gap-2 items-center">
             <TbMessage2 size={20} className="opacity-70" />
@@ -116,6 +120,7 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room, chatMessages }) => {
             .map((msg: any, index: number) => (
               <RoomMessage key={index} message={msg} />
             ))}
+          <div ref={chatEndRef} />
         </div>
         <div className="px-5">
           <RoomChatInput

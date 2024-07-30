@@ -174,6 +174,24 @@ const init = (
     io.to(d.roomId).emit("item-update", d);
   });
 
+  socket.on("action:hand_raise", ({ userId, roomId }: SocketDTO) => {
+    console.log("hand raised", { userId, roomId });
+    try {
+      io.to(roomId).emit("hand-raised", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on("action:hand_down", ({ userId, roomId }: SocketDTO) => {
+    console.log("hand down", { userId, roomId });
+    try {
+      io.to(roomId).emit("hand-down", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
   socket.on("leave-room", async ({ roomId, userId }: SocketDTO) => {
     await wsQueue.add("clean_up", {
       userId: userId,

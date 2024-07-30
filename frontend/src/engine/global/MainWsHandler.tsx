@@ -201,6 +201,35 @@ export const MainWsHandler = ({ children }: Props) => {
       proximityList.delete(participantId);
     });
 
+    conn.on("hand-raised", ({ userId, roomId }) => {
+      console.log("hand raised");
+      queryClient.setQueryData(["room"], (data: any) => ({
+        ...data,
+        participants: data?.participants?.map((p: RoomParticipant) =>
+          p.userId === userId
+            ? {
+                ...p,
+                raisedHand: !p.raisedHand,
+              }
+            : p
+        ),
+      }));
+    });
+
+    conn.on("hand-down", ({ userId, roomId }) => {
+      console.log("hand down");
+      queryClient.setQueryData(["room"], (data: any) => ({
+        ...data,
+        participants: data?.participants?.map((p: RoomParticipant) =>
+          p.userId === userId
+            ? {
+                ...p,
+                raisedHand: !p.raisedHand,
+              }
+            : p
+        ),
+      }));
+    });
 
     return () => {
       conn.off("mod-added");

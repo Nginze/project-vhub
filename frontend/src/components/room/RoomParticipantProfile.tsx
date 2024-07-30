@@ -57,8 +57,7 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
             <AvatarFallback />
           </Avatar>
 
-            <div className="bg-appGreen p-1 border border-light absolute bottom-0 right-[1px]  rounded-full">
-            </div>
+          <div className="bg-appGreen p-1 border border-light absolute bottom-0 right-[1px]  rounded-full"></div>
         </div>
         <div className="flex flex-col items-start">
           <span className="text-[15px] opacity-70 font-body font-semibold">
@@ -70,6 +69,7 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
       </div>
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-1">
+          {roomParticipant.raisedHand && "✋"}
           {roomParticipant.isMuted && (
             <Tooltip>
               <TooltipTrigger asChild>

@@ -52,7 +52,7 @@ type RoomControlsProps = {
   conn: Socket;
   myRoomStatus: RoomStatus;
   roomId: string;
-  chatMessages: any
+  chatMessages: any;
 };
 
 export const RoomControls: React.FC<RoomControlsProps> = ({
@@ -60,7 +60,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   roomId,
   myRoomStatus,
   conn,
-  chatMessages
+  chatMessages,
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -170,6 +170,27 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
     } catch (err) {}
   };
 
+  const handleHandRaise = async () => {
+    if (!conn) {
+      return;
+    }
+
+    const event = myRoomStatus.raisedHand
+      ? "action:hand_down"
+      : "action:hand_raise";
+
+    myRoomStatus.raisedHand
+      ? playSoundEffect("unmute")
+      : playSoundEffect("mute");
+    conn.emit(event, { roomId, userId: user.userId });
+    try {
+      statusMutation.mutate({
+        state: "raised_hand",
+        value: !myRoomStatus.raisedHand,
+        userId: user.userId as string,
+      });
+    } catch (err) {}
+  };
   return (
     <>
       <RoomZoomControls />
@@ -329,10 +350,11 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
 
                 <RoomMediaControlButton
                   bgColor="bg-ultra"
-                  onClick={() => {}}
+                  onClick={handleHandRaise}
                   tooltipText="Raise Hand"
-                  iconOn={<HiHandRaised size={20} color="white" />}
-                  iconOff={<HiHandRaised size={20} color="white" />}
+                  isOn={myRoomStatus.raisedHand as boolean}
+                  iconOn={<HiHandRaised size={20} className="text-appGreen"  />}
+                  iconOff={<HiHandRaised size={20}  color="white" />}
                 />
 
                 <RoomMediaControlButton
