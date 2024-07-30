@@ -55,8 +55,7 @@ export const HomeRoomPreviewCard: React.FC<HomeRoomPreviewCardProps> = ({
         </div>
         <div className="w-full flex flex-col gap-14">
           <span className="text-[13px] opacity-80 font-sans overflow-hidden overflow-ellipsis h-10 w-full">
-            {/* {room.roomDesc} */}A space for developers and enthusiasts to and
-            share creations built with openAIs powerful models
+            {room.roomDesc}
           </span>
           <span className="text-[13px] opacity-90 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-appGreen"></div>

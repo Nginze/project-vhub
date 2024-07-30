@@ -41,12 +41,12 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
   }, [user, router]);
 
   return (
-    <div className="w-full flex items-center justify-between  py-3 rounded-lg cursor-pointer">
+    <div className="w-full flex items-center justify-between  py-2 rounded-lg cursor-pointer">
       <div className="flex items-center gap-4">
-        <div>
+        <div className="relative">
           <Avatar
             className={cn(
-              "w-9 h-9 cursor-pointer ",
+              "w-7 h-7  cursor-pointer bg-dark border border-light relative", // Add relative here
               roomParticipant.indicatorOn && "border-2 border-appGreen"
             )}
           >
@@ -56,6 +56,9 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
             />
             <AvatarFallback />
           </Avatar>
+
+            <div className="bg-appGreen p-1 border border-light absolute bottom-0 right-[1px]  rounded-full">
+            </div>
         </div>
         <div className="flex flex-col items-start">
           <span className="text-[15px] opacity-70 font-body font-semibold">

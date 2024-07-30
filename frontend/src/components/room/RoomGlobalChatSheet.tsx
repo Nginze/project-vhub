@@ -16,6 +16,8 @@ import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import { WebSocketContext } from "@/context/WsContext";
 import { userContext } from "@/context/UserContext";
+import { useSettingStore } from "@/global-store/SettingStore";
+import { WS_MESSAGE } from "@/engine/2d-renderer/events";
 
 type RoomGlobalChatSheetProps = {
   room: any;
@@ -66,7 +68,7 @@ export const RoomGlobalChatSheet: React.FC<RoomGlobalChatSheetProps> = ({
         <RoomMessage />
         <RoomMessage />
       </div>
-      <RoomChatInput message={message} setMessage={setMessage} />
+      {/* <RoomChatInput message={message} setMessage={setMessage} /> */}
     </div>
   );
 };
@@ -75,11 +77,54 @@ type RoomMessageProps = {
 };
 
 export const RoomMessage: React.FC<RoomMessageProps> = ({ message }) => {
+  const parseMessage = (msg: string): React.ReactNode[] => {
+    const tokens = msg.split(" ");
+    const parsedMessage: (React.ReactNode | string)[] = [];
+
+    tokens.forEach((t) => {
+      const parsedToken = t.replaceAll(":", "");
+
+      if (emoteMap[parsedToken] && t.indexOf(":") > -1) {
+        parsedMessage.push(
+          <img
+            className="inline align-baseline"
+            src={emoteMap[parsedToken]}
+            alt={parsedToken}
+          />
+        );
+        parsedMessage.push(" ");
+      } else if (t.startsWith("http://") || t.startsWith("https://")) {
+        parsedMessage.push(
+          <a
+            href={t}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500"
+          >
+            {t}
+          </a>
+        );
+        parsedMessage.push(" ");
+      } else if (t.startsWith("@")) {
+        parsedMessage.push(
+          <span className="bg-orange-400 p-1 rounded-sm text-xs">{t}</span>
+        );
+        parsedMessage.push(" ");
+      } else {
+        parsedMessage.push(t);
+        parsedMessage.push(" ");
+      }
+    });
+
+    return parsedMessage;
+  };
   return (
     <>
       <div className="flex flex-col items-start">
-        <span>Parker</span>
-        <span className="font-sans text-[14px]">Hi everyone</span>
+        <span style={{ color: message.color }}>{message.userName}</span>
+        <span className="font-sans text-[14px] opacity-80">
+          {parseMessage(message.content)}
+        </span>
       </div>
     </>
   );
@@ -88,11 +133,13 @@ export const RoomMessage: React.FC<RoomMessageProps> = ({ message }) => {
 type RoomChatInputProps = {
   message: string;
   setMessage: any;
+  room: any;
 };
 
 export const RoomChatInput: React.FC<RoomChatInputProps> = ({
-  message,
+  message: chatContent,
   setMessage,
+  room,
 }) => {
   const [showPicker, setPicker] = useState<boolean>(false);
   const chatInputRef = React.useRef<HTMLInputElement>(null);
@@ -104,39 +151,47 @@ export const RoomChatInput: React.FC<RoomChatInputProps> = ({
 
   const { conn } = useContext(WebSocketContext);
   const { user, userLoading } = useContext(userContext);
+  const { userColor } = useSettingStore();
 
   const handleChatSend = (e: any) => {
     e.preventDefault();
     setPicker(false);
-    const message: ChatMessage = {
+    const message: any = {
       ...user,
-      reply,
       content: chatContent,
       createdAt: new Date(),
       color: userColor,
       read: false,
     };
-    conn?.emit("chat:global_new_message", { roomId: room.roomId, message });
+    console.log(message, room.roomId);
+    conn?.emit(WS_MESSAGE.WS_CHAT_GLOBAL_NEW_MESSAGE, {
+      roomId: room.roomId,
+      message,
+    });
     setMessage("");
   };
+
   return (
-    <div className="relative w-full">
-      <div className="absolute bottom-16 z-70 -left-10">
+    <div className="w-full">
+      <div className="absolute bottom-16 z-70 right-[24rem]">
         {showPicker && (
           <Picker data={data} custom={customEmojis} onEmojiSelect={addEmoji} />
         )}
       </div>
-      <form onSubmit={handleChatSend}>
+      <form onSubmit={handleChatSend} className="relative mb-2">
         <Input
           ref={chatInputRef}
-          value={message}
+          value={chatContent}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full bg-transparent py-6 text-[14px] border-[hsla(0,0%,100%,.1)] bg-dark placeholder:text-white placeholder:opacity-60 outline-none text-white pl-3 pr-10"
+          className="w-full bg-transparent py-6 text-[14px] border-[hsla(0,0%,100%,.1)] bg-semiUltra rounded-2xl placeholder:text-white placeholder:opacity-60 outline-none text-white pl-3 pr-10"
           placeholder="Send a message"
         />
         <div className="absolute inset-y-0 right-3 flex items-center">
           <button
-            onClick={() => {
+            type="button"
+            onClick={(e) => {
+              // e.preventDefault();
+              e.stopPropagation();
               chatInputRef.current?.focus();
               setPicker(!showPicker);
             }}

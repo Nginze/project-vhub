@@ -76,7 +76,7 @@ export class RoomScene extends Phaser.Scene {
     console.log("[LOGGING]: Loading complete");
 
     const { set } = useRendererStore.getState();
-    set({ scene: this });
+    set({ scenel: this });
     set({ ready: true });
   }
 
@@ -274,7 +274,7 @@ export class RoomScene extends Phaser.Scene {
       useConsumerStore.getState();
 
     if (!(userId in audioConsumerMap)) {
-      console.log("[LOGGING]: No audio graph");
+      // console.log("[LOGGING]: No audio graph");
       return;
     }
 

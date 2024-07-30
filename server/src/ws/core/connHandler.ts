@@ -4,7 +4,6 @@ import { logger } from "../../config/logger";
 import { sendQueue, wsQueue } from "../../config/bull";
 import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
 import { setUserOffline } from "../helpers";
-import { timeStamp } from "console";
 
 const init = (
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
@@ -48,7 +47,7 @@ const init = (
     }
   });
 
-  socket.on("ping", () => {
+  socket.on(WS_MESSAGE.WS_PING, () => {
     socket.emit("pong");
   });
 

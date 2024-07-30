@@ -43,7 +43,7 @@ const init = (
             roomId,
             user: {
               ...user,
-              isSpeaker: isAutospeaker || isCreator,
+              isSpeaker: true,
               isMuted: true,
               isVideoOff: true,
               raisedHand: false,
@@ -65,7 +65,7 @@ const init = (
             roomId,
             user: {
               ...user,
-              isSpeaker: isAutospeaker || isCreator,
+              isSpeaker: true,
               isMuted: true,
               isVideoOff: true,
               raisedHand: false,
@@ -81,7 +81,7 @@ const init = (
         };
 
         broadcastExcludeSender(io, joinEvent);
-        broadcastExcludeSender(io, joinEventNonRenderer);
+        // broadcastExcludeSender(io, joinEventNonRenderer);
       } catch (error) {
         throw error;
       }
@@ -181,13 +181,13 @@ const init = (
       timeStamp: Date.now(),
     });
 
+    socket.leave(roomId);
+
     io.to(roomId).emit(WS_MESSAGE.WS_PARTICIPANT_LEFT, {
       roomId,
       //@ts-ignore
-      participantId: user.userId,
+      participantId: userId,
     });
-
-    socket.leave(roomId);
 
     await sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER, {
       op: RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER,

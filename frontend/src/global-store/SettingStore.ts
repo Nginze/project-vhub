@@ -47,6 +47,29 @@ export async function getSpeakers() {
   }));
 }
 
+function getColors() {
+  const colors = {
+    SpringGreen: "#00FA9A",
+    YellowGreen: "#9ACD32",
+    Green: "#008000",
+    OrangeRed: "#FF4500",
+    Red: "#FF0000",
+    GoldenRod: "#DAA520",
+    HotPink: "#FF69B4",
+    CadetBlue: "#5F9EA0",
+    SeaGreen: "#2E8B57",
+    Chocolate: "#D2691E",
+    BlueViolet: "#8A2BE2",
+    Firebrick: "#B22222",
+  };
+
+  const colorKeys = Object.keys(colors);
+  const randomColorKey =
+    colorKeys[Math.floor(Math.random() * colorKeys.length)];
+
+  return colors[randomColorKey as keyof typeof colors];
+}
+
 export const useSettingStore = create(
   persist(
     combine(
@@ -65,6 +88,7 @@ export const useSettingStore = create(
           value: "default",
           label: "Default - Microphone (Realtek(R) Audio)",
         },
+        userColor: getColors(),
       },
       (set) => ({
         updateSpatialAudio(val: boolean) {

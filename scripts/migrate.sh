@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Load environment variables from .env.production and .env.development
-source /home/nginze/Documents/vhub/.env.production
-source /home/nginze/Documents/vhub/.env.development
+source /home/nginze/Documents/vhub/.env
 
 # Ask for environment
 echo "Choose environment (development/production):"

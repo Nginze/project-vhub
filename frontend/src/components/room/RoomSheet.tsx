@@ -20,12 +20,14 @@ import { TbMessage2 } from "react-icons/tb";
 import { useUIStore } from "@/global-store/UIStore";
 import { cn } from "@/lib/utils";
 import { RoomChatInput, RoomMessage } from "./RoomGlobalChatSheet";
+import { emoteMap } from "@/engine/chat/EmoteData";
 
 type RoomSheetProps = {
   room: any;
+  chatMessages: any;
 };
 
-export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
+export const RoomSheet: React.FC<RoomSheetProps> = ({ room, chatMessages }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const { activeRoomSheet, set: setUI } = useUIStore();
   const [message, setMessage] = useState("");
@@ -37,10 +39,10 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
   );
 
   return (
-    <div className="w-full h-full flex flex-col px-3.5 font-logo">
-      <SheetHeader className="flex flex-row w-full mb-8 items-center space-y-0 justify-between">
+    <div className="w-full h-full flex flex-col font-logo">
+      <SheetHeader className="flex flex-row w-full mb-4 items-center space-y-0 justify-between px-5">
         <span
-          className="text-lg opacity-80 truncate"
+          className="text-[22px] opacity-80 truncate"
           style={{ maxWidth: "150px" }}
         >
           {room.roomName}
@@ -72,8 +74,8 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
           </SheetPrimitive.Close>
         </div>
       </SheetHeader>
-      <div className="w-full mb-5">
-        <div className="flex bg-deep px-4 py-0 rounded-lg gap-2 items-center border-2 border-light focus-within:border-appPrimary">
+      <div className="w-full mb-5 px-5">
+        <div className="flex bg-ultra px-4 py-1 rounded-2xl gap-2 items-center border border-light focus-within:border-appPrimary">
           <AiOutlineSearch size={20} />
           <Input
             value={searchTerm}
@@ -83,14 +85,14 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
           />
         </div>
       </div>
-      <div className="flex flex-col items-start flex-1 h-1/2 max-h-1/2">
-        <span className="flex gap-2 h-6 opacity-80 text-[16px] font-semibold mb-3">
-          On the Call
+      <div className="flex flex-col items-start flex-1 h-1/2 max-h-1/2 overflow-auto">
+        <span className="flex gap-2 h-6 opacity-80 text-[16px] font-semibold font-sans mb-3 px-5">
+          Participants
           <span className="bg-light flex items-center justify-center px-2 py-0.5 rounded-sm text-[10px]">
             {room.participants.length}
           </span>
         </span>
-        <div className="flex flex-col items-start gap-1.5 w-full">
+        <div className="flex flex-col items-start  w-full px-5">
           {filteredParticipants.map((p: RoomParticipant) => (
             <RoomParticipantProfile key={p.userId} roomParticipant={p} />
           ))}
@@ -100,27 +102,28 @@ export const RoomSheet: React.FC<RoomSheetProps> = ({ room }) => {
         className="opacity-30 mr-5 bg-veryLight"
         orientation="horizontal"
       />
-      <div className="flex-1 h-1/2 max-h-1/2">
-        <div
-          className="text-lg w-full flex flex-row items-center gap-2 py-3 opacity-80 "
-          // style={{ maxWidth: "270px" }}
-        >
-          <ChevronLeft />
-          <span> Global Chat</span>
+      <div className="flex flex-col flex-1 overflow-y-auto  chat">
+        <div className="text-lg w-full flex flex-row items-center gap-2 py-3 px-5 opacity-80 ">
+          <span className="text-[16px] flex gap-2 items-center">
+            <TbMessage2 size={20} className="opacity-70" />
+            Global Chat
+          </span>
         </div>
-        <div className="flex h-full flex-col items-start overflow-auto gap-3  mb-5">
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
-          <RoomMessage />
+        <div className="flex flex-col flex-1 items-start overflow-auto gap-1 mb-5 w-full px-5">
+          {chatMessages?.messages
+            .slice()
+            .reverse()
+            .map((msg: any, index: number) => (
+              <RoomMessage key={index} message={msg} />
+            ))}
         </div>
-        <RoomChatInput message={message} setMessage={setMessage} />
+        <div className="px-5">
+          <RoomChatInput
+            room={room}
+            message={message}
+            setMessage={setMessage}
+          />
+        </div>
       </div>
     </div>
   );

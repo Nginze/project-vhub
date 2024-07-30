@@ -60,7 +60,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({
 
   return (
     <>
-      <div className="flex justify-between items-center border-b border-light/50 pb-5">
+      <div className="flex justify-between items-center border-b border-light/50 py-5 sticky top-0 bg-void z-50">
         <div className="flex items-center gap-5">
           <div onClick={() => router.push("/home")}>
             <Logo withLogo={true} withText={false} size="md" />

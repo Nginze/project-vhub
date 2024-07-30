@@ -14,7 +14,7 @@ import {
   BiSolidVideoOff,
 } from "react-icons/bi";
 import { FaPeopleGroup } from "react-icons/fa6";
-import { HiMicrophone } from "react-icons/hi2";
+import { HiHandRaised, HiMicrophone, HiUserGroup } from "react-icons/hi2";
 import { VscReactions } from "react-icons/vsc";
 import { Room, RoomStatus } from "../../../../shared/types";
 import { AppSheet } from "../global/AppSheet";
@@ -40,13 +40,19 @@ import { RoomZoomControls } from "./RoomZoomControls";
 import { Check, Monitor, Smile } from "lucide-react";
 import { FaHandPaper, FaSmile } from "react-icons/fa";
 import { RiUserShared2Fill } from "react-icons/ri";
-import { IoHandRightSharp } from "react-icons/io5";
+import {
+  IoHandRightSharp,
+  IoPeopleCircle,
+  IoPeopleCircleSharp,
+} from "react-icons/io5";
+import { PiSmiley, PiSmileyFill } from "react-icons/pi";
 
 type RoomControlsProps = {
   room: Room;
   conn: Socket;
   myRoomStatus: RoomStatus;
-  roomId: String;
+  roomId: string;
+  chatMessages: any
 };
 
 export const RoomControls: React.FC<RoomControlsProps> = ({
@@ -54,6 +60,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   roomId,
   myRoomStatus,
   conn,
+  chatMessages
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -186,7 +193,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   />
                 }
               >
-                <div className="flex items-center gap-3 px-5 py-3 hover:bg-dark active:bg-deep cursor-pointer w-[180px]">
+                <div className="flex items-center gap-3 px-5 py-3 hover:bg-dark active:bg-deep cursor-pointer w-[150px]">
                   <div className="relative">
                     <Avatar className="w-8 h-8 cursor-pointer">
                       <AvatarImage
@@ -209,7 +216,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
               </AppDialog>
               <Separator
                 orientation="vertical"
-                className="h-10 opacity-30 mr-5 bg-veryLight"
+                className="h-8 opacity-60 mr-5 bg-veryLight"
               />
               <div className="flex items-center p-0.5 gap-2 bg-void overflow-hidden rounded-full">
                 {/* <RoomMediaControlButton
@@ -286,10 +293,10 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   onOpenChange={(open: boolean) =>
                     setUI({ sheetOpen: !sheetOpen })
                   }
-                  className=""
+                  className="px-0 mx-0"
                   content={
                     activeRoomSheet == "participant" ? (
-                      <RoomSheet room={room} />
+                      <RoomSheet chatMessages={chatMessages} room={room} />
                     ) : (
                       <RoomGlobalChatSheet room={room} />
                     )
@@ -302,8 +309,8 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                       set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
                     }}
                     tooltipText="Settings"
-                    iconOn={<RiUserShared2Fill size={24} color="white" />}
-                    iconOff={<RiUserShared2Fill size={24} color="white" />}
+                    iconOn={<HiUserGroup size={24} color="white" />}
+                    iconOff={<HiUserGroup size={24} color="white" />}
                   />
                 </AppSheet>
 
@@ -323,26 +330,27 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                 <RoomMediaControlButton
                   bgColor="bg-ultra"
                   onClick={() => {}}
-                  tooltipText="Share Screen"
-                  iconOn={<Monitor size={26} color="white" />}
-                  iconOff={<Monitor size={26} color="white" />}
+                  tooltipText="Raise Hand"
+                  iconOn={<HiHandRaised size={20} color="white" />}
+                  iconOff={<HiHandRaised size={20} color="white" />}
                 />
 
                 <RoomMediaControlButton
                   bgColor="bg-ultra"
                   onClick={() => {}}
-                  tooltipText="Raise Hand"
-                  iconOn={<FaHandPaper size={24} color="white" />}
-                  iconOff={<FaHandPaper size={24} color="white" />}
+                  tooltipText="Share Screen"
+                  iconOn={<Monitor size={20} color="white" />}
+                  iconOff={<Monitor size={20} color="white" />}
                 />
+
                 <div>
                   <RoomReactionsButton
                     bgColor="bg-ultra"
                     tooltipText="Emote"
-                    iconOff={<FaSmile size={24} color="white" />}
+                    iconOff={<PiSmileyFill size={20} color="white" />}
                     iconOn={
                       <div className="flex items-center">
-                        <FaSmile size={24} color="white" />
+                        <PiSmileyFill size={20} color="white" />
                         <ReactionBarSelector
                           onSelect={(reaction: string) => {
                             console.log(reaction);

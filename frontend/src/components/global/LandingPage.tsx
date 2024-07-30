@@ -13,12 +13,14 @@ export const LandingPage: React.FC<LandingPageProps> = () => {
   return (
     <>
       <Head>
+        <title>Holoverse</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
           href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
           rel="stylesheet"
         ></link>
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <div className="w-screen h-screen font-logo bg-ultra flex flex-col items-center">

@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import { useRouter } from "next/router";
 
 export default function Document() {
   return (
@@ -29,7 +30,9 @@ export default function Document() {
           rel="stylesheet"
         ></link>
       </Head>
-      <body className={`text-white font-sans overflow-hidden`}>
+      <body
+        className={`text-white font-sans overflow-x-hidden scrollable`}
+      >
         <Main />
         <NextScript />
       </body>
