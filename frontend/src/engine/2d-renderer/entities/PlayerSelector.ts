@@ -77,6 +77,7 @@ export default class PlayerSelector extends GameObjects.Rectangle {
 
   registerPhysics() {
     const scene = this.scene as RoomScene;
+    const setRenderer = useRendererStore.getState().set;
     const {
       user: { userId },
     } = useRendererStore.getState();
@@ -112,6 +113,10 @@ export default class PlayerSelector extends GameObjects.Rectangle {
             selectedItem.setDialogBox(
               "<span>Press <kbd class='key-cap'>E</kbd> to interact</span>"
             );
+            setRenderer({
+              interactivityPrompt:
+                "<span>Press <kbd class='key-cap'>E</kbd> to interact</span>",
+            });
             break;
           case ItemType.COMPUTER:
             const computer = selectedItem as Computer;
@@ -119,10 +124,20 @@ export default class PlayerSelector extends GameObjects.Rectangle {
               computer.setDialogBox(
                 "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>"
               );
+
+              setRenderer({
+                interactivityPrompt:
+                  "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>",
+              });
             } else {
               selectedItem.setDialogBox(
                 "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>"
               );
+
+              setRenderer({
+                interactivityPrompt:
+                  "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>",
+              });
             }
             break;
           case ItemType.WHITEBOARD:
@@ -135,6 +150,11 @@ export default class PlayerSelector extends GameObjects.Rectangle {
               whiteboard.setDialogBox(
                 "<span>Press <kbd class='key-cap'>R</kbd> to use</span>"
               );
+
+              setRenderer({
+                interactivityPrompt:
+                  "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>",
+              });
             } else {
               console.log(
                 "whiteboard.currentUsers.size",
@@ -143,6 +163,11 @@ export default class PlayerSelector extends GameObjects.Rectangle {
               whiteboard.setDialogBox(
                 "<span>Press <kbd class='key-cap'>R</kbd> to join</span>"
               );
+
+              setRenderer({
+                interactivityPrompt:
+                  "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>",
+              });
             }
 
             break;
@@ -150,6 +175,11 @@ export default class PlayerSelector extends GameObjects.Rectangle {
             selectedItem.setDialogBox(
               "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>"
             );
+
+            setRenderer({
+              interactivityPrompt:
+                "<span>Press <kbd class='key-cap'>R</kbd> to interact</span>",
+            });
             break;
           default:
             break;
@@ -161,12 +191,14 @@ export default class PlayerSelector extends GameObjects.Rectangle {
   addPhysics() {
     const scene = this.scene as RoomScene;
     const currentItem = this.selectedItem as Item;
+    const setRenderer = useRendererStore.getState().set;
 
     if (currentItem) {
       if (!scene.physics.overlap(this.selector, currentItem)) {
         currentItem.removeHiglight(scene.postFxPlugin);
         currentItem.clearDialogBox();
         this.selectedItem = null;
+        setRenderer({ interactivityPrompt: "" });
       }
     }
   }

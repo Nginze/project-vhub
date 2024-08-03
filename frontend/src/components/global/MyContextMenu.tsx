@@ -149,10 +149,10 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = ({
           <div id="ctx-menu-trigger"></div>
         </ContextMenuTrigger>
         <ContextMenuContent className="bg-dark border border-light font-sans text-white rounded-xl w-[200px]">
-          <ContextMenuItem className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]">
+          {/* <ContextMenuItem className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]">
             <UserRoundCog size={16} className=" opacity-70" />
             <span className="opacity-70 font-semibold">Edit Skin</span>
-          </ContextMenuItem>
+          </ContextMenuItem> */}
 
           <ContextMenuItem
             onClick={() => {
@@ -191,7 +191,7 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = ({
               </>
             )}
           </ContextMenuItem>
-          <Separator className="bg-black w-full mx-auto" />
+          {/* <Separator className="bg-black w-full mx-auto" />
           <ContextMenuItem className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]">
             <BsFillGearFill className="opacity-70 " size={16} />
             <span className="opacity-70 font-semibold">Settings</span>
@@ -199,7 +199,7 @@ export const MyContextMenu: React.FC<MyContextMenuProps> = ({
           <ContextMenuItem className="cursor-pointer py-2 px-3 gap-4 rounded-xl focus:bg-light focus:text-white text-[16px]">
             <BiExit className="opacity-70 " size={16} />
             <span className="opacity-70 font-semibold">Leave Room</span>
-          </ContextMenuItem>
+          </ContextMenuItem> */}
         </ContextMenuContent>
       </ContextMenu>
     </>

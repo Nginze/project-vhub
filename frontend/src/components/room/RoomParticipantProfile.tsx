@@ -109,16 +109,16 @@ export const RoomParticipantProfile: React.FC<RoomParticipantProfileProps> = ({
             </Tooltip>
           )}
         </div>
-        {/* <div className="flex items-center">
+        <div className="flex items-center">
           <AppDropDownMenu
             className="bg-dark border border-light text-white rounded-xl w-[160px]"
-            content={<RoomParticipantProfileMenu />}
+            content={<RoomParticipantProfileMenu participant={roomParticipant}/>}
           >
             <button className="hover:bg-light p-1.5 rounded-lg button">
               <HiEllipsisHorizontal size={16} className="text-white/50" />
             </button>
           </AppDropDownMenu>
-        </div> */}
+        </div>
       </div>
     </div>
   );

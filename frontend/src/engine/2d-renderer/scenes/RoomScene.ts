@@ -71,7 +71,6 @@ export class RoomScene extends Phaser.Scene {
     registerRendererEvents(this);
     registerItems(this);
     registerSpriteAnimations32(this);
-    
 
     console.log("[LOGGING]: Loading complete");
 
@@ -364,5 +363,22 @@ export class RoomScene extends Phaser.Scene {
       this.zoomLevel -= 0.1; // Adjust this value to control the zoom speed
       this.cameras.main.zoomTo(this.zoomLevel, 500); // 500 is the duration in ms
     }
+  }
+
+  locatePlayer(targetUserId: string) {
+    if (!this.gridEngine) {
+      return;
+    }
+
+    console.log("called locate player");
+
+    // Get the target user's position
+    const targetPosition = this.gridEngine.getPosition(targetUserId);
+
+    // Center the camera on the target user
+    this.cameras.main.centerOn(targetPosition.x, targetPosition.y);
+
+    // Zoom in on the target user
+    // this.cameras.main.zoomTo(2, 500); // 2 is the zoom level, 500 is the duration in ms
   }
 }

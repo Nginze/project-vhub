@@ -26,6 +26,7 @@ export const useRendererStore = create(
       computerStore: {} as Record<string, Computer>,
       whiteboardStore: {} as Record<string, Whiteboard>,
       chairStore: {} as Record<string, Chair>,
+      interactivityPrompt: "",
     },
     (set) => ({
       set,

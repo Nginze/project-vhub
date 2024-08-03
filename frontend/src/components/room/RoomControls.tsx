@@ -46,6 +46,7 @@ import {
   IoPeopleCircleSharp,
 } from "react-icons/io5";
 import { PiSmiley, PiSmileyFill } from "react-icons/pi";
+import { RoomInteractivityPrompt } from "./RoomInteractivityPrompt";
 
 type RoomControlsProps = {
   room: Room;
@@ -53,6 +54,7 @@ type RoomControlsProps = {
   myRoomStatus: RoomStatus;
   roomId: string;
   chatMessages: any;
+  noExtra?: any;
 };
 
 export const RoomControls: React.FC<RoomControlsProps> = ({
@@ -61,6 +63,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   myRoomStatus,
   conn,
   chatMessages,
+  noExtra,
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -193,15 +196,18 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   };
   return (
     <>
-      <RoomZoomControls />
-      <div className="w-full py-4 flex items-center">
+      {!noExtra && <RoomZoomControls />}
+      <div className="w-full py-4 flex items-center relative">
         <div className="w-full px-10 flex items-center justify-between">
           {/* <div className="flex flex-col items-start opacity-80">
             <Logo withLogo={false} size="sm" />
             <span className="text-[9px] opacity-60">{roomId}</span>
           </div> */}
 
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-center relative">
+            <div className="absolute bottom-[5rem]">
+              {!noExtra && <RoomInteractivityPrompt />}
+            </div>
             <div className="flex items-center pr-5 p-0.5 bg-ultra shadow-canvasShadow overflow-hidden rounded-full relative">
               <AppDialog
                 width={"sm:max-w-[450px]"}
@@ -329,7 +335,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                     onClick={() => {
                       set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
                     }}
-                    tooltipText="Settings"
+                    tooltipText="People"
                     iconOn={<HiUserGroup size={24} color="white" />}
                     iconOff={<HiUserGroup size={24} color="white" />}
                   />
@@ -353,8 +359,8 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   onClick={handleHandRaise}
                   tooltipText="Raise Hand"
                   isOn={myRoomStatus.raisedHand as boolean}
-                  iconOn={<HiHandRaised size={20} className="text-appGreen"  />}
-                  iconOff={<HiHandRaised size={20}  color="white" />}
+                  iconOn={<HiHandRaised size={20} className="text-appGreen" />}
+                  iconOff={<HiHandRaised size={20} color="white" />}
                 />
 
                 <RoomMediaControlButton

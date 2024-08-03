@@ -170,7 +170,7 @@ const RoomPage: React.FC<RoomProps> = () => {
           whiteboard.broadcastUpdate(user.userId as string, "leave");
         }}
         width={"sm:max-w-full"}
-        content={<AppIFrame roomStatus={roomStatus} room={room} />}
+        content={<AppIFrame chatMessages={chatMessages} roomStatus={roomStatus} room={room} />}
         className="px-0 rounded-none bg-black h-screen"
       >
         <></>
