@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import Head from "next/head";
 import { withProtectedRoute } from "@/components/global/ProtectedRoute";
 import { useUIStore } from "@/global-store/UIStore";
+import { AppScreen } from "@/components/global/AppScreen";
 
 type RoomProps = {};
 
@@ -37,7 +38,7 @@ const RoomPage: React.FC<RoomProps> = () => {
   const { set, ready, whiteboardStore, currentWhiteboardId } =
     useRendererStore();
   const { set: setRoom, spaceName } = useRoomStore();
-  const { roomIframeOpen } = useRoomStore();
+  const { roomIframeOpen, roomScreenOpen } = useRoomStore();
   const { localStream } = useMediaStore();
   const { roomLoadStatusMessage } = useUIStore();
 
@@ -106,8 +107,7 @@ const RoomPage: React.FC<RoomProps> = () => {
     set({ currentRoomId: roomId as string });
     set({ room: room });
     set({ roomStatus: roomStatus });
-    set({ qc: queryClient});
-
+    set({ qc: queryClient });
   }, [roomId, room, roomStatus]);
 
   useEffect(() => {
@@ -166,6 +166,21 @@ const RoomPage: React.FC<RoomProps> = () => {
           />
         }
       />
+
+      <AppDialog
+        open={roomScreenOpen}
+        onClose={() => {
+          setRoom({ roomScreenOpen: false });
+          // const whiteboard = whiteboardStore[currentWhiteboardId] as Whiteboard;
+          // whiteboard.removeCurrentUser(user.userId as string);
+          // whiteboard.broadcastUpdate(user.userId as string, "leave");
+        }}
+        width={"sm:max-w-full"}
+        content={<AppScreen />}
+        className="px-0 rounded-none bg-black h-screen py-0 flex justify-center  items-center"
+      >
+        {null}
+      </AppDialog>
       <AppDialog
         open={roomIframeOpen}
         onClose={() => {

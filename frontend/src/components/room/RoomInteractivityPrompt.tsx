@@ -19,7 +19,7 @@ export const RoomInteractivityPrompt: React.FC<
     interactivityPrompt && (
       <>
         <div
-          className="flex items-center px-4 py-2 w-[250px]  justify-center bg-white text-black shadow-canvasShadow overflow-hidden rounded-2xl relative"
+          className="flex items-center px-4 py-2 w-[250px]  justify-center border border-light/45 bg-white text-black shadow-canvasShadow overflow-hidden rounded-2xl relative"
           dangerouslySetInnerHTML={{ __html: interactivityPrompt }}
         >
           {/* <div className="flex items-center gap-2">

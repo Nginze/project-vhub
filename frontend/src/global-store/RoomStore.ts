@@ -6,6 +6,8 @@ export const useRoomStore = create(
     {
       roomSheetOpen: false,
       roomIframeOpen: false,
+      roomScreenOpen: false,
+      roomScreenUserId: "",
       currentReaction: "",
       spaceName: "",
       wantsMicOn: false,

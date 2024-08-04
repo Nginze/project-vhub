@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import router, { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -84,12 +85,12 @@ const Update: NextPage = () => {
                 some teased in the demo, so keep an eye out. We’re so excited to
                 share it with you.
               </p>
-              <a
+              <Link
                 href="/home"
                 className="text-[15px] font-bold underline text-appGreen"
               >
                 GO GO GO!
-              </a>
+              </Link>
             </section>
           </div>
         </section>

@@ -7,7 +7,7 @@ import { Room, RoomParticipant } from "../../../shared/types";
 export const useCreateVideoCards = (
   proximityList: Map<string, Consumer>,
   room: any,
-  isMinimized: boolean
+  isMinimized?: boolean
 ) => {
   // const defaultCardProps = {
   //   videoMuted: true,
