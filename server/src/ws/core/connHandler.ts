@@ -21,6 +21,7 @@ const init = (
       }
 
       await wsQueue.add("clean_up", {
+        peerId: socket.id,
         userId: user.userId,
         roomId: currentRoom ?? "",
         timeStamp: Date.now(),

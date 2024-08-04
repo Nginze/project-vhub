@@ -102,14 +102,14 @@ export const deleteRoom = async (roomId: string) => {
   );
 };
 
-export const setUserOnline = (userId: string, socketId: string) => {
-  redis.set(userId, socketId);
-  redis.sadd("onlineUsers", userId);
+export const setUserOnline = async (userId: string, socketId: string) => {
+  await redis.set(userId, socketId);
+  await redis.sadd("onlineUsers", userId);
 };
 
-export const setUserOffline = (userId: string, socketId: string) => {
-  redis.srem("onlineUsers", userId);
-  redis.del(userId);
+export const setUserOffline = async (userId: string, socketId: string) => {
+  await redis.srem("onlineUsers", userId);
+  await redis.del(userId);
 };
 
 export const getPeerId = async (userId: string) => {

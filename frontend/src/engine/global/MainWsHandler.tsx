@@ -231,6 +231,21 @@ export const MainWsHandler = ({ children }: Props) => {
       }));
     });
 
+    conn.on("screen-share-started", ({ userId, roomId }) => {
+      console.log("screen share started");
+      queryClient.setQueryData(["room"], (data: any) => ({
+        ...data,
+        participants: data?.participants.map((p: RoomParticipant) =>
+          p.userId === userId
+            ? {
+                ...p,
+                isScreenSharing: true,
+              }
+            : p
+        ),
+      }));
+    })
+
     return () => {
       conn.off("mod-added");
       conn.off("you-are-now-a-mod");

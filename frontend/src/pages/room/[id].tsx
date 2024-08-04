@@ -43,11 +43,14 @@ const RoomPage: React.FC<RoomProps> = () => {
 
   const queryClient = useQueryClient();
 
-  const { room, roomLoading, roomStatus, roomStatusLoading, chatMessages, chatLoading } = useLoadRoomMeta(
-    roomId as string,
-    user,
-    hasJoined.current
-  );
+  const {
+    room,
+    roomLoading,
+    roomStatus,
+    roomStatusLoading,
+    chatMessages,
+    chatLoading,
+  } = useLoadRoomMeta(roomId as string, user, hasJoined.current);
 
   const profileMutation = useMutation({
     mutationFn: async (data: { spaceName: string }) => {
@@ -103,6 +106,8 @@ const RoomPage: React.FC<RoomProps> = () => {
     set({ currentRoomId: roomId as string });
     set({ room: room });
     set({ roomStatus: roomStatus });
+    set({ qc: queryClient});
+
   }, [roomId, room, roomStatus]);
 
   useEffect(() => {
@@ -170,7 +175,13 @@ const RoomPage: React.FC<RoomProps> = () => {
           whiteboard.broadcastUpdate(user.userId as string, "leave");
         }}
         width={"sm:max-w-full"}
-        content={<AppIFrame chatMessages={chatMessages} roomStatus={roomStatus} room={room} />}
+        content={
+          <AppIFrame
+            chatMessages={chatMessages}
+            roomStatus={roomStatus}
+            room={room}
+          />
+        }
         className="px-0 rounded-none bg-black h-screen"
       >
         <></>

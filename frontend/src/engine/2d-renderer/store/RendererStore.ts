@@ -6,6 +6,7 @@ import Computer from "@/engine/2d-renderer/items/Computer";
 import Whiteboard from "@/engine/2d-renderer/items/WhiteBoard";
 import Chair from "@/engine/2d-renderer/items/Chair";
 import { RoomScene } from "../scenes/RoomScene";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 export const useRendererStore = create(
   combine(
@@ -17,10 +18,13 @@ export const useRendererStore = create(
       room: {} as Room & {
         participants: any[];
       },
+
       currentWhiteboardId: "",
       game: null as Phaser.Game | null,
       currentComputerId: "",
       ready: false,
+
+      qc: null as unknown as QueryClient,
       roomStatus: {} as RoomStatus,
       scene: null as unknown as RoomScene,
       computerStore: {} as Record<string, Computer>,

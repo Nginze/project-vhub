@@ -253,8 +253,7 @@ export default class Player extends Phaser.GameObjects.Container {
 
       scene.players.set(user.userId, this);
 
-      registerCustomSpriteAnimations(scene);
-      this.playAnimation(AnimationType.IDLE, dir as Direction);
+      console.log("players in scene", scene.players);
 
       scene.gridEngine?.addCharacter({
         id: user.userId,
@@ -262,6 +261,9 @@ export default class Player extends Phaser.GameObjects.Container {
         container: this.playerContainer,
         startPosition: { x: posX, y: posY },
       });
+      
+      registerCustomSpriteAnimations(scene);
+      this.playAnimation(AnimationType.IDLE, dir as Direction);
     });
 
     this.scene.load.start();

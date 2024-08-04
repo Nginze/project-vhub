@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <Toaster position="bottom-center" reverseOrder={false} />
             </WebSocketProvider>
           </UserProvider>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </TooltipProvider>
       </QueryClientProvider>
     </>

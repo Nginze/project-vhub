@@ -486,6 +486,7 @@ export const registerSpriteAnimations32 = (scene: RoomScene) => {
 
 export const registerCustomSpriteAnimations = (scene: RoomScene) => {
   const playerIds = scene.gridEngine?.getAllCharacters();
+  // const playerIds = Object.keys(scene.players);
 
   playerIds?.forEach((playerId) => {
     const spriteKey = `player-${playerId}`;
@@ -557,7 +558,7 @@ export const registerCustomSpriteAnimations = (scene: RoomScene) => {
         end: 117,
       }),
       repeat: -1,
-      frameRate: ANIMS_FRAME_RATE ,
+      frameRate: ANIMS_FRAME_RATE,
     });
 
     scene.anims.create({
@@ -587,7 +588,7 @@ export const registerCustomSpriteAnimations = (scene: RoomScene) => {
         end: 135,
       }),
       repeat: -1,
-      frameRate: ANIMS_FRAME_RATE ,
+      frameRate: ANIMS_FRAME_RATE,
     });
 
     // scene.anims.create({

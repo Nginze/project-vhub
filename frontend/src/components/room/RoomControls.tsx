@@ -47,6 +47,9 @@ import {
 } from "react-icons/io5";
 import { PiSmiley, PiSmileyFill } from "react-icons/pi";
 import { RoomInteractivityPrompt } from "./RoomInteractivityPrompt";
+import { sendScreen } from "@/engine/rtc/utils/SendScreen";
+import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
+import { RoomScreenSharePrompt } from "./RoomScreenSharePrompt";
 
 type RoomControlsProps = {
   room: Room;
@@ -74,8 +77,11 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   const { mic, vid, set: setMedia } = useMediaStore();
   const { playSoundEffect } = useSoundEffectStore();
   const { set: setUI, sheetOpen, activeRoomSheet } = useUIStore();
+  const { proximityList } = useConsumerStore();
 
   const [spritePreviewUrl, setSpritePreviewUrl] = useState<string>("");
+
+  const proximityListKeys = Array.from(proximityList.keys());
 
   useEffect(() => {
     console.log(spritePreviewUrl);
@@ -194,6 +200,27 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
       });
     } catch (err) {}
   };
+
+  const handleScreenShare = async () => {
+    console.log("clicked screen share");
+    if (!conn) {
+      return;
+    }
+
+    sendScreen();
+
+    conn.emit("action:screen_share", {
+      roomId,
+      userId: user.userId,
+      proximityList: proximityListKeys,
+    });
+    console.log("screen share emit", {
+      roomId,
+      userId: user.userId,
+      proximityList: proximityListKeys,
+    });
+  };
+
   return (
     <>
       {!noExtra && <RoomZoomControls />}
@@ -205,9 +232,14 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
           </div> */}
 
           <div className="flex-1 flex justify-center relative">
-            <div className="absolute bottom-[5rem]">
-              {!noExtra && <RoomInteractivityPrompt />}
+            <div className="absolute bottom-[5rem] flex items-center gap-2">
+              {!noExtra && <RoomInteractivityPrompt />}{" "}
+              {!noExtra && <RoomScreenSharePrompt />}{" "}
             </div>
+
+            {/* <div className="absolute bottom-[5rem]">
+              <RoomScreenSharePrompt />
+            </div> */}
             <div className="flex items-center pr-5 p-0.5 bg-ultra shadow-canvasShadow overflow-hidden rounded-full relative">
               <AppDialog
                 width={"sm:max-w-[450px]"}
@@ -365,7 +397,7 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
 
                 <RoomMediaControlButton
                   bgColor="bg-ultra"
-                  onClick={() => {}}
+                  onClick={handleScreenShare}
                   tooltipText="Share Screen"
                   iconOn={<Monitor size={20} color="white" />}
                   iconOff={<Monitor size={20} color="white" />}

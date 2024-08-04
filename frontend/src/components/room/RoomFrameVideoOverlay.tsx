@@ -3,11 +3,12 @@ import { RoomVideoCard } from "./RoomVideoCard";
 import { useMediaStore } from "@/engine/rtc/store/MediaStore";
 import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
 import { useCreateVideoCards } from "@/hooks/useCreateVideoCards";
-import { ChevronsDown, Expand, Fullscreen, Maximize } from "lucide-react";
+import { ChevronsDown, Expand, Fullscreen, Maximize, Maximize2 } from "lucide-react";
 import { Room } from "../../../../shared/types";
 import { userContext } from "@/context/UserContext";
 import { Button } from "../ui/button";
 import { BiExpand } from "react-icons/bi";
+import { motion } from "framer-motion";
 
 type RoomFrameVideoOverlayProps = {
   room: Room;
@@ -45,7 +46,7 @@ export const RoomFrameVideoOverlay: React.FC<RoomFrameVideoOverlayProps> = ({
           }}
           className="absolute hover:opacity-80 top-10 left-10 z-50 "
         >
-          <Maximize size={20} />
+          <Maximize2 size={20} />
         </button>
         <div
           className={`grid grid-cols-${numColumns} gap-4 px-10 py-5 w-full h-4/5 overflow-auto my-auto relative mx-auto`}

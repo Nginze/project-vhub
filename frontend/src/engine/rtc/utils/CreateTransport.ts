@@ -48,40 +48,55 @@ export async function createTransport(
           appData.mediaTag,
           userid
         );
-        // we may want to start out paused (if the checkboxes in the ui
-        // aren't checked, for each media type. not very clean code, here
-        // but, you know, this isn't a real application.)
-        // let paused = false;
-        // if (appData.mediaTag === "cam-video") {
-        //   paused = getCamPausedState();
-        // } else if (appData.mediaTag === "cam-audio") {
-        //   paused = getMicPausedState();
-        // }
-        // tell the server what it needs to know from us in order to set
-        // up a server-side producer object, and get back a
-        // producer.id. call callback() on success or errback() on
-        // failure.
-        conn.once(RTC_MESSAGE.RTC_MS_SEND_SEND_TRACK_DONE, (d: any) => {
-          console.log("[LOGGING]: @send-track-done");
-          setUI({ roomLoadStatusMessage: "Track Connected" });
-          callback({ id: d.id });
-        });
 
-        conn.emit(
-          WS_MESSAGE.RTC_WS_SEND_TRACK,
-          {
-            roomId,
-            peerId: userid,
-            transportId: transportOptions.id,
-            kind,
-            rtpParameters,
-            rtpCapabilities: device!.rtpCapabilities,
-            paused: false,
-            appData,
-            direction,
-          },
-          (id: any) => callback({ id })
-        );
+        if (
+          appData.mediaTag === "screen-video" ||
+          appData.mediaTag === "screen-audio"
+        ) {
+          conn.once(RTC_MESSAGE.RTC_MS_SEND_SEND_SCREEN_DONE, (d: any) => {
+            console.log("[LOGGING]: @send-screen-done");
+            // setUI({ roomLoadStatusMessage: "Track Connected" });
+            callback({ id: d.id });
+          });
+
+          conn.emit(
+            WS_MESSAGE.RTC_WS_SEND_SCREEN,
+            {
+              roomId,
+              peerId: userid,
+              transportId: transportOptions.id,
+              kind,
+              rtpParameters,
+              rtpCapabilities: device!.rtpCapabilities,
+              paused: false,
+              appData,
+              direction,
+            },
+            (id: any) => callback({ id })
+          );
+        }else {
+          conn.once(RTC_MESSAGE.RTC_MS_SEND_SEND_TRACK_DONE, (d: any) => {
+            console.log("[LOGGING]: @send-track-done");
+            setUI({ roomLoadStatusMessage: "Track Connected" });
+            callback({ id: d.id });
+          });
+
+          conn.emit(
+            WS_MESSAGE.RTC_WS_SEND_TRACK,
+            {
+              roomId,
+              peerId: userid,
+              transportId: transportOptions.id,
+              kind,
+              rtpParameters,
+              rtpCapabilities: device!.rtpCapabilities,
+              paused: false,
+              appData,
+              direction,
+            },
+            (id: any) => callback({ id })
+          );
+        }
       }
     );
   }

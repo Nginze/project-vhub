@@ -2,7 +2,12 @@ import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
 import { logger } from "../../config/logger";
-import { broadcastExcludeSender, getUser, setUserPosition } from "../helpers";
+import {
+  broadcastExcludeSender,
+  getPeerId,
+  getUser,
+  setUserPosition,
+} from "../helpers";
 import { sendQueue, wsQueue } from "../../config/bull";
 
 type SocketDTO = {
@@ -192,8 +197,35 @@ const init = (
     }
   });
 
+  socket.on(
+    "action:screen_share",
+    async ({ roomId, userId, proximityList }) => {
+      console.log(
+        "SCREEN SHARE STARTED -----------------------------------------------------------------------"
+      );
+      console.log("screen share started", { userId, roomId, proximityList });
+      proximityList.forEach(async (theirUserId: string) => {
+        const peerId = await getPeerId(theirUserId);
+        console.log(
+          "This peer in proximity sending screen share event",
+          peerId,
+          theirUserId
+        );
+        try {
+          io.to(peerId as string).emit("screen-share-started", {
+            userId,
+            roomId,
+          });
+        } catch (error) {
+          throw error;
+        }
+      });
+    }
+  );
+
   socket.on("leave-room", async ({ roomId, userId }: SocketDTO) => {
     await wsQueue.add("clean_up", {
+      peerId: socket.id,
       userId: userId,
       roomId: roomId ?? "",
       timeStamp: Date.now(),
