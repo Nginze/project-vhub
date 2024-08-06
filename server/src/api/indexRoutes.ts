@@ -4,5 +4,10 @@ import "dotenv/config";
 export const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to the Vhub API");
+  res.redirect("/health");
 });
+
+router.get("/health", (req: Request, res: Response) => {
+  // I will render the status of all backend services here
+});
+

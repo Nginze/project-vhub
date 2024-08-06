@@ -4,6 +4,7 @@ import { userContext } from "@/context/UserContext";
 import Head from "next/head";
 import Loader from "./Loader";
 import { Grid } from "../ui/grid";
+import { LoaderOverlay } from "./LoaderOverlay";
 
 interface Props {
   [key: string]: any;
@@ -55,8 +56,9 @@ export const withProtectedRoute = (WrappedComponent: ComponentType<Props>) => {
           <div className="bg-void text-white w-screen h-screen flex items-center justify-center">
             <Grid />
             <div className="flex items-center gap-2">
-              <Loader alt width={15} />
-              <span>Checking authentication status ...</span>
+              <LoaderOverlay />
+              {/* <Loader alt width={15} />
+              <span>Checking authentication status ...</span> */}
             </div>
           </div>
         </>

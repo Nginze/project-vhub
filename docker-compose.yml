@@ -10,7 +10,7 @@ services:
       - redis
       - postgres
     env_file:
-      - .env.production
+      - .env
 
   worker:
     build:
@@ -21,18 +21,7 @@ services:
       - redis
       - postgres
     env_file:
-      - .env.production
-
-  # webrtc-server:
-  #   build:
-  #     context: .
-  #     dockerfile: webrtc-server/Dockerfile
-  #   container_name: ${WEBRTC_HOST}
-  #   depends_on:
-  #     - redis
-  #     - postgres
-  #   env_file:
-  #     - .env.production
+      - .env
 
   nginx:
     image: reverse-proxy
@@ -48,7 +37,7 @@ services:
       - worker
     restart: always
     env_file:
-      - .env.production
+      - .env
 
   redis:
     image: redis:latest
@@ -66,7 +55,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     env_file:
-      - .env.production
+      - .env
 
 volumes:
   redis-data:

@@ -18,7 +18,7 @@ export const RoomLeaveConfirmation: React.FC<
   const [loading, setLoading] = React.useState(false);
   const { conn } = useContext(WebSocketContext);
   const { user } = useContext(userContext);
-  const { mic, vid, screenMic, screenVid } = useMediaStore();
+  const { mic, vid, screenMic, screenVid, nullify } = useMediaStore();
 
   return (
     <div className="font-logo">
@@ -38,6 +38,7 @@ export const RoomLeaveConfirmation: React.FC<
             vid?.stop();
             screenMic?.stop();
             screenVid?.stop();
+            nullify();
             await router.push("/home");
 
             conn?.emit("leave-room", { roomId, userId: user.userId });

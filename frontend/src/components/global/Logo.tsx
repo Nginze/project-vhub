@@ -12,15 +12,15 @@ export const Logo: React.FC<LogoProps> = ({
   withText = true,
   size = "md",
 }) => {
-  const WIDTH = size == "sm" ? 20 : size == "md" ? 30 : 50;
-  const HEIGHT = size == "sm" ? 20 : size == "md" ? 30 : 50;
+  const WIDTH = size == "sm" ? 20 : size == "md" ? 35 : 60;
+  const HEIGHT = size == "sm" ? 20 : size == "md" ? 35 : 60;
 
   return (
     <div className="flex items-center gap-2 cursor-pointer">
-      {withLogo && <GiGhost size={25} className="text-app" />}
+      {withLogo && <img src="/logo3.svg" width={WIDTH} />}
       {withText && (
-        <span className="text-xl relative text-white font-logo font-semibold">
-          Holoverse
+        <span className="text-[24px] relative text-white font-new">
+          holoverse
         </span>
       )}
     </div>

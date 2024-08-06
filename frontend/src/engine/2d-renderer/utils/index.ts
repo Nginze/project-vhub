@@ -4,7 +4,12 @@ import { useRoomStore } from "@/global-store/RoomStore";
 import { CollisionStrategy, Direction } from "grid-engine";
 import { GameObjects } from "phaser";
 import { Socket } from "socket.io-client";
-import { Room, RoomStatus, UserData } from "../../../../../shared/types";
+import {
+  Room,
+  RoomParticipant,
+  RoomStatus,
+  UserData,
+} from "../../../../../shared/types";
 import { WS_MESSAGE } from "../events";
 import Chair from "../items/Chair";
 import Computer from "../items/Computer";
@@ -21,25 +26,41 @@ export const registerRendererEvents = (scene: RoomScene) => {
   const { conn } = scene;
 
   conn.on(WS_MESSAGE.WS_NEW_USER_JOINED_ROOM, (d: any) => {
-    console.log("[LOGGING]: new-user-joined-room", "data: ", d);
+    try {
+      console.log("[LOGGING]: new-user-joined-room", "data: ", d);
 
-    const { posX, posY, userId, skin } = d.user;
+      const { posX, posY, userId, skin } = d.user;
 
-    if (!scene.gridEngine || scene.gridEngine.hasCharacter(userId)) {
-      return;
-    }
+      if (
+        !scene ||
+        !scene.gridEngine ||
+        scene.gridEngine.hasCharacter(userId)
+      ) {
+        return;
+      }
 
-    const player = new Player(scene, d.user);
-    scene.players.set(userId, player);
+      const player = new Player(scene, d.user);
 
-    scene.gridEngine.addCharacter({
-      id: userId,
-      sprite: player.playerSprite,
-      container: player.playerContainer,
-      startPosition: { x: posX, y: posY },
-    });
+      // scene.players.set(d.user.userId, player);
 
-    registerCustomSpriteAnimations(scene);
+      useRendererStore.getState().qc.setQueryData(["room"], (data: any) => {
+        const exists = data?.participants.some(
+          (p: RoomParticipant) =>
+            p.userId === d.user.userId 
+        );
+
+        if (!exists) {
+          return {
+            ...data,
+            participants: [...data.participants, d.user],
+          };
+        } else {
+          return data;
+        }
+      });
+
+      // registerCustomSpriteAnimations(scene);
+    } catch (error) {}
   });
 
   conn.on(WS_MESSAGE.WS_PARTICIPANT_LEFT, (d: any) => {
@@ -59,8 +80,6 @@ export const registerRendererEvents = (scene: RoomScene) => {
   });
 
   conn.on(WS_MESSAGE.WS_PARTICIPANT_MOVED, (d: any) => {
-    console.log("[LOGGING]: Participant-moved", "data: ", d);
-
     if (!scene.gridEngine) {
       return;
     }
@@ -180,7 +199,6 @@ export const registerSprites = (scene: RoomScene) => {
         );
       }
 
-
       return {
         id: participant.userId,
         sprite: player.playerSprite,
@@ -198,6 +216,8 @@ export const registerSprites = (scene: RoomScene) => {
     characters,
     characterCollisionStrategy: CollisionStrategy.BLOCK_ONE_TILE_AHEAD,
   });
+
+  // registerCustomSpriteAnimations(scene);
 };
 
 export const registerGridEngineEvents = (scene: RoomScene) => {

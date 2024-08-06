@@ -7,6 +7,8 @@ const init = (
   socket: Socket
 ) => {
   socket.on(WS_MESSAGE.WS_CHAT_GLOBAL_NEW_MESSAGE, ({ roomId, message }) => {
+    console.log("new message", message);
+    
     io.to(roomId).emit("new-chat-message", { roomId, message });
   });
 };

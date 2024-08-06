@@ -1,4 +1,4 @@
-import { Queue, Worker } from "bullmq";
+import { Job, Queue, Worker } from "bullmq";
 import { logger } from "../config/logger";
 import { RecvDTO, SendParams } from "../types/Misc";
 import "dotenv/config";
@@ -21,8 +21,7 @@ export const sendQueue = new Queue("sendqueue", {
 });
 
 export const startBull = (handler: HandlerMap) => {
-  logger.debug("worker created");
-  new Worker(
+  const msWorker = new Worker(
     "recvqueue",
     async (job) => {
       try {
@@ -38,6 +37,12 @@ export const startBull = (handler: HandlerMap) => {
       connection,
     }
   );
+
+  msWorker.on("failed", (job: any, err: any) => {
+    logger.error(`Job ${job.id} failed with ${err.message}`);
+  });
+
+  logger.warn("\nWorker Created, Waiting for Jobs ...\n");
 };
 
 const send = (params: SendParams) => {

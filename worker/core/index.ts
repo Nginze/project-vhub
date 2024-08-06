@@ -18,14 +18,10 @@ export const setupWsWorker = () => {
   const wsWorker = new Worker(
     "sendqueue",
     async (job) => {
-      const { userId, roomId } = job.data;
+      const { userId, peerId, roomId } = job.data;
       try {
         if (job.name == "clean_up") {
-          logger.debug("new ws job");
-
-          console.log(job.data);
-
-          const peerId = await getPeerId(userId!);
+          console.log("cleaning up", peerId);
 
           await api.post("/worker/invalidate", {
             peerId,

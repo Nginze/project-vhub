@@ -65,3 +65,10 @@ export type SendParams = {
   peerId?: String;
   d: SendDTO | ErrorDTO | string;
 };
+
+export enum MediaTag {
+  CAM_AUDIO = "cam-audio",
+  CAM_VIDEO = "cam-video",
+  SCREEN_AUDIO = "screen-audio",
+  SCREEN_VIDEO = "screen-video",
+}

@@ -22,10 +22,10 @@ export const HomeGrid: React.FC<HomeGridProps> = ({
       })}
     </div>
   ) : (
-    <div className="grid grid-cols-5 gap-10 overflow-visible">
+    <div className="grid grid-cols-5 gap-10 h-full">
       {rooms &&
         rooms
-          .filter((room: any) => room.roomDesc.includes(filterQuery))
+          // .filter((room: any) => room?.roomDesc?.includes(filterQuery))
           .map((room: any) => (
             <HomeRoomPreviewCard key={room.id} room={room} />
           ))}

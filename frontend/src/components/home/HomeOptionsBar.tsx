@@ -6,8 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Earth, Search, ShieldCheck } from "lucide-react";
+import { Earth, Lock, Search, ShieldCheck, Sparkles } from "lucide-react";
 import { Input } from "../ui/input";
+import { GiPadlock } from "react-icons/gi";
 
 type HomeOptionsBarProps = {
   filterQuery: string;
@@ -26,7 +27,7 @@ export const HomeOptionsBar: React.FC<HomeOptionsBarProps> = ({
     <div>
       <div className="w-full flex items-center gap-6 justify-end">
         <Select onValueChange={(v) => setActiveFilter(v)}>
-          <SelectTrigger className="w-[120px] px-5 py-6 rounded-xl bg-void hover:bg-deep border-none ring-0 outline-none focus:outline-none focus:ring-0">
+          <SelectTrigger className="w-[150px] px-5 py-6 rounded-xl bg-void hover:bg-deep border-none ring-0 outline-none focus:outline-none focus:ring-0">
             <SelectValue
               placeholder={
                 <span className="flex items-center gap-2">
@@ -40,9 +41,12 @@ export const HomeOptionsBar: React.FC<HomeOptionsBarProps> = ({
           <SelectContent>
             <SelectItem
               value="public"
-              className="text-[16px] font-semibold opacity-70"
+              className="text-[16px] font-semibold opacity-70 px-6"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-start gap-2">
+                <span>
+                  <ShieldCheck size={18} />
+                </span>
                 <span className="text-[16px] font-semibold opacity-70">
                   Public
                 </span>
@@ -50,11 +54,27 @@ export const HomeOptionsBar: React.FC<HomeOptionsBarProps> = ({
             </SelectItem>
             <SelectItem
               value="private"
-              className="text-[16px] font-semibold opacity-70"
+              className="text-[16px] font-semibold opacity-70 px-6"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-center gap-2">
+                <span>
+                  <Lock size={18} />
+                </span>
                 <span className="text-[16px] font-semibold opacity-70">
                   Private
+                </span>
+              </span>
+            </SelectItem>
+            <SelectItem
+              value="favourite"
+              className="text-[16px] font-semibold opacity-70 px-6"
+            >
+              <span className="flex items-center justify-center gap-2">
+                <span>
+                  <Sparkles size={18} />
+                </span>
+                <span className="text-[16px] font-semibold opacity-70">
+                  Favorite
                 </span>
               </span>
             </SelectItem>

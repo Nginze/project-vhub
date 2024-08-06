@@ -7,6 +7,12 @@ export const useUIStore = create(
       sheetOpen: false,
       activeRoomSheet: "participant",
       roomLoadStatusMessage: "Connecting to Server",
+      mapKey: "map",
+      roomSize: 10,
+      passcode: "",
+      privacy: "public",
+      spaceName: "",
+      spaceDescription: ""
     },
     (set) => ({
       set,

@@ -191,16 +191,60 @@ export const MainWsHandler = ({ children }: Props) => {
     });
 
     conn.on(WS_MESSAGE.WS_PARTICIPANT_LEFT, ({ roomId, participantId }) => {
-      console.log("participant left");
+      console.log("[MainWSHandler]: participant left");
       queryClient.setQueryData(["room"], (data: any) => ({
         ...data,
-        participants: data.participants.filter(
+        participants: data?.participants.filter(
           (p: RoomParticipant) => p.userId !== participantId
         ),
       }));
       proximityList.delete(participantId);
     });
 
+    conn.on("hand-raised", ({ userId, roomId }) => {
+      console.log("hand raised");
+      queryClient.setQueryData(["room"], (data: any) => ({
+        ...data,
+        participants: data?.participants?.map((p: RoomParticipant) =>
+          p.userId === userId
+            ? {
+                ...p,
+                raisedHand: !p.raisedHand,
+              }
+            : p
+        ),
+      }));
+    });
+
+    conn.on("hand-down", ({ userId, roomId }) => {
+      console.log("hand down");
+      queryClient.setQueryData(["room"], (data: any) => ({
+        ...data,
+        participants: data?.participants?.map((p: RoomParticipant) =>
+          p.userId === userId
+            ? {
+                ...p,
+                raisedHand: !p.raisedHand,
+              }
+            : p
+        ),
+      }));
+    });
+
+    conn.on("screen-share-started", ({ userId, roomId }) => {
+      console.log("screen share started");
+      queryClient.setQueryData(["room"], (data: any) => ({
+        ...data,
+        participants: data?.participants.map((p: RoomParticipant) =>
+          p.userId === userId
+            ? {
+                ...p,
+                isScreenSharing: true,
+              }
+            : p
+        ),
+      }));
+    })
 
     return () => {
       conn.off("mod-added");

@@ -5,7 +5,7 @@ import { useRoomStore } from "@/global-store/RoomStore";
 import { REACTIONS_MAP, _REACTION_MAP } from "@/lib/emoji";
 import { ReactionBarSelector } from "@charkour/react-reactions";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   BiExit,
   BiSolidMicrophone,
@@ -14,7 +14,7 @@ import {
   BiSolidVideoOff,
 } from "react-icons/bi";
 import { FaPeopleGroup } from "react-icons/fa6";
-import { HiMicrophone } from "react-icons/hi2";
+import { HiHandRaised, HiMicrophone, HiUserGroup } from "react-icons/hi2";
 import { VscReactions } from "react-icons/vsc";
 import { Room, RoomStatus } from "../../../../shared/types";
 import { AppSheet } from "../global/AppSheet";
@@ -26,7 +26,7 @@ import { RoomReactionsButton } from "./RoomReactionsButton";
 import { RoomSheet } from "./RoomSheet";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api";
-import { parseCamel } from "@/lib/utils";
+import { getSpritePreview, parseCamel } from "@/lib/utils";
 import { WebSocketContext } from "@/context/WsContext";
 import { Socket } from "socket.io-client";
 import AppDialog from "../global/AppDialog";
@@ -37,12 +37,27 @@ import { useSoundEffectStore } from "@/global-store/SoundFxStore";
 import { useUIStore } from "@/global-store/UIStore";
 import { RoomGlobalChatSheet } from "./RoomGlobalChatSheet";
 import { RoomZoomControls } from "./RoomZoomControls";
+import { Check, Monitor, Smile } from "lucide-react";
+import { FaHandPaper, FaSmile } from "react-icons/fa";
+import { RiUserShared2Fill } from "react-icons/ri";
+import {
+  IoHandRightSharp,
+  IoPeopleCircle,
+  IoPeopleCircleSharp,
+} from "react-icons/io5";
+import { PiSmiley, PiSmileyFill } from "react-icons/pi";
+import { RoomInteractivityPrompt } from "./RoomInteractivityPrompt";
+import { sendScreen } from "@/engine/rtc/utils/SendScreen";
+import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
+import { RoomScreenSharePrompt } from "./RoomScreenSharePrompt";
 
 type RoomControlsProps = {
   room: Room;
   conn: Socket;
   myRoomStatus: RoomStatus;
-  roomId: String;
+  roomId: string;
+  chatMessages: any;
+  noExtra?: any;
 };
 
 export const RoomControls: React.FC<RoomControlsProps> = ({
@@ -50,6 +65,8 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   roomId,
   myRoomStatus,
   conn,
+  chatMessages,
+  noExtra,
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -60,6 +77,18 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
   const { mic, vid, set: setMedia } = useMediaStore();
   const { playSoundEffect } = useSoundEffectStore();
   const { set: setUI, sheetOpen, activeRoomSheet } = useUIStore();
+  const { proximityList } = useConsumerStore();
+
+  const [spritePreviewUrl, setSpritePreviewUrl] = useState<string>("");
+
+  const proximityListKeys = Array.from(proximityList.keys());
+
+  useEffect(() => {
+    console.log(spritePreviewUrl);
+    getSpritePreview(3, user).then((previewUrl) =>
+      setSpritePreviewUrl(previewUrl as string)
+    );
+  }, [user, router]);
 
   const statusMutation = useMutation({
     mutationFn: async (params: {
@@ -150,18 +179,68 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
     } catch (err) {}
   };
 
+  const handleHandRaise = async () => {
+    if (!conn) {
+      return;
+    }
+
+    const event = myRoomStatus.raisedHand
+      ? "action:hand_down"
+      : "action:hand_raise";
+
+    myRoomStatus.raisedHand
+      ? playSoundEffect("unmute")
+      : playSoundEffect("mute");
+    conn.emit(event, { roomId, userId: user.userId });
+    try {
+      statusMutation.mutate({
+        state: "raised_hand",
+        value: !myRoomStatus.raisedHand,
+        userId: user.userId as string,
+      });
+    } catch (err) {}
+  };
+
+  const handleScreenShare = async () => {
+    console.log("clicked screen share");
+    if (!conn) {
+      return;
+    }
+
+    sendScreen();
+
+    conn.emit("action:screen_share", {
+      roomId,
+      userId: user.userId,
+      proximityList: proximityListKeys,
+    });
+    console.log("screen share emit", {
+      roomId,
+      userId: user.userId,
+      proximityList: proximityListKeys,
+    });
+  };
+
   return (
     <>
-      <RoomZoomControls />
-      <div className="w-full py-4 flex items-center">
+      {!noExtra && <RoomZoomControls />}
+      <div className="w-full py-4 flex items-center relative">
         <div className="w-full px-10 flex items-center justify-between">
-          <div className="flex flex-col items-start opacity-80">
+          {/* <div className="flex flex-col items-start opacity-80">
             <Logo withLogo={false} size="sm" />
             <span className="text-[9px] opacity-60">{roomId}</span>
-          </div>
+          </div> */}
 
-          <div className="flex-1 flex justify-center -ml-16">
-            <div className="flex items-center pr-5 p-0.5 bg-ultra overflow-hidden rounded-full shadow-appShadow relative">
+          <div className="flex-1 flex justify-center relative">
+            <div className="absolute bottom-[5rem] flex items-center gap-2">
+              {!noExtra && <RoomInteractivityPrompt />}{" "}
+              {!noExtra && <RoomScreenSharePrompt />}{" "}
+            </div>
+
+            {/* <div className="absolute bottom-[5rem]">
+              <RoomScreenSharePrompt />
+            </div> */}
+            <div className="flex items-center pr-5 p-0.5 bg-ultra shadow-canvasShadow overflow-hidden rounded-full relative">
               <AppDialog
                 width={"sm:max-w-[450px]"}
                 className="p-0 pb-5"
@@ -173,15 +252,18 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   />
                 }
               >
-                <div className="flex items-center gap-3 px-5 py-3 hover:bg-dark active:bg-deep cursor-pointer">
-                  <div>
+                <div className="flex items-center gap-3 px-5 py-3 hover:bg-dark active:bg-deep cursor-pointer w-[150px]">
+                  <div className="relative">
                     <Avatar className="w-8 h-8 cursor-pointer">
                       <AvatarImage
                         className="object-cover"
-                        src={user.avatarUrl as string}
+                        src={spritePreviewUrl as string}
                       />
                       <AvatarFallback />
                     </Avatar>
+                    <div className="bg-appGreen p-0.5 border border-light absolute bottom-0 -right-1 rounded-full">
+                      <Check size={10} />
+                    </div>
                   </div>
                   <div className="flex flex-col items-start">
                     <span className="text-[12px] opacity-70 font-body font-semibold">
@@ -193,10 +275,10 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
               </AppDialog>
               <Separator
                 orientation="vertical"
-                className="h-10 opacity-30 mr-5 bg-veryLight"
+                className="h-8 opacity-60 mr-5 bg-veryLight"
               />
-              <div className="flex items-center p-0.5 gap-5 bg-void overflow-hidden rounded-full">
-                <RoomMediaControlButton
+              <div className="flex items-center p-0.5 gap-2 bg-void overflow-hidden rounded-full">
+                {/* <RoomMediaControlButton
                   isOn={!myRoomStatus.isMuted as boolean}
                   isLoading={!localStream || !localStream.active}
                   iconOn={
@@ -263,17 +345,17 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                       </div>
                     }
                   />
-                </div>
+                </div> */}
 
                 <AppSheet
                   open={sheetOpen}
                   onOpenChange={(open: boolean) =>
                     setUI({ sheetOpen: !sheetOpen })
                   }
-                  className="px-0"
+                  className="px-0 mx-0"
                   content={
                     activeRoomSheet == "participant" ? (
-                      <RoomSheet room={room} />
+                      <RoomSheet chatMessages={chatMessages} room={room} />
                     ) : (
                       <RoomGlobalChatSheet room={room} />
                     )
@@ -281,28 +363,79 @@ export const RoomControls: React.FC<RoomControlsProps> = ({
                   title={<span>People</span>}
                 >
                   <RoomMediaControlButton
-                    useDefaultBg
+                    bgColor="bg-ultra"
                     onClick={() => {
                       set((s) => ({ roomSheetOpen: !s.roomSheetOpen }));
                     }}
-                    tooltipText="Settings"
-                    iconOn={<FaPeopleGroup size={24} color="white" />}
-                    iconOff={<FaPeopleGroup size={24} color="white" />}
+                    tooltipText="People"
+                    iconOn={<HiUserGroup size={24} color="white" />}
+                    iconOff={<HiUserGroup size={24} color="white" />}
                   />
                 </AppSheet>
 
-                <AppDialog
+                {/* <AppDialog
                   width={"sm:max-w-[450px]"}
                   content={<RoomLeaveConfirmation />}
                 >
                   <RoomMediaControlButton
+                    useDefaultBg
+                    onClick={() => {}}
                     tooltipText="Leave"
-                    iconOn={<BiExit size={24} />}
-                    iconOff={<BiExit size={24} />}
-                    bgColor="bg-appRed"
-                    textColor="text-white"
+                    iconOn={<BiExit size={24} color="white" />}
+                    iconOff={<BiExit size={24} color="white" />}
                   />
-                </AppDialog>
+                </AppDialog> */}
+
+                <RoomMediaControlButton
+                  bgColor="bg-ultra"
+                  onClick={handleHandRaise}
+                  tooltipText="Raise Hand"
+                  isOn={myRoomStatus.raisedHand as boolean}
+                  iconOn={<HiHandRaised size={20} className="text-appGreen" />}
+                  iconOff={<HiHandRaised size={20} color="white" />}
+                />
+
+                <RoomMediaControlButton
+                  bgColor="bg-ultra"
+                  onClick={handleScreenShare}
+                  tooltipText="Share Screen"
+                  iconOn={<Monitor size={20} color="white" />}
+                  iconOff={<Monitor size={20} color="white" />}
+                />
+
+                <div>
+                  <RoomReactionsButton
+                    bgColor="bg-ultra"
+                    tooltipText="Emote"
+                    iconOff={<PiSmileyFill size={20} color="white" />}
+                    iconOn={
+                      <div className="flex items-center">
+                        <PiSmileyFill size={20} color="white" />
+                        <ReactionBarSelector
+                          onSelect={(reaction: string) => {
+                            console.log(reaction);
+                            set((s) => ({
+                              //@ts-ignore
+                              currentReaction: _REACTION_MAP[reaction],
+                            }));
+                            scene.players
+                              .get(user.userId as string)
+                              ?.showReaction();
+                          }}
+                          reactions={REACTIONS_MAP}
+                          iconSize={17}
+                          style={{
+                            background: "transparent",
+                            boxShadow: "none",
+                            padding: "0",
+                            margin: "0",
+                            boxSizing: "border-box",
+                          }}
+                        />
+                      </div>
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>

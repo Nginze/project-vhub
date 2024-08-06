@@ -11,6 +11,7 @@ import { HiMicrophone } from "react-icons/hi2";
 import { RotatingLines } from "react-loader-spinner";
 import { cn } from "@/lib/utils";
 import { useSettingStore } from "@/global-store/SettingStore";
+import { useRoomStore } from "@/global-store/RoomStore";
 
 type SetupPreviewProps = {};
 
@@ -25,6 +26,7 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const { selectedCameraDevice, selectedMicDevice } = useSettingStore();
+  const { wantsMicOn, wantsVideoOn, set: setRoom } = useRoomStore();
 
   useEffect(() => {
     if (videoRef.current && videoStream) {
@@ -44,6 +46,7 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
       if (videoStream) {
         videoStream.getTracks().forEach((track) => track.stop());
         setVideoStream(null);
+        setRoom({ wantsVideoOn: false });
       } else {
         const constraints = {
           video: {
@@ -52,12 +55,14 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         setVideoStream(stream);
+        setRoom({ wantsVideoOn: true });
       }
 
       setTimeout(() => setVideoLoading(false), 1000);
     } catch (error) {
       console.error("Error accessing media devices.", error);
 
+      setRoom({ wantsVideoOn: false});
       setTimeout(() => setVideoLoading(false), 1000);
       throw error;
     }
@@ -69,6 +74,7 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
       if (audioStream) {
         audioStream.getTracks().forEach((track) => track.stop());
         setAudioStream(null);
+        setRoom({ wantsMicOn: false });
       } else {
         const constraints = {
           audio: {
@@ -77,12 +83,14 @@ export const SetupPreview: React.FC<SetupPreviewProps> = () => {
         };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         setAudioStream(stream);
+        setRoom({ wantsMicOn: true });
       }
 
       setTimeout(() => setAudioLoading(false), 500);
     } catch (error) {
       console.error("Error accessing media devices.", error);
       setTimeout(() => setAudioLoading(false), 500);
+      setRoom({ wantsMicOn: false });
       throw error;
     }
   }

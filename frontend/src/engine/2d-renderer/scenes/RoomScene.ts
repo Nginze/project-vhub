@@ -13,7 +13,10 @@ import {
 
 import { useConsumerStore } from "@/engine/rtc/store/ConsumerStore";
 import { clamp } from "framer-motion";
-import { registerCustomSpriteAnimations } from "../anims";
+import {
+  registerCustomSpriteAnimations,
+  registerSpriteAnimations32,
+} from "../anims";
 import Player from "../entities/Player";
 import { WS_MESSAGE } from "../events";
 import { NavKeys, ProxmityActionType } from "../types";
@@ -67,11 +70,12 @@ export class RoomScene extends Phaser.Scene {
     registerGridEngineEvents(this);
     registerRendererEvents(this);
     registerItems(this);
+    registerSpriteAnimations32(this);
 
     console.log("[LOGGING]: Loading complete");
 
     const { set } = useRendererStore.getState();
-    set({ scene: this });
+    set({ scenel: this });
     set({ ready: true });
   }
 
@@ -84,8 +88,8 @@ export class RoomScene extends Phaser.Scene {
     const myUserId = this.user.userId as string;
     const myPlayer = this.players.get(myUserId) as Player;
 
-    myPlayer.update();
-    myPlayer.playerSelector.update();
+    myPlayer?.update();
+    myPlayer?.playerSelector.update();
     this.proximityUpdateForMedia();
 
     if (this.cursors.left.isDown || this.cursors.A.isDown) {
@@ -269,7 +273,7 @@ export class RoomScene extends Phaser.Scene {
       useConsumerStore.getState();
 
     if (!(userId in audioConsumerMap)) {
-      console.log("[LOGGING]: No audio graph");
+      // console.log("[LOGGING]: No audio graph");
       return;
     }
 
@@ -359,5 +363,22 @@ export class RoomScene extends Phaser.Scene {
       this.zoomLevel -= 0.1; // Adjust this value to control the zoom speed
       this.cameras.main.zoomTo(this.zoomLevel, 500); // 500 is the duration in ms
     }
+  }
+
+  locatePlayer(targetUserId: string) {
+    if (!this.gridEngine) {
+      return;
+    }
+
+    console.log("called locate player");
+
+    // Get the target user's position
+    const targetPosition = this.gridEngine.getPosition(targetUserId);
+
+    // Center the camera on the target user
+    this.cameras.main.centerOn(targetPosition.x, targetPosition.y);
+
+    // Zoom in on the target user
+    // this.cameras.main.zoomTo(2, 500); // 2 is the zoom level, 500 is the duration in ms
   }
 }

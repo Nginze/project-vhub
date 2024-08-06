@@ -46,7 +46,7 @@ export const RoomVideoOverlay: React.FC<RoomVideoOverlayProps> = ({
       {
         <div className="absolute bottom-4 z-50 right-5">
           <RoomVideoCard
-            className="w-36 h-[6rem] border border-deep"
+            className="w-40 h-[6.5rem] border border-deep"
             indicatorOn={false}
             userName={user.userName as string}
             stream={localStream}

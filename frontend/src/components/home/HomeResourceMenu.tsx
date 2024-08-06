@@ -33,22 +33,34 @@ import {
   MdOutlinePayments,
   MdOutlineTipsAndUpdates,
 } from "react-icons/md";
+import { useRouter } from "next/router";
 
 type HomeResourceMenuProps = {};
 
 export const HomeResourceMenu: React.FC<HomeResourceMenuProps> = () => {
+  const router = useRouter();
+
   return (
     <div className="font-sans">
       <DropdownMenuGroup>
-        <DropdownMenuItem className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]">
+        <DropdownMenuItem
+          onClick={() => router.push("/updates")}
+          className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]"
+        >
           <MdOutlineTipsAndUpdates size={20} className="mr-4" />
           <span>Updates</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]">
+        <DropdownMenuItem
+          onClick={() => router.push("/pricing")}
+          className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]"
+        >
           <MdOutlinePayments size={20} className="mr-4" />
           <span>Pricing</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]">
+        <DropdownMenuItem
+          onClick={() => router.push("/help")}
+          className="cursor-pointer py-2 px-3 rounded-xl focus:bg-light focus:text-white text-[16px]"
+        >
           <HelpCircle size={20} className="mr-4" />
           <span>Help Center</span>
         </DropdownMenuItem>

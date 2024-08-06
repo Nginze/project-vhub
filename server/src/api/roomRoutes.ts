@@ -15,8 +15,9 @@ router.post(
       const roomInfo = {
         ...req.body,
         creatorId: (req.user as UserData).userId,
-      } as Room;
+      } as any;
       const {
+        roomName,
         roomDesc,
         creatorId,
         isPrivate,
@@ -24,6 +25,9 @@ router.post(
         chatEnabled,
         handRaiseEnabled,
         mapKey,
+        privacy,
+        passcode,
+        roomSize
       } = roomInfo;
 
       if (!roomInfo) {
@@ -34,11 +38,12 @@ router.post(
 
       const { rows } = await client.query(
         `
-      INSERT INTO room (room_desc, is_private, auto_speaker, creator_id, chat_enabled, hand_raise_enabled, map_key)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO room (room_name,room_desc, is_private, auto_speaker, creator_id, chat_enabled, hand_raise_enabled, map_key, privacy, passcode, room_size)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING room_id;
         `,
         [
+          roomName,
           roomDesc,
           isPrivate,
           autoSpeaker,
@@ -46,6 +51,9 @@ router.post(
           chatEnabled,
           handRaiseEnabled,
           mapKey,
+          privacy,
+          passcode,
+          roomSize
         ]
       );
 
@@ -105,10 +113,10 @@ router.get(
     }
 
     const posData = await getUserPosition(roomId, userId as string);
-    if (posData.posX == 3) {
+    if (posData && posData.posX == 3) {
       posData.posX = 15;
     }
-    if (posData.posY == 3) {
+    if (posData && posData.posY == 3) {
       posData.posY = 17;
     }
 
@@ -323,7 +331,6 @@ router.get(
           ARRAY(SELECT category FROM room_category WHERE room_id = room.room_id) AS categories
           FROM room
           WHERE ended = false
-          LIMIT 5
         `
       );
 

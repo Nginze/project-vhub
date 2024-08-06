@@ -46,20 +46,20 @@ export default class Item extends Phaser.Physics.Arcade.Sprite {
 
   // add texts into dialog box container
   setDialogBox(text: string) {
-    const dialogBox = this.scene.add.dom(this.x, this.y + this.height * 0.5)
-      .createFromHTML(`
-        <div class='item-dialog'>
-          <div style="white-space: nowrap;">
-            ${text}
-          </div>
-        </div>
-      `);
+    // const dialogBox = this.scene.add.dom(this.x, this.y + this.height * 0.5)
+    //   .createFromHTML(`
+    //     <div class='item-dialog'>
+    //       <div style="white-space: nowrap;">
+    //         ${text}
+    //       </div>
+    //     </div>
+    //   `);
 
-    // Add the DOMElement to the dialogBox
-    this.dialogBox.add(dialogBox);
+    // // Add the DOMElement to the dialogBox
+    // this.dialogBox.add(dialogBox);
 
-    // Add the DOMElement to the dialogBox
-    this.dialogBox.add(dialogBox);
+    // // Add the DOMElement to the dialogBox
+    // this.dialogBox.add(dialogBox);
   }
 
   // remove everything in the dialog box container

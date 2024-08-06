@@ -22,7 +22,7 @@ export const cleanUp = async (
 ) => {
   const client = await pool.connect();
 
-  logger.debug("cleaning up user's room session", userId);
+  logger.warn(`Cleaning up user ${userId} from room ${roomId}`);
 
   try {
     await client.query("BEGIN");
@@ -54,21 +54,6 @@ export const cleanUp = async (
       `,
         [roomId, userId]
       );
-
-      const dbTimeStamp = new Date(roomStatus[0].created_at).getTime();
-
-      // If the user's room status is older than the current room status (race-condition avoidance with main server)
-    //   if (dbTimeStamp < timeStamp) {
-    //     //Delete the user's room status
-    //     await client.query(
-    //       `
-    //     DELETE FROM
-    //     room_status
-    //     WHERE user_id = $1 and room_id = $2
-    // `,
-    //       [userId, roomId]
-    //     );
-    //   }
 
       await client.query(
         `
@@ -139,3 +124,20 @@ export const getPeerId = async (userId: string) => {
   const peerId = await redis.get(userId);
   return peerId;
 };
+
+// OLD CODE TO HANDLE RACE CONDITIONS
+
+// const dbTimeStamp = new Date(roomStatus[0].created_at).getTime();
+
+// If the user's room status is older than the current room status (race-condition avoidance with main server)
+//   if (dbTimeStamp < timeStamp) {
+//     //Delete the user's room status
+//     await client.query(
+//       `
+//     DELETE FROM
+//     room_status
+//     WHERE user_id = $1 and room_id = $2
+// `,
+//       [userId, roomId]
+//     );
+//   }

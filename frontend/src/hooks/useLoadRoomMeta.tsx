@@ -1,5 +1,5 @@
 import { api } from "@/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserData } from "../../../shared/types";
 
 export const useLoadRoomMeta = (
@@ -7,6 +7,18 @@ export const useLoadRoomMeta = (
   user: UserData,
   hasJoined: boolean = true
 ) => {
+  const queryClient = useQueryClient();
+  //@ts-ignore
+  const { isLoading: chatLoading, data: chatMessages } = useQuery({
+    queryKey: ["room-chat", roomId],
+    queryFn: () => {
+      return queryClient.getQueryData(["room-chat", roomId]);
+    },
+    staleTime: 300000,
+    refetchInterval: false,
+    refetchOnWindowFocus: false,
+  });
+
   const { isLoading: roomLoading, data: room } = useQuery({
     queryKey: ["room"],
     queryFn: async () => {
@@ -52,5 +64,7 @@ export const useLoadRoomMeta = (
     room,
     roomStatusLoading,
     roomStatus,
+    chatMessages,
+    chatLoading,
   };
 };

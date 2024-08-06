@@ -1,1615 +1,2346 @@
 export const emojis = [
   {
-    id: "heart",
-    name: "heart",
-    short_names: ["heart", "<3"],
-    keywords: ["heart", "<3"],
-    skins: [{ src: "/emotes/heart.png" }],
+    name: "5Head",
+    id: "5Head",
+    short_names: ["5Head"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/5Head.png",
+      },
+    ],
   },
   {
-    name: "brokenheart",
-    id: "brokenheart",
+    name: "AYAYA",
+    id: "AYAYA",
+    short_names: ["AYAYA"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/AYAYA.png",
+      },
+    ],
+  },
+  {
+    name: "BBoomer",
+    id: "BBoomer",
+    short_names: ["BBoomer"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/BBoomer.gif",
+      },
+    ],
+  },
+  {
+    name: "BERN",
+    id: "BERN",
+    short_names: ["BERN"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/BERN.png",
+      },
+    ],
+  },
+  {
+    name: "BLANKIES",
+    id: "BLANKIES",
+    short_names: ["BLANKIES"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/BLANKIES.gif",
+      },
+    ],
+  },
+  {
+    name: "BOGGED",
+    id: "BOGGED",
+    short_names: ["BOGGED"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/BOGGED.png",
+      },
+    ],
+  },
+  {
+    name: "BebeLa",
+    id: "BebeLa",
+    short_names: ["BebeLa"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/BebeLa.png",
+      },
+    ],
+  },
+  {
+    name: "COGGERS",
+    id: "COGGERS",
+    short_names: ["COGGERS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/COGGERS.gif",
+      },
+    ],
+  },
+  {
+    name: "COPIUM",
+    id: "COPIUM",
+    short_names: ["COPIUM"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/COPIUM.png",
+      },
+    ],
+  },
+  {
+    name: "Clap",
+    id: "Clap",
+    short_names: ["Clap"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/Clap.gif",
+      },
+    ],
+  },
+  {
+    name: "DANKHACKERMANS",
+    id: "DANKHACKERMANS",
+    short_names: ["DANKHACKERMANS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/DANKHACKERMANS.gif",
+      },
+    ],
+  },
+  {
+    name: "DANKIES",
+    id: "DANKIES",
+    short_names: ["DANKIES"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/DANKIES.gif",
+      },
+    ],
+  },
+  {
+    name: "DewTime",
+    id: "DewTime",
+    short_names: ["DewTime"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/DewTime.gif",
+      },
+    ],
+  },
+  {
+    name: "DogePls",
+    id: "DogePls",
+    short_names: ["DogePls"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/DogePls.gif",
+      },
+    ],
+  },
+  {
+    name: "EZ",
+    id: "EZ",
+    short_names: ["EZ"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/EZ.png",
+      },
+    ],
+  },
+  {
+    name: "F",
+    id: "F",
+    short_names: ["F"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/F.gif",
+      },
+    ],
+  },
+  {
+    name: "FeelsDankMan",
+    id: "FeelsDankMan",
+    short_names: ["FeelsDankMan"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/FeelsDankMan.png",
+      },
+    ],
+  },
+  {
+    name: "FeelsOkayMan",
+    id: "FeelsOkayMan",
+    short_names: ["FeelsOkayMan"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/FeelsOkayMan.png",
+      },
+    ],
+  },
+  {
+    name: "FeelsStrongMan",
+    id: "FeelsStrongMan",
+    short_names: ["FeelsStrongMan"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/FeelsStrongMan.png",
+      },
+    ],
+  },
+  {
+    name: "FeelsWeirdMan",
+    id: "FeelsWeirdMan",
+    short_names: ["FeelsWeirdMan"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/FeelsWeirdMan.png",
+      },
+    ],
+  },
+  {
+    name: "GRUG",
+    id: "GRUG",
+    short_names: ["GRUG"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/GRUG.png",
+      },
+    ],
+  },
+  {
+    name: "GuitarTime",
+    id: "GuitarTime",
+    short_names: ["GuitarTime"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/GuitarTime.gif",
+      },
+    ],
+  },
+  {
+    name: "HACKERMANS",
+    id: "HACKERMANS",
+    short_names: ["HACKERMANS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/HACKERMANS.gif",
+      },
+    ],
+  },
+  {
+    name: "HYPERCLAP",
+    id: "HYPERCLAP",
+    short_names: ["HYPERCLAP"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/HYPERCLAP.gif",
+      },
+    ],
+  },
+  {
+    name: "HYPERITALIANHANDS",
+    id: "HYPERITALIANHANDS",
+    short_names: ["HYPERITALIANHANDS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/HYPERITALIANHANDS.gif",
+      },
+    ],
+  },
+  {
+    name: "HYPERPOGGER",
+    id: "HYPERPOGGER",
+    short_names: ["HYPERPOGGER"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/HYPERPOGGER.gif",
+      },
+    ],
+  },
+  {
+    name: "HYPERPOGO",
+    id: "HYPERPOGO",
+    short_names: ["HYPERPOGO"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/HYPERPOGO.gif",
+      },
+    ],
+  },
+  {
+    name: "HandsUp",
+    id: "HandsUp",
+    short_names: ["HandsUp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/HandsUp.png",
+      },
+    ],
+  },
+  {
+    name: "HasanWalk",
+    id: "HasanWalk",
+    short_names: ["HasanWalk"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/HasanWalk.gif",
+      },
+    ],
+  },
+  {
+    name: "IGetIt",
+    id: "IGetIt",
+    short_names: ["IGetIt"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/IGetIt.png",
+      },
+    ],
+  },
+  {
+    name: "IntelxAMD",
+    id: "IntelxAMD",
+    short_names: ["IntelxAMD"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/IntelxAMD.png",
+      },
+    ],
+  },
+  {
+    name: "ItalianHands",
+    id: "ItalianHands",
+    short_names: ["ItalianHands"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/ItalianHands.gif",
+      },
+    ],
+  },
+  {
+    name: "Jammies",
+    id: "Jammies",
+    short_names: ["Jammies"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/Jammies.gif",
+      },
+    ],
+  },
+  {
+    name: "KEKW",
+    id: "KEKW",
+    short_names: ["KEKW"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/KEKW.png",
+      },
+    ],
+  },
+  {
+    name: "KEKWait",
+    id: "KEKWait",
+    short_names: ["KEKWait"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/KEKWait.png",
+      },
+    ],
+  },
+  {
+    name: "KEKebab",
+    id: "KEKebab",
+    short_names: ["KEKebab"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/KEKebab.png",
+      },
+    ],
+  },
+  {
+    name: "KKapitalist",
+    id: "KKapitalist",
+    short_names: ["KKapitalist"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/KKapitalist.png",
+      },
+    ],
+  },
+  {
+    name: "KKomrade",
+    id: "KKomrade",
+    short_names: ["KKomrade"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/KKomrade.png",
+      },
+    ],
+  },
+  {
+    name: "KKonaW",
+    id: "KKonaW",
+    short_names: ["KKonaW"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/KKonaW.png",
+      },
+    ],
+  },
+  {
+    name: "KKop",
+    id: "KKop",
+    short_names: ["KKop"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/KKop.png",
+      },
+    ],
+  },
+  {
+    name: "LULW",
+    id: "LULW",
+    short_names: ["LULW"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/LULW.png",
+      },
+    ],
+  },
+  {
+    name: "MALARKEY",
+    id: "MALARKEY",
+    short_names: ["MALARKEY"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/MALARKEY.gif",
+      },
+    ],
+  },
+  {
+    name: "MmmHmm",
+    id: "MmmHmm",
+    short_names: ["MmmHmm"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/MmmHmm.gif",
+      },
+    ],
+  },
+  {
+    name: "ModTime",
+    id: "ModTime",
+    short_names: ["ModTime"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/ModTime.gif",
+      },
+    ],
+  },
+  {
+    name: "NODDERS",
+    id: "NODDERS",
+    short_names: ["NODDERS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/NODDERS.gif",
+      },
+    ],
+  },
+  {
+    name: "NOPERS",
+    id: "NOPERS",
+    short_names: ["NOPERS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/NOPERS.gif",
+      },
+    ],
+  },
+  {
+    name: "OOOO",
+    id: "OOOO",
+    short_names: ["OOOO"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/OOOO.gif",
+      },
+    ],
+  },
+  {
+    name: "OkayChamp",
+    id: "OkayChamp",
+    short_names: ["OkayChamp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/OkayChamp.png",
+      },
+    ],
+  },
+  {
+    name: "POGGERS",
+    id: "POGGERS",
+    short_names: ["POGGERS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/POGGERS.png",
+      },
+    ],
+  },
+  {
+    name: "POGGIES",
+    id: "POGGIES",
+    short_names: ["POGGIES"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/POGGIES.png",
+      },
+    ],
+  },
+  {
+    name: "PagChomp",
+    id: "PagChomp",
+    short_names: ["PagChomp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PagChomp.png",
+      },
+    ],
+  },
+  {
+    name: "PainsChamp",
+    id: "PainsChamp",
+    short_names: ["PainsChamp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PainsChamp.png",
+      },
+    ],
+  },
+  {
+    name: "PartyParrot",
+    id: "PartyParrot",
+    short_names: ["PartyParrot"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PartyParrot.gif",
+      },
+    ],
+  },
+  {
+    name: "PauseChamp",
+    id: "PauseChamp",
+    short_names: ["PauseChamp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PauseChamp.png",
+      },
+    ],
+  },
+  {
+    name: "PepeHands",
+    id: "PepeHands",
+    short_names: ["PepeHands"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PepeHands.png",
+      },
+    ],
+  },
+  {
+    name: "PepeLa",
+    id: "PepeLa",
+    short_names: ["PepeLa"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PepeLa.png",
+      },
+    ],
+  },
+  {
+    name: "PepeLaugh",
+    id: "PepeLaugh",
+    short_names: ["PepeLaugh"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PepeLaugh.gif",
+      },
+    ],
+  },
+  {
+    name: "PepeS",
+    id: "PepeS",
+    short_names: ["PepeS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PepeS.gif",
+      },
+    ],
+  },
+  {
+    name: "PepeSpit",
+    id: "PepeSpit",
+    short_names: ["PepeSpit"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PepeSpit.gif",
+      },
+    ],
+  },
+  {
+    name: "PepegeHmm",
+    id: "PepegeHmm",
+    short_names: ["PepegeHmm"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PepegeHmm.png",
+      },
+    ],
+  },
+  {
+    name: "PepoG",
+    id: "PepoG",
+    short_names: ["PepoG"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PepoG.png",
+      },
+    ],
+  },
+  {
+    name: "Playa",
+    id: "Playa",
+    short_names: ["Playa"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/Playa.png",
+      },
+    ],
+  },
+  {
+    name: "Pog",
+    id: "Pog",
+    short_names: ["Pog"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/Pog.png",
+      },
+    ],
+  },
+  {
+    name: "PogO",
+    id: "PogO",
+    short_names: ["PogO"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PogO.png",
+      },
+    ],
+  },
+  {
+    name: "PogU",
+    id: "PogU",
+    short_names: ["PogU"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/PogU.png",
+      },
+    ],
+  },
+  {
+    name: "Prayge",
+    id: "Prayge",
+    short_names: ["Prayge"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/Prayge.png",
+      },
+    ],
+  },
+  {
+    name: "REE",
+    id: "REE",
+    short_names: ["REE"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/REE.png",
+      },
+    ],
+  },
+  {
+    name: "SWOONER",
+    id: "SWOONER",
+    short_names: ["SWOONER"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/SWOONER.png",
+      },
+    ],
+  },
+  {
+    name: "SillyChamp",
+    id: "SillyChamp",
+    short_names: ["SillyChamp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/SillyChamp.png",
+      },
+    ],
+  },
+  {
+    name: "SmokeTime",
+    id: "SmokeTime",
+    short_names: ["SmokeTime"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/SmokeTime.gif",
+      },
+    ],
+  },
+  {
+    name: "TeaTime",
+    id: "TeaTime",
+    short_names: ["TeaTime"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/TeaTime.gif",
+      },
+    ],
+  },
+  {
+    name: "TomatoTime",
+    id: "TomatoTime",
+    short_names: ["TomatoTime"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/TomatoTime.gif",
+      },
+    ],
+  },
+  {
+    name: "WICKED",
+    id: "WICKED",
+    short_names: ["WICKED"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/WICKED.png",
+      },
+    ],
+  },
+  {
+    name: "WeirdChamp",
+    id: "WeirdChamp",
+    short_names: ["WeirdChamp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/WeirdChamp.png",
+      },
+    ],
+  },
+  {
+    name: "Weirdge",
+    id: "Weirdge",
+    short_names: ["Weirdge"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/Weirdge.png",
+      },
+    ],
+  },
+  {
+    name: "WhatChamp",
+    id: "WhatChamp",
+    short_names: ["WhatChamp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/WhatChamp.png",
+      },
+    ],
+  },
+  {
+    name: "WineTime",
+    id: "WineTime",
+    short_names: ["WineTime"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/WineTime.gif",
+      },
+    ],
+  },
+  {
+    name: "YEP",
+    id: "YEP",
+    short_names: ["YEP"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/YEP.png",
+      },
+    ],
+  },
+  {
+    name: "ZZoomer",
+    id: "ZZoomer",
+    short_names: ["ZZoomer"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/ZZoomer.gif",
+      },
+    ],
+  },
+  {
+    name: "angrykermit",
+    id: "angrykermit",
+    short_names: ["angrykermit"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/angrykermit.png",
+      },
+    ],
+  },
+  {
+    name: "awyeah",
+    id: "awyeah",
+    short_names: ["awyeah"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/awyeah.gif",
+      },
+    ],
+  },
+  {
+    name: "babaYEP",
+    id: "babaYEP",
+    short_names: ["babaYEP"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/babaYEP.png",
+      },
+    ],
+  },
+  {
+    name: "beardguyleft",
+    id: "beardguyleft",
+    short_names: ["beardguyleft"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/beardguyleft.png",
+      },
+    ],
+  },
+  {
+    name: "beardguyright",
+    id: "beardguyright",
+    short_names: ["beardguyright"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/beardguyright.png",
+      },
+    ],
+  },
+  {
+    name: "bidenJAM",
+    id: "bidenJAM",
+    short_names: ["bidenJAM"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/bidenJAM.gif",
+      },
+    ],
+  },
+  {
+    name: "blaze",
+    id: "blaze",
+    short_names: ["blaze"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/blaze.png",
+      },
+    ],
+  },
+  {
+    name: "blobdance",
+    id: "blobdance",
+    short_names: ["blobdance"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/blobdance.gif",
+      },
+    ],
+  },
+  {
+    name: "blobwtf",
+    id: "blobwtf",
+    short_names: ["blobwtf"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/blobwtf.png",
+      },
+    ],
+  },
+  {
+    name: "brokenHeart",
+    id: "brokenHeart",
     short_names: ["brokenHeart"],
-    keywords: ["broken", "heart", "broken heart", "brokenHeart"],
-    skins: [{ src: "/emotes/brokenHeart.gif" }],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/brokenHeart.gif",
+      },
+    ],
   },
   {
-    name: "obama",
-    id: "obama",
-    short_names: ["obama"],
-    keywords: ["obama", "prism", "obamium"],
-    skins: [{ src: "/emotes/obamium.png" }],
+    name: "browndogehouse",
+    id: "browndogehouse",
+    short_names: ["browndogehouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/browndogehouse.png",
+      },
+    ],
   },
   {
-    name: "intelxamd",
-    id: "intelxamd",
-    short_names: ["intelxamd"],
-    keywords: ["intel", "amd", "intelxamd"],
-    skins: [{ src: "/emotes/IntelxAMD.png" }],
+    name: "catDance",
+    id: "catDance",
+    short_names: ["catDance"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/catDance.gif",
+      },
+    ],
+  },
+  {
+    name: "catjam",
+    id: "catjam",
+    short_names: ["catjam"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/catjam.gif",
+      },
+    ],
+  },
+  {
+    name: "coolhouse",
+    id: "coolhouse",
+    short_names: ["coolhouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/coolhouse.png",
+      },
+    ],
+  },
+  {
+    name: "coronaS",
+    id: "coronaS",
+    short_names: ["coronaS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/coronaS.png",
+      },
+    ],
+  },
+  {
+    name: "crabpls",
+    id: "crabpls",
+    short_names: ["crabpls"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/crabpls.gif",
+      },
+    ],
+  },
+  {
+    name: "cryptoADA",
+    id: "cryptoADA",
+    short_names: ["cryptoADA"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoADA.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoBCH",
+    id: "cryptoBCH",
+    short_names: ["cryptoBCH"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoBCH.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoBNB",
+    id: "cryptoBNB",
+    short_names: ["cryptoBNB"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoBNB.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoBTC",
+    id: "cryptoBTC",
+    short_names: ["cryptoBTC"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoBTC.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoCAKE",
+    id: "cryptoCAKE",
+    short_names: ["cryptoCAKE"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoCAKE.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoDOGE",
+    id: "cryptoDOGE",
+    short_names: ["cryptoDOGE"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoDOGE.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoETC",
+    id: "cryptoETC",
+    short_names: ["cryptoETC"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoETC.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoETH",
+    id: "cryptoETH",
+    short_names: ["cryptoETH"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoETH.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoLTC",
+    id: "cryptoLTC",
+    short_names: ["cryptoLTC"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoLTC.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoSUSHI",
+    id: "cryptoSUSHI",
+    short_names: ["cryptoSUSHI"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoSUSHI.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoTron",
+    id: "cryptoTron",
+    short_names: ["cryptoTron"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoTron.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoUSDC",
+    id: "cryptoUSDC",
+    short_names: ["cryptoUSDC"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoUSDC.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoXRP",
+    id: "cryptoXRP",
+    short_names: ["cryptoXRP"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoXRP.png",
+      },
+    ],
+  },
+  {
+    name: "cryptoZEC",
+    id: "cryptoZEC",
+    short_names: ["cryptoZEC"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cryptoZEC.png",
+      },
+    ],
+  },
+  {
+    name: "cyandogehouse",
+    id: "cyandogehouse",
+    short_names: ["cyandogehouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/cyandogehouse.png",
+      },
+    ],
+  },
+  {
+    name: "dankHug",
+    id: "dankHug",
+    short_names: ["dankHug"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/dankHug.png",
+      },
+    ],
+  },
+  {
+    name: "darthkermit",
+    id: "darthkermit",
+    short_names: ["darthkermit"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/darthkermit.png",
+      },
+    ],
+  },
+  {
+    name: "dodgyCoin",
+    id: "dodgyCoin",
+    short_names: ["dodgyCoin"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/dodgyCoin.png",
+      },
+    ],
+  },
+  {
+    name: "doge3d",
+    id: "doge3d",
+    short_names: ["doge3d"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/doge3d.gif",
+      },
+    ],
+  },
+  {
+    name: "dogecool",
+    id: "dogecool",
+    short_names: ["dogecool"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/dogecool.gif",
+      },
+    ],
+  },
+  {
+    name: "dogehouse",
+    id: "dogehouse",
+    short_names: ["dogehouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/dogehouse.png",
+      },
+    ],
+  },
+  {
+    name: "doughdoge",
+    id: "doughdoge",
+    short_names: ["doughdoge"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/doughdoge.png",
+      },
+    ],
+  },
+  {
+    name: "electron",
+    id: "electron",
+    short_names: ["electron"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/electron.png",
+      },
+    ],
+  },
+  {
+    name: "elixir",
+    id: "elixir",
+    short_names: ["elixir"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/elixir.png",
+      },
+    ],
+  },
+  {
+    name: "feelsgoodman",
+    id: "feelsgoodman",
+    short_names: ["feelsgoodman"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/feelsgoodman.png",
+      },
+    ],
+  },
+  {
+    name: "gachiHYPER",
+    id: "gachiHYPER",
+    short_names: ["gachiHYPER"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/gachiHYPER.gif",
+      },
+    ],
+  },
+  {
+    name: "github",
+    id: "github",
+    short_names: ["github"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/github.png",
+      },
+    ],
+  },
+  {
+    name: "hasHyperJAM",
+    id: "hasHyperJAM",
+    short_names: ["hasHyperJAM"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hasHyperJAM.gif",
+      },
+    ],
+  },
+  {
+    name: "hasPls",
+    id: "hasPls",
+    short_names: ["hasPls"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hasPls.gif",
+      },
+    ],
+  },
+  {
+    name: "hasRock",
+    id: "hasRock",
+    short_names: ["hasRock"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hasRock.gif",
+      },
+    ],
+  },
+  {
+    name: "hasTasty",
+    id: "hasTasty",
+    short_names: ["hasTasty"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hasTasty.gif",
+      },
+    ],
+  },
+  {
+    name: "hasanHyperSmash",
+    id: "hasanHyperSmash",
+    short_names: ["hasanHyperSmash"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hasanHyperSmash.gif",
+      },
+    ],
+  },
+  {
+    name: "hasanSmash",
+    id: "hasanSmash",
+    short_names: ["hasanSmash"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hasanSmash.gif",
+      },
+    ],
+  },
+  {
+    name: "heart",
+    id: "heart",
+    short_names: ["heart"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/heart.png",
+      },
+    ],
+  },
+  {
+    name: "hyperHammer",
+    id: "hyperHammer",
+    short_names: ["hyperHammer"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hyperHammer.gif",
+      },
+    ],
+  },
+  {
+    name: "hypers",
+    id: "hypers",
+    short_names: ["hypers"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/hypers.png",
+      },
+    ],
   },
   {
     name: "linus",
     id: "linus",
     short_names: ["linus"],
-    keywords: ["linus", "tech", "linustechtips"],
-    skins: [{ src: "/emotes/linus.png" }],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/linus.png",
+      },
+    ],
+  },
+  {
+    name: "lulWut",
+    id: "lulWut",
+    short_names: ["lulWut"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/lulWut.png",
+      },
+    ],
+  },
+  {
+    name: "mememan",
+    id: "mememan",
+    short_names: ["mememan"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/mememan.png",
+      },
+    ],
+  },
+  {
+    name: "modCheck",
+    id: "modCheck",
+    short_names: ["modCheck"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/modCheck.gif",
+      },
+    ],
+  },
+  {
+    name: "monkaHmm",
+    id: "monkaHmm",
+    short_names: ["monkaHmm"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/monkaHmm.png",
+      },
+    ],
+  },
+  {
+    name: "monkaSTEER",
+    id: "monkaSTEER",
+    short_names: ["monkaSTEER"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/monkaSTEER.gif",
+      },
+    ],
+  },
+  {
+    name: "monkaStare",
+    id: "monkaStare",
+    short_names: ["monkaStare"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/monkaStare.png",
+      },
+    ],
+  },
+  {
+    name: "monkaW",
+    id: "monkaW",
+    short_names: ["monkaW"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/monkaW.png",
+      },
+    ],
+  },
+  {
+    name: "monkas",
+    id: "monkas",
+    short_names: ["monkas"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/monkas.png",
+      },
+    ],
+  },
+  {
+    name: "neffHyperJAM",
+    id: "neffHyperJAM",
+    short_names: ["neffHyperJAM"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/neffHyperJAM.gif",
+      },
+    ],
+  },
+  {
+    name: "neutralhouse",
+    id: "neutralhouse",
+    short_names: ["neutralhouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/neutralhouse.png",
+      },
+    ],
+  },
+  {
+    name: "nextjs",
+    id: "nextjs",
+    short_names: ["nextjs"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/nextjs.png",
+      },
+    ],
+  },
+  {
+    name: "npc",
+    id: "npc",
+    short_names: ["npc"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/npc.png",
+      },
+    ],
+  },
+  {
+    name: "nymnCorn",
+    id: "nymnCorn",
+    short_names: ["nymnCorn"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/nymnCorn.gif",
+      },
+    ],
+  },
+  {
+    name: "obamium",
+    id: "obamium",
+    short_names: ["obamium"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/obamium.png",
+      },
+    ],
+  },
+  {
+    name: "omegalul",
+    id: "omegalul",
+    short_names: ["omegalul"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/omegalul.png",
+      },
+    ],
+  },
+  {
+    name: "orangedogehouse",
+    id: "orangedogehouse",
+    short_names: ["orangedogehouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/orangedogehouse.png",
+      },
+    ],
+  },
+  {
+    name: "peepoArrive",
+    id: "peepoArrive",
+    short_names: ["peepoArrive"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoArrive.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoBaba",
+    id: "peepoBaba",
+    short_names: ["peepoBaba"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoBaba.png",
+      },
+    ],
+  },
+  {
+    name: "peepoBye",
+    id: "peepoBye",
+    short_names: ["peepoBye"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoBye.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoChat",
+    id: "peepoChat",
+    short_names: ["peepoChat"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoChat.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoCheer",
+    id: "peepoCheer",
+    short_names: ["peepoCheer"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoCheer.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoClap",
+    id: "peepoClap",
+    short_names: ["peepoClap"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoClap.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoD",
+    id: "peepoD",
+    short_names: ["peepoD"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoD.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoFat",
+    id: "peepoFat",
+    short_names: ["peepoFat"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoFat.png",
+      },
+    ],
+  },
+  {
+    name: "peepoGiggles",
+    id: "peepoGiggles",
+    short_names: ["peepoGiggles"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoGiggles.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoHey",
+    id: "peepoHey",
+    short_names: ["peepoHey"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoHey.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoJAMMER",
+    id: "peepoJAMMER",
+    short_names: ["peepoJAMMER"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoJAMMER.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoKiss",
+    id: "peepoKiss",
+    short_names: ["peepoKiss"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoKiss.png",
+      },
+    ],
+  },
+  {
+    name: "peepoLeave",
+    id: "peepoLeave",
+    short_names: ["peepoLeave"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoLeave.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoPog",
+    id: "peepoPog",
+    short_names: ["peepoPog"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoPog.png",
+      },
+    ],
+  },
+  {
+    name: "peepoPogO",
+    id: "peepoPogO",
+    short_names: ["peepoPogO"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoPogO.png",
+      },
+    ],
+  },
+  {
+    name: "peepoRun",
+    id: "peepoRun",
+    short_names: ["peepoRun"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoRun.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoShy",
+    id: "peepoShy",
+    short_names: ["peepoShy"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoShy.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoSnow",
+    id: "peepoSnow",
+    short_names: ["peepoSnow"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoSnow.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoT",
+    id: "peepoT",
+    short_names: ["peepoT"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoT.gif",
+      },
+    ],
+  },
+  {
+    name: "peepoWeird",
+    id: "peepoWeird",
+    short_names: ["peepoWeird"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepoWeird.png",
+      },
+    ],
+  },
+  {
+    name: "peepohappy",
+    id: "peepohappy",
+    short_names: ["peepohappy"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepohappy.png",
+      },
+    ],
+  },
+  {
+    name: "peepohug",
+    id: "peepohug",
+    short_names: ["peepohug"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peepohug.png",
+      },
+    ],
+  },
+  {
+    name: "pepeBCKL",
+    id: "pepeBCKL",
+    short_names: ["pepeBCKL"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepeBCKL.png",
+      },
+    ],
+  },
+  {
+    name: "pepeCD",
+    id: "pepeCD",
+    short_names: ["pepeCD"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepeCD.gif",
+      },
+    ],
+  },
+  {
+    name: "pepeJAMJAM",
+    id: "pepeJAMJAM",
+    short_names: ["pepeJAMJAM"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepeJAMJAM.gif",
+      },
+    ],
+  },
+  {
+    name: "pepeMeltdown",
+    id: "pepeMeltdown",
+    short_names: ["pepeMeltdown"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepeMeltdown.gif",
+      },
+    ],
+  },
+  {
+    name: "pepeP",
+    id: "pepeP",
+    short_names: ["pepeP"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepeP.gif",
+      },
+    ],
+  },
+  {
+    name: "pepeW",
+    id: "pepeW",
+    short_names: ["pepeW"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepeW.gif",
+      },
+    ],
+  },
+  {
+    name: "peped",
+    id: "peped",
+    short_names: ["peped"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/peped.gif",
+      },
+    ],
+  },
+  {
+    name: "pepega",
+    id: "pepega",
+    short_names: ["pepega"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepega.png",
+      },
+    ],
+  },
+  {
+    name: "pepejam",
+    id: "pepejam",
+    short_names: ["pepejam"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepejam.gif",
+      },
+    ],
+  },
+  {
+    name: "pepepls",
+    id: "pepepls",
+    short_names: ["pepepls"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pepepls.gif",
+      },
+    ],
+  },
+  {
+    name: "pogchamp",
+    id: "pogchamp",
+    short_names: ["pogchamp"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/pogchamp.png",
+      },
+    ],
+  },
+  {
+    name: "ppHop",
+    id: "ppHop",
+    short_names: ["ppHop"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/ppHop.gif",
+      },
+    ],
+  },
+  {
+    name: "ppOverheat",
+    id: "ppOverheat",
+    short_names: ["ppOverheat"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/ppOverheat.gif",
+      },
+    ],
+  },
+  {
+    name: "ppPoof",
+    id: "ppPoof",
+    short_names: ["ppPoof"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/ppPoof.gif",
+      },
+    ],
+  },
+  {
+    name: "presponge",
+    id: "presponge",
+    short_names: ["presponge"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/presponge.png",
+      },
+    ],
+  },
+  {
+    name: "purpledogehouse",
+    id: "purpledogehouse",
+    short_names: ["purpledogehouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/purpledogehouse.png",
+      },
+    ],
+  },
+  {
+    name: "rareParrot",
+    id: "rareParrot",
+    short_names: ["rareParrot"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/rareParrot.gif",
+      },
+    ],
+  },
+  {
+    name: "ratJAM",
+    id: "ratJAM",
+    short_names: ["ratJAM"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/ratJAM.gif",
+      },
+    ],
+  },
+  {
+    name: "react",
+    id: "react",
+    short_names: ["react"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/react.png",
+      },
+    ],
   },
   {
     name: "reddogehouse",
     id: "reddogehouse",
-    short_names: ["redDogeHouse"],
-    keywords: ["red", "dogehouse", "doge"],
-    skins: [{ src: "/emotes/reddogehouse.png" }],
+    short_names: ["reddogehouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/reddogehouse.png",
+      },
+    ],
   },
   {
-    name: "this",
-    id: "this",
-    short_names: ["this"],
-    keywords: ["this"],
-    skins: [{ src: "/emotes/this.png" }],
+    name: "sPonGeBoB",
+    id: "sPonGeBoB",
+    short_names: ["sPonGeBoB"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/sPonGeBoB.png",
+      },
+    ],
   },
   {
-    name: "browndogehouse",
-    id: "browndogehouse",
-    short_names: ["brownDogeHouse"],
-    keywords: ["brown", "dogehouse", "doge"],
-    skins: [{ src: "/emotes/browndogehouse.png" }],
+    name: "sadge",
+    id: "sadge",
+    short_names: ["sadge"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/sadge.png",
+      },
+    ],
+  },
+  {
+    name: "sadhouse",
+    id: "sadhouse",
+    short_names: ["sadhouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/sadhouse.png",
+      },
+    ],
   },
   {
     name: "shut",
     id: "shut",
     short_names: ["shut"],
-    keywords: ["shut"],
-    skins: [{ src: "/emotes/shut.png" }],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/shut.png",
+      },
+    ],
   },
   {
-    name: "blobwtf",
-    id: "blobwtf",
-    short_names: ["blobWtf"],
-    keywords: ["blob", "wtf"],
-    skins: [{ src: "/emotes/blobwtf.png" }],
+    name: "smudgecat",
+    id: "smudgecat",
+    short_names: ["smudgecat"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/smudgecat.png",
+      },
+    ],
   },
   {
-    name: "whalethonk",
-    id: "whalethonk",
-    short_names: ["WhaleThonk"],
-    keywords: ["whale", "thonk", "thinking", "what"],
-    skins: [{ src: "/emotes/whalethonk.png" }],
+    name: "stinks",
+    id: "stinks",
+    short_names: ["stinks"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/stinks.png",
+      },
+    ],
   },
   {
-    name: "pogchamp",
-    short_names: ["PogChamp"],
-    id: "pogchamp",
-    keywords: ["pogchamp", "pog"],
-    skins: [{ src: "/emotes/pogchamp.png" }],
-  },
-  {
-    name: "monkas",
-    id: "monkas",
-    short_names: ["monkaS"],
-    keywords: ["monkas", "pepe"],
-    skins: [{ src: "/emotes/monkas.png" }],
-  },
-  {
-    name: "hypers",
-    short_names: ["HYPERS"],
-    id: "hypers",
-    keywords: ["hypers", "pepe"],
-    skins: [{ src: "/emotes/hypers.png" }],
-  },
-  {
-    name: "peped",
-    id: "peped",
-    short_names: ["pepeD"],
-    keywords: ["peped", "pepe"],
-    skins: [{ src: "/emotes/peped.gif" }],
-  },
-  {
-    name: "pepega",
-    id: "pepega",
-    short_names: ["Pepega"],
-    keywords: ["pepega", "pepe"],
-    skins: [{ src: "/emotes/pepega.png" }],
-  },
-  {
-    name: "peepohappy",
-    id: "peepohappy",
-    short_names: ["peepoHappy"],
-    keywords: ["peepohappy", "peepo", "pepe"],
-    skins: [{ src: "/emotes/peepohappy.png" }],
-  },
-  {
-    name: "peepohug",
-    id: "peepohug",
-    short_names: ["peepoHug"],
-    keywords: ["peepohug", "peepo", "pepe"],
-    skins: [{ src: "/emotes/peepohug.png" }],
-  },
-  {
-    name: "sadge",
-    id: "sadge",
-    short_names: ["Sadge"],
-    keywords: ["sadge", "pepe"],
-    skins: [{ src: "/emotes/sadge.png" }],
-  },
-  {
-    name: "catjam",
-    id: "catjam",
-    short_names: ["catJAM"],
-    keywords: ["catjam", "vibe"],
-    skins: [{ src: "/emotes/catjam.gif" }],
-  },
-  {
-    name: "thonk",
-    id: "thonk",
-    short_names: ["Thonk"],
-    keywords: ["thonk", "think"],
-    skins: [{ src: "/emotes/thonk.png" }],
-  },
-  {
-    name: "dogehouse",
-    id: "dogehouse",
-    short_names: ["DogeHouse"],
-    keywords: ["dogehouse", "doge"],
-    skins: [{ src: "/emotes/dogehouse.png" }],
-  },
-  {
-    name: "sadhouse",
-    id: "sadhouse",
-    short_names: ["SadHouse"],
-    keywords: ["dogehouse", "doge", "sadhouse"],
-    skins: [{ src: "/emotes/sadhouse.png" }],
-  },
-  {
-    name: "coolhouse",
-    id: "coolhouse",
-    short_names: ["CoolHouse"],
-    keywords: ["dogehouse", "doge", "coolhouse"],
-    skins: [{ src: "/emotes/coolhouse.png" }],
-  },
-  {
-    name: "winkhouse",
-    id: "winkhouse",
-    short_names: ["WinkHouse"],
-    keywords: ["dogehouse", "doge", "winkhouse"],
-    skins: [{ src: "/emotes/winkhouse.png" }],
+    name: "stonks",
+    id: "stonks",
+    short_names: ["stonks"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/stonks.png",
+      },
+    ],
   },
   {
     name: "suprisehouse",
     id: "suprisehouse",
-    short_names: ["SupriseHouse"],
-    keywords: ["dogehouse", "doge", "suprisehouse", "shock"],
-    skins: [{ src: "/emotes/suprisehouse.png" }],
+    short_names: ["suprisehouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/suprisehouse.png",
+      },
+    ],
   },
   {
-    name: "neutralhouse",
-    id: "neutralhouse",
-    short_names: ["NeutralHouse"],
-    keywords: ["dogehouse", "doge", "neutralhouse"],
-    skins: [{ src: "/emotes/neutralhouse.png" }],
+    name: "takemymoney",
+    id: "takemymoney",
+    short_names: ["takemymoney"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/takemymoney.png",
+      },
+    ],
+  },
+  {
+    name: "this",
+    id: "this",
+    short_names: ["this"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/this.png",
+      },
+    ],
+  },
+  {
+    name: "thonk",
+    id: "thonk",
+    short_names: ["thonk"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/thonk.png",
+      },
+    ],
+  },
+  {
+    name: "thugpepe",
+    id: "thugpepe",
+    short_names: ["thugpepe"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/thugpepe.png",
+      },
+    ],
+  },
+  {
+    name: "unPOGGERS",
+    id: "unPOGGERS",
+    short_names: ["unPOGGERS"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/unPOGGERS.png",
+      },
+    ],
   },
   {
     name: "waytoodank",
     id: "waytoodank",
-    short_names: ["WAYTOODANK"],
-    keywords: ["dank", "feelsdankman", "waytoodank"],
-    skins: [{ src: "/emotes/waytoodank.gif" }],
-  },
-  {
-    name: "cryptobtc",
-    id: "cryptobtc",
-    short_names: ["CryptoBTC"],
-    keywords: ["crypto", "btc", "bitcoin"],
-    skins: [{ src: "/emotes/cryptoBTC.png" }],
-  },
-  {
-    name: "cryptoeth",
-    id: "cryptoeth",
-    short_names: ["CryptoETH"],
-    keywords: ["crypto", "eth", "ethereum"],
-    skins: [{ src: "/emotes/cryptoETH.png" }],
-  },
-  {
-    name: "cryptobnb",
-    id: "cryptobnb",
-    short_names: ["CryptoBNB"],
-    keywords: ["crypto", "bnb", "binance"],
-    skins: [{ src: "/emotes/cryptoBNB.png" }],
-  },
-  {
-    name: "cryptoltc",
-    id: "cryptoltc",
-    short_names: ["CryptoLTC"],
-    keywords: ["crypto", "ltc", "litecoin"],
-    skins: [{ src: "/emotes/cryptoLTC.png" }],
-  },
-  {
-    name: "cryptobch",
-    id: "cryptobch",
-    short_names: ["CryptoBCH"],
-    keywords: ["crypto", "bch", "bitcoin", "bitcoincash"],
-    skins: [{ src: "/emotes/cryptoBCH.png" }],
-  },
-  {
-    name: "cryptodoge",
-    id: "cryptodoge",
-    short_names: ["CryptoDOGE"],
-    keywords: ["crypto", "doge", "dogecoin", "bestcoin"],
-    skins: [{ src: "/emotes/cryptoDOGE.png" }],
-  },
-  {
-    name: "cryptosushi",
-    id: "cryptosushi",
-    short_names: ["CryptoSUSHI"],
-    keywords: ["crypto", "sushi", "swap", "sushiswap"],
-    skins: [{ src: "/emotes/cryptoSUSHI.png" }],
-  },
-  {
-    name: "cryptotron",
-    id: "cryptotron",
-    short_names: ["CryptoTRON"],
-    keywords: ["crypto", "tron"],
-    skins: [{ src: "/emotes/cryptoTron.png" }],
-  },
-  {
-    name: "cryptozec",
-    id: "cryptozec",
-    short_names: ["CryptoZEC"],
-    keywords: ["crypto", "zec", "zcash"],
-    skins: [{ src: "/emotes/cryptoZEC.png" }],
-  },
-  {
-    name: "cryptoetc",
-    id: "cryptoetc",
-    short_names: ["CryptoETC"],
-    keywords: ["crypto", "etc", "ethereum", "ethereumclassic"],
-    skins: [{ src: "/emotes/cryptoETC.png" }],
-  },
-  {
-    name: "cryptocake",
-    id: "cryptocake",
-    short_names: ["CryptoCAKE"],
-    keywords: ["crypto", "cake", "swap", "pancakeswap"],
-    skins: [{ src: "/emotes/cryptoCAKE.png" }],
-  },
-  {
-    name: "cryptoada",
-    short_names: ["CryptoADA"],
-    keywords: ["crypto", "ada", "cardano"],
-    skins: [{ src: "/emotes/cryptoADA.png" }],
-  },
-  {
-    name: "cryptoxrp",
-    short_names: ["CryptoXRP"],
-    keywords: ["crypto", "xrp", "ripple"],
-    skins: [{ src: "/emotes/cryptoXRP.png" }],
-  },
-  {
-    name: "cryptousdc",
-    short_names: ["CryptoUSDC"],
-    keywords: ["crypto", "usdc", "usdcoin"],
-    skins: [{ src: "/emotes/cryptoUSDC.png" }],
-  },
-  {
-    name: "dodgycoin",
-    short_names: ["DodgyCoin"],
-    keywords: ["crypto", "doge", "dodgycoin"],
-    skins: [{ src: "/emotes/dodgyCoin.png" }],
-  },
-  {
-    name: "pepebckl",
-    id: "pepebckl",
-    short_names: ["pepeBCKL"],
-    keywords: [
-      "pepebckl",
-      "bckl",
-      "pepe",
-      "malarkey",
-      "jesse",
-      "penguin",
-      "stallman",
-      "freesoftware",
-      "fsf",
-      "charlie",
-      "kernel",
-      "lab",
-      "kernellab",
-      "computing",
-      "jessecharlie",
-      "linux",
-      "torvalds",
+    short_names: ["waytoodank"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/waytoodank.gif",
+      },
     ],
-    skins: [{ src: "/emotes/pepeBCKL.png" }],
   },
   {
-    name: "5head",
-    id: "5head",
-    short_names: ["5Head"],
-    keywords: ["5head", "big", "brain", "bigbrain", "smart"],
-    skins: [{ src: "/emotes/5Head.png" }],
-  },
-  {
-    name: "ayaya",
-    id: "ayaya",
-    short_names: ["AYAYA"],
-    keywords: ["ayaya"],
-    skins: [{ src: "/emotes/AYAYA.png" }],
-  },
-  {
-    name: "babayep",
-    id: "babayep",
-    short_names: ["babaYEP"],
-    keywords: ["babayep", "baba", "yep"],
-    skins: [{ src: "/emotes/babaYEP.png" }],
-  },
-  {
-    name: "bboomer",
-    id: "bboomer",
-    short_names: ["BBoomer"],
-    keywords: ["bboomer", "boomer"],
-    skins: [{ src: "/emotes/BBoomer.gif" }],
-  },
-  {
-    name: "bebela",
-    id: "bebela",
-    short_names: ["BebeLa"],
-    keywords: ["bebela", "bebe"],
-    skins: [{ src: "/emotes/BebeLa.png" }],
-  },
-  {
-    name: "bern",
-    id: "bern",
-    short_names: ["BERN"],
-    keywords: [
-      "bern",
-      "notmeus",
-      "bernie",
-      "sanders",
-      "berniesanders",
-      "bernard",
-      "socialism",
-      "socialist",
-      "comrade",
-      "democrat",
-      "malarkey",
-      "biden",
-      "joe",
-      "joebiden",
-      "us",
-      "usa",
-      "america",
+    name: "wednesday",
+    id: "wednesday",
+    short_names: ["wednesday"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/wednesday.png",
+      },
     ],
-    skins: [{ src: "/emotes/BERN.png" }],
   },
   {
-    name: "bidenjam",
-    id: "bidenjam",
-    short_names: ["bidenJAM"],
-    keywords: [
-      "bidenjam",
-      "jam",
-      "jamjam",
-      "malarkey",
-      "ridinwithbiden",
-      "icecream",
-      "joe",
-      "biden",
-      "joebiden",
-      "46",
-      "president",
-      "laser",
-      "potus",
-      "democrat",
-      "us",
-      "usa",
-      "america",
+    name: "whalethonk",
+    id: "whalethonk",
+    short_names: ["whalethonk"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/whalethonk.png",
+      },
     ],
-    skins: [{ src: "/emotes/bidenJAM.gif" }],
   },
   {
-    name: "playa",
-    id: "playa",
-    short_names: ["Playa"],
-    keywords: ["Playa"],
-    skins: [{ src: "/emotes/Playa.png" }],
-  },
-  {
-    name: "igetit",
-    id: "igetit",
-    short_names: ["IGetIt"],
-    keywords: ["IGetIt", "Smile", "PepeLa", "Smug"],
-    skins: [{ src: "/emotes/IGetIt.png" }],
-  },
-  {
-    name: "blankies",
-    id: "blankies",
-    short_names: ["BLANKIES"],
-    keywords: ["blankies", "jammies", "blanket", "dance"],
-    skins: [{ src: "/emotes/BLANKIES.gif" }],
-  },
-  {
-    name: "bogged",
-    short_names: ["BOGGED"],
-    keywords: [
-      "bogged",
-      "bog",
-      "hello",
-      "phone",
-      "iphone",
-      "calling",
-      "call",
-      "phonecall",
-    ],
-    skins: [{ src: "/emotes/BOGGED.png" }],
-  },
-  {
-    name: "clap",
-    short_names: ["Clap"],
-    keywords: ["clap", "clapping"],
-    skins: [{ src: "/emotes/Clap.gif" }],
-  },
-  {
-    name: "coggers",
-    short_names: ["COGGERS"],
-    keywords: ["coggers", "pog", "pogu", "poggies", "poggers", "pogger"],
-    skins: [{ src: "/emotes/COGGERS.gif" }],
-  },
-  {
-    name: "copium",
-    short_names: ["COPIUM"],
-    keywords: ["copium", "cope"],
-    skins: [{ src: "/emotes/COPIUM.png" }],
-  },
-  {
-    name: "coronas",
-    short_names: ["coronaS"],
-    keywords: ["coronas", "corona", "mask", "covid"],
-    skins: [{ src: "/emotes/coronaS.png" }],
-  },
-  {
-    name: "crabpls",
-    short_names: ["CrabPls"],
-    keywords: ["crabpls", "crab", "pls", "plz", "please"],
-    skins: [{ src: "/emotes/crabpls.gif" }],
-  },
-  {
-    name: "dankhackermans",
-    short_names: ["DANKHACKERMANS"],
-    keywords: [
-      "dankhackermans",
-      "dank",
-      "hacker",
-      "hackermans",
-      "keyboard",
-      "typing",
-      "computer",
-      "coding",
-      "coder",
-      "code",
-      "virus",
-      "malware",
-    ],
-    skins: [{ src: "/emotes/DANKHACKERMANS.gif" }],
-  },
-  {
-    name: "dankhug",
-    short_names: ["dankHug"],
-    keywords: ["dankhug", "dank", "hug"],
-    skins: [{ src: "/emotes/dankHug.png" }],
-  },
-  {
-    name: "dankies",
-    short_names: ["DANKIES"],
-    keywords: ["dankies", "dank"],
-    skins: [{ src: "/emotes/DANKIES.gif" }],
-  },
-  {
-    name: "dewtime",
-    short_names: ["DewTime"],
-    keywords: ["dewtime", "mountaindew", "dew", "moutain", "time"],
-    skins: [{ src: "/emotes/DewTime.gif" }],
-  },
-  {
-    name: "ez",
-    short_names: ["EZ"],
-    keywords: ["ez"],
-    skins: [{ src: "/emotes/EZ.png" }],
-  },
-  {
-    name: "f",
-    short_names: ["F"],
-    keywords: ["f"],
-    skins: [{ src: "/emotes/F.gif" }],
-  },
-  {
-    name: "feelsdankman",
-    short_names: ["FeelsDankMan"],
-    keywords: ["feelsdankman", "feels", "feel", "dank", "man"],
-    skins: [{ src: "/emotes/FeelsDankMan.png" }],
-  },
-  {
-    name: "feelsokayman",
-    short_names: ["FeelsOkayMan"],
-    keywords: ["feelsokayman", "feels", "feel", "okay", "man"],
-    skins: [{ src: "/emotes/FeelsOkayMan.png" }],
-  },
-  {
-    name: "feelsstrongman",
-    short_names: ["FeelsStrongMan"],
-    keywords: ["feelsstrongman", "feels", "feel", "strong", "man"],
-    skins: [{ src: "/emotes/FeelsStrongMan.png" }],
-  },
-  {
-    name: "feelsweirdman",
-    short_names: ["FeelsWeirdMan"],
-    keywords: ["feelsweirdman", "feels", "feel", "weird", "man"],
-    skins: [{ src: "/emotes/FeelsWeirdMan.png" }],
-  },
-  {
-    name: "gachihyper",
-    short_names: ["gachiHYPER"],
-    keywords: ["gachihyper", "gachi", "hyper", "coomer"],
-    skins: [{ src: "/emotes/gachiHYPER.gif" }],
-  },
-  {
-    name: "grug",
-    short_names: ["GRUG"],
-    keywords: ["grug"],
-    skins: [{ src: "/emotes/GRUG.png" }],
-  },
-  {
-    name: "guitartime",
-    short_names: ["GuitarTime"],
-    keywords: ["guitartime", "guitar", "time"],
-    skins: [{ src: "/emotes/GuitarTime.gif" }],
-  },
-  {
-    name: "hackermans",
-    short_names: ["HACKERMANS"],
-    keywords: [
-      "hackermans",
-      "hacker",
-      "keyboard",
-      "typing",
-      "computer",
-      "coding",
-      "coder",
-      "code",
-      "virus",
-      "malware",
-    ],
-    skins: [{ src: "/emotes/HACKERMANS.gif" }],
-  },
-  {
-    name: "handsup",
-    short_names: ["HandsUp"],
-    keywords: ["handsup", "hands", "up", "hand"],
-    skins: [{ src: "/emotes/HandsUp.png" }],
-  },
-  {
-    name: "hasanhypersmash",
-    short_names: ["hasanHyperSmash"],
-    keywords: [
-      "hasanhypersmash",
-      "hasan",
-      "hasanabi",
-      "hasanpiker",
-      "hyper",
-      "smash",
-    ],
-    skins: [{ src: "/emotes/hasanHyperSmash.gif" }],
-  },
-  {
-    name: "hasansmash",
-    short_names: ["hasanSmash"],
-    keywords: ["hasansmash", "hasan", "hasanabi", "hasanpiker", "smash"],
-    skins: [{ src: "/emotes/hasanSmash.gif" }],
-  },
-  {
-    name: "hasanwalk",
-    short_names: ["HasanWalk"],
-    keywords: [
-      "hasanwalk",
-      "hasan",
-      "hasanabi",
-      "hasanpiker",
-      "walk",
-      "walking",
-    ],
-    skins: [{ src: "/emotes/HasanWalk.gif" }],
-  },
-  {
-    name: "hashyperjam",
-    short_names: ["hasHyperJAM"],
-    keywords: [
-      "hashyperjam",
-      "hasan",
-      "hasanabi",
-      "hasanpiker",
-      "hyper",
-      "jam",
-      "jamjam",
-      "jammies",
-    ],
-    skins: [{ src: "/emotes/hasHyperJAM.gif" }],
-  },
-  {
-    name: "haspls",
-    short_names: ["hasPls"],
-    keywords: [
-      "haspls",
-      "please",
-      "pls",
-      "plz",
-      "hasan",
-      "hasanabi",
-      "hasanpiker",
-    ],
-    skins: [{ src: "/emotes/hasPls.gif" }],
-  },
-  {
-    name: "hasrock",
-    short_names: ["hasRock"],
-    keywords: [
-      "hasrock",
-      "spongebob",
-      "patrick",
-      "hasan",
-      "hasanabi",
-      "hasanpiker",
-      "rock",
-    ],
-    skins: [{ src: "/emotes/hasRock.gif" }],
-  },
-  {
-    name: "hastasty",
-    short_names: ["hasTasty"],
-    keywords: [
-      "hastasty",
-      "hasan",
-      "tasty",
-      "yum",
-      "yummy",
-      "hasanabi",
-      "hasanpiker",
-    ],
-    skins: [{ src: "/emotes/hasTasty.gif" }],
-  },
-  {
-    name: "hyperclap",
-    short_names: ["HYPERCLAP"],
-    keywords: ["hyperclap", "hyper", "clap"],
-    skins: [{ src: "/emotes/HYPERCLAP.gif" }],
-  },
-  {
-    name: "hyperhammer",
-    short_names: ["hyperHammer"],
-    keywords: ["hyperhammer", "hyper", "hammer"],
-    skins: [{ src: "/emotes/hyperHammer.gif" }],
-  },
-  {
-    name: "hyperitalianhands",
-    short_names: ["HYPERITALIANHANDS"],
-    keywords: [
-      "hyperitalianhands",
-      "hyper",
-      "italian",
-      "hands",
-      "hand",
-      "italy",
-      "ovahere",
-    ],
-    skins: [{ src: "/emotes/HYPERITALIANHANDS.gif" }],
-  },
-  {
-    name: "hyperpogger",
-    short_names: ["HYPERPOGGER"],
-    keywords: ["hyperpogger", "hyper", "pog", "pogger", "poggies"],
-    skins: [{ src: "/emotes/HYPERPOGGER.gif" }],
-  },
-  {
-    name: "hyperpogo",
-    short_names: ["HYPERPOGO"],
-    keywords: [
-      "hyperpogo",
-      "hyper",
-      "pog",
-      "pogo",
-      "azan",
-      "poggies",
-      "poggers",
-      "pogger",
-    ],
-    skins: [{ src: "/emotes/HYPERPOGO.gif" }],
-  },
-  {
-    name: "italianhands",
-    short_names: ["ItalianHands"],
-    keywords: ["italianhands", "ovahere", "italian", "hands", "hand", "italy"],
-    skins: [{ src: "/emotes/ItalianHands.gif" }],
-  },
-  {
-    name: "jammies",
-    short_names: ["Jammies"],
-    keywords: ["jammies", "jam", "jamjam", "dance", "vibe"],
-    skins: [{ src: "/emotes/Jammies.gif" }],
-  },
-  {
-    name: "kekw",
-    short_names: ["KEKW"],
-    keywords: [
-      "kekw",
-      "kek",
-      "omegalul",
-      "lol",
-      "lmao",
-      "haha",
-      "ha",
-      "ja",
-      "jaja",
-    ],
-    skins: [{ src: "/emotes/KEKW.png" }],
-  },
-  {
-    name: "kekwait",
-    short_names: ["KEKWait"],
-    keywords: [
-      "kekwait",
-      "lul",
-      "omegalul",
-      "lol",
-      "lmao",
-      "wait",
-      "kek",
-      "ha",
-    ],
-    skins: [{ src: "/emotes/KEKWait.png" }],
-  },
-  {
-    name: "kkapitalist",
-    short_names: ["KKapitalist"],
-    keywords: ["kkapitalist", "kapitalist", "capitalist", "business"],
-    skins: [{ src: "/emotes/KKapitalist.png" }],
-  },
-  {
-    name: "kkomrade",
-    short_names: ["KKomrade"],
-    keywords: ["kkomrade", "komrade", "comrade"],
-    skins: [{ src: "/emotes/KKomrade.png" }],
-  },
-  {
-    name: "kkonaw",
-    short_names: ["KKonaW"],
-    keywords: ["kkonaw"],
-    skins: [{ src: "/emotes/KKonaW.png" }],
-  },
-  {
-    name: "kkop",
-    short_names: ["KKop"],
-    keywords: [
-      "kkop",
-      "kop",
-      "kops",
-      "cop",
-      "cops",
-      "police",
-      "acab",
-      "blueline",
-    ],
-    skins: [{ src: "/emotes/KKop.png" }],
-  },
-  {
-    name: "lulw",
-    short_names: ["LULW"],
-    keywords: ["lulw", "lul", "lol", "lmao", "omegalul"],
-    skins: [{ src: "/emotes/LULW.png" }],
-  },
-  {
-    name: "lulwut",
-    short_names: ["lulWut"],
-    keywords: [
-      "lulwut",
-      "lul",
-      "lmao",
-      "lol",
-      "wut",
-      "what",
-      "wat",
-      "wtf",
-      "omegalul",
-      "ha",
-      "haha",
-      "ja",
-      "jaja",
-    ],
-    skins: [{ src: "/emotes/lulWut.png" }],
-  },
-  {
-    name: "malarkey",
-    short_names: ["MALARKEY"],
-    keywords: [
-      "malarkey",
-      "ridinwithbiden",
-      "icecream",
-      "joe",
-      "biden",
-      "joebiden",
-      "46",
-      "president",
-      "laser",
-      "potus",
-      "democrat",
-      "us",
-      "usa",
-      "america",
-    ],
-    skins: [{ src: "/emotes/MALARKEY.gif" }],
-  },
-  {
-    name: "mmmhmm",
-    short_names: ["MmmHmm"],
-    keywords: [
-      "mmmhmm",
-      "mmm",
-      "mmmm",
-      "hmm",
-      "hmmm",
-      "mmmmhmmm",
-      "mmmmhmm",
-      "mmmhmmm",
-    ],
-    skins: [{ src: "/emotes/MmmHmm.gif" }],
-  },
-  {
-    name: "modcheck",
-    short_names: ["modCheck"],
-    keywords: [
-      "modcheck",
-      "mods",
-      "mod",
-      "check",
-      "spongebob",
-      "ask",
-      "askers",
-      "whoasked",
-      "where",
-      "look",
-      "fish",
-      "oooo",
-    ],
-    skins: [{ src: "/emotes/modCheck.gif" }],
-  },
-  {
-    name: "modtime",
-    short_names: ["ModTime"],
-    keywords: ["modtime", "mod", "mods", "time"],
-    skins: [{ src: "/emotes/ModTime.gif" }],
-  },
-  {
-    name: "monkahmm",
-    short_names: ["monkaHmm"],
-    keywords: ["monkahmm", "monka", "hmmm", "hmm"],
-    skins: [{ src: "/emotes/monkaHmm.png" }],
-  },
-  {
-    name: "monkastare",
-    short_names: ["monkaStare"],
-    keywords: ["monkastare", "stare", "monka"],
-    skins: [{ src: "/emotes/monkaStare.png" }],
-  },
-  {
-    name: "monkasteer",
-    short_names: ["monkaSTEER"],
-    keywords: ["monkasteer", "monka", "steer", "ridinwithbiden"],
-    skins: [{ src: "/emotes/monkaSTEER.gif" }],
-  },
-  {
-    name: "monkaw",
-    short_names: ["monkaW"],
-    keywords: ["monkaw", "monka"],
-    skins: [{ src: "/emotes/monkaW.png" }],
-  },
-  {
-    name: "neffhyperjam",
-    short_names: ["neffHyperJAM"],
-    keywords: [
-      "neffhyperjam",
-      "hyperjam",
-      "jam",
-      "jammies",
-      "boppin",
-      "dj",
-      "jamjam",
-      "neff",
-      "will",
-      "willneff",
-    ],
-    skins: [{ src: "/emotes/neffHyperJAM.gif" }],
-  },
-  {
-    name: "nodders",
-    short_names: ["NODDERS"],
-    keywords: ["nodders", "nod", "noddies"],
-    skins: [{ src: "/emotes/NODDERS.gif" }],
-  },
-  {
-    name: "nopers",
-    short_names: ["NOPERS"],
-    keywords: ["nopers", "no", "nope"],
-    skins: [{ src: "/emotes/NOPERS.gif" }],
-  },
-  {
-    name: "nymncorn",
-    short_names: ["nymnCorn"],
-    keywords: ["nymncorn", "mmm", "corn", "nymn"],
-    skins: [{ src: "/emotes/nymnCorn.gif" }],
-  },
-  {
-    name: "okaychamp",
-    short_names: ["OkayChamp"],
-    keywords: ["okaychamp", "okay", "champ"],
-    skins: [{ src: "/emotes/OkayChamp.png" }],
-  },
-  {
-    name: "omegalul",
-    short_names: ["OMEGALUL"],
-    keywords: ["omegalul", "lol", "lmao", "lul", "ha", "haha", "ja", "jaja"],
-    skins: [{ src: "/emotes/omegalul.png" }],
-  },
-  {
-    name: "oooo",
-    short_names: ["OOOO"],
-    keywords: ["oooo", "fish"],
-    skins: [{ src: "/emotes/OOOO.gif" }],
-  },
-  {
-    name: "pagchomp",
-    short_names: ["PagChomp"],
-    keywords: ["pagchomp", "pag", "chomp"],
-    skins: [{ src: "/emotes/PagChomp.png" }],
-  },
-  {
-    name: "painschamp",
-    short_names: ["PainsChamp"],
-    keywords: ["painschamp", "pains", "champ", "pain"],
-    skins: [{ src: "/emotes/PainsChamp.png" }],
-  },
-  {
-    name: "pausechamp",
-    short_names: ["PauseChamp"],
-    keywords: ["pausechamp", "pause", "champ"],
-    skins: [{ src: "/emotes/PauseChamp.png" }],
-  },
-  {
-    name: "peepoarrive",
-    short_names: ["peepoArrive"],
-    keywords: [
-      "peepoarrive",
-      "peepo",
-      "pepo",
-      "arrive",
-      "here",
-      "welcome",
-      "hey",
-      "wave",
-      "hi",
-      "hello",
-      "howdy",
-    ],
-    skins: [{ src: "/emotes/peepoArrive.gif" }],
-  },
-  {
-    name: "peepobaba",
-    short_names: ["peepoBaba"],
-    keywords: ["peepobaba", "peepo", "pepo", "baba"],
-    skins: [{ src: "/emotes/peepoBaba.png" }],
-  },
-  {
-    name: "peepobye",
-    short_names: ["peepoBye"],
-    keywords: ["peepobye", "peepo", "pepo", "bye"],
-    skins: [{ src: "/emotes/peepoBye.gif" }],
-  },
-  {
-    name: "peepochat",
-    short_names: ["peepoChat"],
-    keywords: ["peepochat", "peepo", "pepo", "chat"],
-    skins: [{ src: "/emotes/peepoChat.gif" }],
-  },
-  {
-    name: "peepocheer",
-    short_names: ["peepoCheer"],
-    keywords: ["peepocheer", "peepo", "pepo", "cheer"],
-    skins: [{ src: "/emotes/peepoCheer.gif" }],
-  },
-  {
-    name: "peepoclap",
-    short_names: ["peepoClap"],
-    keywords: ["peepoclap", "peepo", "pepo", "clap"],
-    skins: [{ src: "/emotes/peepoClap.gif" }],
-  },
-  {
-    name: "peepod",
-    short_names: ["peepoD"],
-    keywords: ["peepod", "peepo", "pepo"],
-    skins: [{ src: "/emotes/peepoD.gif" }],
-  },
-  {
-    name: "peepofat",
-    short_names: ["peepoFat"],
-    keywords: ["peepofat", "peepo", "pepo", "fat", "houngry", "hungry", "food"],
-    skins: [{ src: "/emotes/peepoFat.png" }],
-  },
-  {
-    name: "peepogiggles",
-    short_names: ["peepoGiggles"],
-    keywords: ["peepogiggles", "pepo", "peepo", "giggle", "giggles"],
-    skins: [{ src: "/emotes/peepoGiggles.gif" }],
-  },
-  {
-    name: "peepohey",
-    short_names: ["peepoHey"],
-    keywords: [
-      "peepohey",
-      "peepo",
-      "wave",
-      "pepo",
-      "hey",
-      "hi",
-      "hello",
-      "howdy",
-      "welcome",
-    ],
-    skins: [{ src: "/emotes/peepoHey.gif" }],
-  },
-  {
-    name: "peepojammer",
-    short_names: ["peepoJAMMER"],
-    keywords: ["peepojammer", "peepo", "pepo", "jam", "jammer", "jamjam"],
-    skins: [{ src: "/emotes/peepoJAMMER.gif" }],
-  },
-  {
-    name: "peepokiss",
-    short_names: ["peepoKiss"],
-    keywords: ["peepokiss", "peepo", "pepo", "kiss", "love"],
-    skins: [{ src: "/emotes/peepoKiss.png" }],
-  },
-  {
-    name: "peepoleave",
-    short_names: ["peepoLeave"],
-    keywords: ["peepoleave", "peepo", "pepo", "leave", "exit", "bye"],
-    skins: [{ src: "/emotes/peepoLeave.gif" }],
-  },
-  {
-    name: "peepopog",
-    short_names: ["peepoPog"],
-    keywords: ["peepopog", "peepo", "pepo", "pog"],
-    skins: [{ src: "/emotes/peepoPog.png" }],
-  },
-  {
-    name: "peepopogo",
-    short_names: ["peepoPogO"],
-    keywords: ["peepopogo", "peepo", "pepo", "pog", "pogo"],
-    skins: [{ src: "/emotes/peepoPogO.png" }],
-  },
-  {
-    name: "peeporun",
-    short_names: ["peepoRun"],
-    keywords: ["peeporun", "peepo", "pepo", "run"],
-    skins: [{ src: "/emotes/peepoRun.gif" }],
-  },
-  {
-    name: "peeposhy",
-    short_names: ["peepoShy"],
-    keywords: ["peeposhy", "peepo", "pepo", "shy"],
-    skins: [{ src: "/emotes/peepoShy.gif" }],
-  },
-  {
-    name: "peeposnow",
-    short_names: ["peepoSnow"],
-    keywords: [
-      "peeposnow",
-      "peepo",
-      "pepo",
-      "snow",
-      "christmas",
-      "cold",
-      "holidays",
-    ],
-    skins: [{ src: "/emotes/peepoSnow.gif" }],
-  },
-  {
-    name: "peepot",
-    short_names: ["peepoT"],
-    keywords: ["peepot", "peepo", "pepo"],
-    skins: [{ src: "/emotes/peepoT.gif" }],
-  },
-  {
-    name: "peepoweird",
-    short_names: ["peepoWeird"],
-    keywords: ["peepoweird", "peepo", "pepo", "weird"],
-    skins: [{ src: "/emotes/peepoWeird.png" }],
-  },
-  {
-    name: "pepecd",
-    short_names: ["pepeCD"],
-    keywords: ["pepecd", "pepe", "cd"],
-    skins: [{ src: "/emotes/pepeCD.gif" }],
-  },
-  {
-    name: "pepegehmm",
-    short_names: ["PepegeHmm"],
-    keywords: ["pepegehmm", "pepege", "pepe", "hmm", "hmmm"],
-    skins: [{ src: "/emotes/PepegeHmm.png" }],
-  },
-  {
-    name: "pepehands",
-    short_names: ["PepeHands"],
-    keywords: ["pepehands", "pepe", "hands"],
-    skins: [{ src: "/emotes/PepeHands.png" }],
-  },
-  {
-    name: "pepejamjam",
-    short_names: ["pepeJAMJAM"],
-    keywords: ["pepejamjam", "pepe", "jam"],
-    skins: [{ src: "/emotes/pepeJAMJAM.gif" }],
-  },
-  {
-    name: "pepejam",
-    short_names: ["pepeJAM"],
-    keywords: ["pepeJAM", "pepe"],
-    skins: [{ src: "/emotes/pepejam.gif" }],
-  },
-  {
-    name: "pepela",
-    short_names: ["PepeLa"],
-    keywords: ["pepela", "pepe"],
-    skins: [{ src: "/emotes/PepeLa.png" }],
-  },
-  {
-    name: "pepelaugh",
-    short_names: ["PepeLaugh"],
-    keywords: ["pepelaugh", "pepe", "laugh"],
-    skins: [{ src: "/emotes/PepeLaugh.gif" }],
-  },
-  {
-    name: "pepemeltdown",
-    short_names: ["pepeMeltdown"],
-    keywords: ["pepemeltdown", "pepe", "meltdown"],
-    skins: [{ src: "/emotes/pepeMeltdown.gif" }],
-  },
-  {
-    name: "pepep",
-    short_names: ["pepeP"],
-    keywords: ["pepep", "pepe"],
-    skins: [{ src: "/emotes/pepeP.gif" }],
-  },
-  {
-    name: "pepes",
-    short_names: ["PepeS"],
-    keywords: ["pepes", "pepe"],
-    skins: [{ src: "/emotes/PepeS.gif" }],
-  },
-  {
-    name: "pepespit",
-    short_names: ["PepeSpit"],
-    keywords: ["pepespit", "pepe", "spit"],
-    skins: [{ src: "/emotes/PepeSpit.gif" }],
-  },
-  {
-    name: "pepew",
-    short_names: ["pepeW"],
-    keywords: ["pepew", "pepe"],
-    skins: [{ src: "/emotes/pepeW.gif" }],
-  },
-  {
-    name: "pepog",
-    short_names: ["PepoG"],
-    keywords: ["pepog", "pepo", "peepo"],
-    skins: [{ src: "/emotes/PepoG.png" }],
-  },
-  {
-    name: "pog",
-    short_names: ["Pog"],
-    keywords: ["pog", "poggies", "pogger", "poggers"],
-    skins: [{ src: "/emotes/Pog.png" }],
-  },
-  {
-    name: "poggers",
-    short_names: ["POGGERS"],
-    keywords: ["poggers", "pog", "poggies", "pogger"],
-    skins: [{ src: "/emotes/POGGERS.png" }],
-  },
-  {
-    name: "poggies",
-    short_names: ["POGGIES"],
-    keywords: ["poggies", "pog", "pogger"],
-    skins: [{ src: "/emotes/POGGIES.png" }],
-  },
-  {
-    name: "pogo",
-    short_names: ["PogO"],
-    keywords: ["pogo", "pog", "azan"],
-    skins: [{ src: "/emotes/PogO.png" }],
-  },
-  {
-    name: "pogu",
-    short_names: ["PogU"],
-    keywords: ["pogu", "pog"],
-    skins: [{ src: "/emotes/PogU.png" }],
-  },
-  {
-    name: "pphop",
-    short_names: ["ppHop"],
-    keywords: ["pphop", "hop"],
-    skins: [{ src: "/emotes/ppHop.gif" }],
-  },
-  {
-    name: "ppoverheat",
-    short_names: ["ppOverheat"],
-    keywords: ["ppoverheat", "overheat"],
-    skins: [{ src: "/emotes/ppOverheat.gif" }],
-  },
-  {
-    name: "pppoof",
-    short_names: ["ppPoof"],
-    keywords: ["pppoof", "poof"],
-    skins: [{ src: "/emotes/ppPoof.gif" }],
-  },
-  {
-    name: "prayge",
-    short_names: ["Prayge"],
-    keywords: ["prayge", "pray", "god"],
-    skins: [{ src: "/emotes/Prayge.png" }],
-  },
-  {
-    name: "ratjam",
-    short_names: ["ratJAM"],
-    keywords: ["ratjam", "rat", "jam"],
-    skins: [{ src: "/emotes/ratJAM.gif" }],
-  },
-  {
-    name: "ree",
-    short_names: ["REE"],
-    keywords: ["ree", "reeee"],
-    skins: [{ src: "/emotes/REE.png" }],
-  },
-  {
-    name: "sillychamp",
-    short_names: ["SillyChamp"],
-    keywords: ["sillychamp", "silly", "champ"],
-    skins: [{ src: "/emotes/SillyChamp.png" }],
-  },
-  {
-    name: "smoketime",
-    short_names: ["SmokeTime"],
-    keywords: ["smoketime", "smoke"],
-    skins: [{ src: "/emotes/SmokeTime.gif" }],
-  },
-  {
-    name: "swooner",
-    short_names: ["SWOONER"],
-    keywords: ["swooner"],
-    skins: [{ src: "/emotes/SWOONER.png" }],
-  },
-  {
-    name: "teatime",
-    short_names: ["TeaTime"],
-    keywords: ["teatime", "tea"],
-    skins: [{ src: "/emotes/TeaTime.gif" }],
-  },
-  {
-    name: "tomatotime",
-    short_names: ["TomatoTime"],
-    keywords: ["tomatotime", "tomato"],
-    skins: [{ src: "/emotes/TomatoTime.gif" }],
-  },
-  {
-    name: "unpoggers",
-    short_names: ["unPOGGERS"],
-    keywords: ["unpoggers", "poggers", "pog", "unpoggies"],
-    skins: [{ src: "/emotes/unPOGGERS.png" }],
-  },
-  {
-    name: "weirdchamp",
-    short_names: ["WeirdChamp"],
-    keywords: ["weirdchamp", "weird", "champ"],
-    skins: [{ src: "/emotes/WeirdChamp.png" }],
-  },
-  {
-    name: "weirdge",
-    short_names: ["Weirdge"],
-    keywords: ["weirdge", "weird"],
-    skins: [{ src: "/emotes/Weirdge.png" }],
-  },
-  {
-    name: "whatchamp",
-    short_names: ["WhatChamp"],
-    keywords: ["whatchamp", "what", "champ"],
-    skins: [{ src: "/emotes/WhatChamp.png" }],
-  },
-  {
-    name: "wicked",
-    short_names: ["WICKED"],
-    keywords: ["wicked"],
-    skins: [{ src: "/emotes/WICKED.png" }],
-  },
-  {
-    name: "widepeepohappy",
+    name: "widepeepoHappy",
+    id: "widepeepoHappy",
     short_names: ["widepeepoHappy"],
-    keywords: ["widepeepohappy", "peepohappy", "peepo", "happy"],
-    skins: [{ src: "/emotes/widepeepoHappy.png" }],
-  },
-  {
-    name: "widepeeposad",
-    short_names: ["widepeepoSad"],
-    keywords: ["widepeeposad", "peeposad", "peepo", "sad"],
-    skins: [{ src: "/emotes/widepeepoSad.png" }],
-  },
-  {
-    name: "winetime",
-    short_names: ["WineTime"],
-    keywords: ["winetime", "wine"],
-    skins: [{ src: "/emotes/WineTime.gif" }],
-  },
-  {
-    name: "yep",
-    short_names: ["YEP"],
-    keywords: ["yep"],
-    skins: [{ src: "/emotes/YEP.png" }],
-  },
-  {
-    name: "zzoomer",
-    short_names: ["ZZoomer"],
-    keywords: ["zzoomer", "zoomer"],
-    skins: [{ src: "/emotes/ZZoomer.gif" }],
-  },
-  {
-    name: "doge3d",
-    short_names: ["Doge3D"],
-    keywords: ["doge3d", "doge", "3d"],
-    skins: [{ src: "/emotes/doge3d.gif" }],
-  },
-  {
-    name: "dogecool",
-    short_names: ["DogeCool"],
-    keywords: ["dogecool", "doge", "cool"],
-    skins: [{ src: "/emotes/dogecool.gif" }],
-  },
-  {
-    name: "thugpepe",
-    short_names: ["ThugPepe"],
-    keywords: ["dogehouse", "doge", "thugpepe"],
-    skins: [{ src: "/emotes/thugpepe.png" }],
-  },
-  {
-    name: "blaze",
-    short_names: ["blaze"],
-    keywords: ["blaze", "yes", "snark"],
-    skins: [{ src: "/emotes/blaze.png" }],
-  },
-  {
-    name: "blobdance",
-    short_names: ["blobDance"],
-    keywords: ["blobDance", "vibe"],
-    skins: [{ src: "/emotes/blobdance.gif" }],
-  },
-  {
-    name: "pepepls",
-    short_names: ["PepePls"],
-    keywords: ["PepePls", "pepe"],
-    skins: [{ src: "/emotes/pepepls.gif" }],
-  },
-  {
-    name: "feelsgoodman",
-    short_names: ["FeelsGoodMan"],
-    keywords: ["FeelsGoodMan", "pepe"],
-    skins: [{ src: "/emotes/feelsgoodman.png" }],
-  },
-  {
-    name: "github",
-    short_names: ["GitHub"],
-    keywords: ["app", "git", "github"],
-    skins: [{ src: "/emotes/github.png" }],
-  },
-  {
-    name: "elixir",
-    short_names: ["Elixir"],
-    keywords: ["app", "elixir"],
-    skins: [{ src: "/emotes/elixir.png" }],
-  },
-  {
-    name: "nextjs",
-    short_names: ["NextJS"],
-    keywords: ["app", "next", "js"],
-    skins: [{ src: "/emotes/nextjs.png" }],
-  },
-  {
-    name: "react",
-    short_names: ["React"],
-    keywords: ["app", "react", "js"],
-    skins: [{ src: "/emotes/react.png" }],
-  },
-  {
-    name: "electron",
-    short_names: ["Electron"],
-    keywords: ["app", "electron"],
-    skins: [{ src: "/emotes/electron.png" }],
-  },
-  {
-    name: "beardguyr",
-    short_names: ["BeardGuyR"],
-    keywords: ["meme", "beard", "guy"],
-    skins: [{ src: "/emotes/beardguyright.png" }],
-  },
-  {
-    name: "beardguyl",
-    short_names: ["BeardGuyL"],
-    keywords: ["meme", "beard", "guy"],
-    skins: [{ src: "/emotes/beardguyleft.png" }],
-  },
-  {
-    name: "mememan",
-    short_names: ["MemeMan"],
-    keywords: ["meme", "guy"],
-    skins: [{ src: "/emotes/mememan.png" }],
-  },
-  {
-    name: "npc",
-    short_names: ["NPC"],
-    keywords: ["meme", "npc", "guy"],
-    skins: [{ src: "/emotes/npc.png" }],
-  },
-  {
-    name: "smudgecat",
-    short_names: ["SMudgeCat"],
-    keywords: ["meme", "cat"],
-    skins: [{ src: "/emotes/smudgecat.png" }],
-  },
-  {
-    name: "stonks",
-    short_names: ["Stonks"],
-    keywords: ["meme", "crypto", "guy"],
-    skins: [{ src: "/emotes/stonks.png" }],
-  },
-  {
-    name: "stinks",
-    short_names: ["Stinks"],
-    keywords: ["meme", "crypto", "guy"],
-    skins: [{ src: "/emotes/stinks.png" }],
-  },
-  {
-    name: "iwmd",
-    short_names: ["IWMD"],
-    keywords: ["meme", "dude", "wednesday", "frog"],
-    skins: [{ src: "/emotes/wednesday.png" }],
-  },
-  {
-    name: "presponge",
-    short_names: ["PreSponge"],
-    keywords: ["meme", "spongebob"],
-    skins: [{ src: "/emotes/presponge.png" }],
-  },
-  {
-    name: "spongebob",
-    short_names: ["sPonGeBoB"],
-    keywords: ["meme", "spongebob"],
-    skins: [{ src: "/emotes/sPonGeBoB.png" }],
-  },
-  {
-    name: "peepohappy",
-    short_names: ["peepohappy"],
-    keywords: ["peepohappy", "peepo", "pepe"],
-    skins: [{ src: "/emotes/peepohappy.png" }],
-  },
-  {
-    name: "peepohug",
-    short_names: ["peepohug"],
-    keywords: ["peepohug", "peepo", "pepe"],
-    skins: [{ src: "/emotes/peepohug.png" }],
-  },
-  {
-    name: "purpledogehouse",
-    short_names: ["PurpleDogeHouse"],
-    keywords: ["purple", "dogehouse", "doge"],
-    skins: [{ src: "/emotes/purpledogehouse.png" }],
-  },
-  {
-    name: "widepeepopussy",
-    short_names: ["widepeepoPussy"],
-    keywords: ["widepeepoPussy", "peepo", "wide"],
-    skins: [{ src: "/emotes/widepeepoPussy.png" }],
-  },
-  {
-    name: "rareparrot",
-    short_names: ["RareParrot"],
-    keywords: ["Rare", "Parrot", "party"],
-    skins: [{ src: "/emotes/rareParrot.gif" }],
-  },
-  {
-    name: "orangedogehouse",
-    short_names: ["OrangeDogeHouse"],
-    keywords: ["orange", "dogehouse", "doge"],
-    skins: [{ src: "/emotes/orangedogehouse.png" }],
-  },
-  {
-    name: "cyandogehouse",
-    short_names: ["CyanDogeHouse"],
-    keywords: ["cyan", "dogehouse", "doge"],
-    skins: [{ src: "/emotes/cyandogehouse.png" }],
-  },
-  {
-    name: "angrykermit",
-    short_names: ["AngryKermit"],
-    keywords: ["kermit", "angry", "ak47"],
-    skins: [{ src: "/emotes/angrykermit.png" }],
-  },
-  {
-    name: "darthkermit",
-    short_names: ["DarthKermit"],
-    keywords: ["kermit", "star", "wars", "darth"],
-    skins: [{ src: "/emotes/darthkermit.png" }],
-  },
-  {
-    name: "takemymoney",
-    short_names: ["TakeMyMoney"],
-    keywords: ["take", "my", "money", "shut", "up"],
-    skins: [{ src: "/emotes/takemymoney.png" }],
-  },
-  {
-    name: "awyeah",
-    short_names: ["awyeah"],
-    keywords: ["aw", "yeah", "awyeah", "dancing"],
-    skins: [{ src: "/emotes/awyeah.gif" }],
-  },
-  {
-    name: "ztlul",
-    short_names: ["ztlul", "zerotwolul"],
-    keywords: ["lul", "lol", "anime", "girl", "zerotwo"],
-    skins: [{ src: "/emotes/zerotwolul.png" }],
-  },
-  {
-    name: "ztsmug",
-    short_names: ["ztsmug", "zerotwosmug"],
-    keywords: ["smug", "anime", "girl", "zerotwo"],
-    skins: [{ src: "/emotes/zerotwosmug.png" }],
-  },
-  {
-    name: "ztthinking",
-    short_names: ["ztthinking"],
-    keywords: [
-      "thinking",
-      "think",
-      "anime",
-      "girl",
-      "zerotwo",
-      "zerotwothinking",
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/widepeepoHappy.png",
+      },
     ],
-    skins: [{ src: "/emotes/zerotwothinking.png" }],
   },
   {
-    name: "partyparrot",
-    short_names: ["partyparrot"],
-    keywords: ["party", "high", "parrot", "fun"],
-    skins: [{ src: "/emotes/PartyParrot.gif" }],
+    name: "widepeepoPussy",
+    id: "widepeepoPussy",
+    short_names: ["widepeepoPussy"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/widepeepoPussy.png",
+      },
+    ],
   },
   {
-    name: "dogepls",
-    short_names: ["dogepls"],
-    keywords: ["doge", "please", "fun", "dance"],
-    skins: [{ src: "/emotes/DogePls.gif" }],
+    name: "widepeepoSad",
+    id: "widepeepoSad",
+    short_names: ["widepeepoSad"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/widepeepoSad.png",
+      },
+    ],
   },
   {
-    name: "catdance",
-    short_names: ["catDance"],
-    keywords: ["cat", "dance", "party", "fun"],
-    skins: [{ src: "/emotes/catDance.gif" }],
+    name: "winkhouse",
+    id: "winkhouse",
+    short_names: ["winkhouse"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/winkhouse.png",
+      },
+    ],
   },
   {
-    name: "doughdoge",
-    short_names: ["doughdoge"],
-    keywords: ["dough", "doge", "pizza"],
-    skins: [{ src: "/emotes/doughdoge.png" }],
+    name: "zerotwolul",
+    id: "zerotwolul",
+    short_names: ["zerotwolul"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/zerotwolul.png",
+      },
+    ],
+  },
+  {
+    name: "zerotwosmug",
+    id: "zerotwosmug",
+    short_names: ["zerotwosmug"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/zerotwosmug.png",
+      },
+    ],
+  },
+  {
+    name: "zerotwothinking",
+    id: "zerotwothinking",
+    short_names: ["zerotwothinking"],
+    keywords: [],
+    skins: [
+      {
+        src: "/emotes/zerotwothinking.png",
+      },
+    ],
   },
 ];
 

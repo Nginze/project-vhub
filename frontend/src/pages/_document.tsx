@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import { useRouter } from "next/router";
 
 export default function Document() {
   return (
@@ -22,8 +23,16 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
           rel="stylesheet"
         ></link>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Sniglet:wght@400;800&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
-      <body className={`text-white font-sans overflow-hidden`}>
+      <body
+        className={`text-white font-sans overflow-x-hidden scrollable`}
+      >
         <Main />
         <NextScript />
       </body>

@@ -2,7 +2,12 @@ import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { RTC_MESSAGE, WS_MESSAGE } from "../../../../shared/events/index";
 import { logger } from "../../config/logger";
-import { broadcastExcludeSender, getUser, setUserPosition } from "../helpers";
+import {
+  broadcastExcludeSender,
+  getPeerId,
+  getUser,
+  setUserPosition,
+} from "../helpers";
 import { sendQueue, wsQueue } from "../../config/bull";
 
 type SocketDTO = {
@@ -43,7 +48,7 @@ const init = (
             roomId,
             user: {
               ...user,
-              isSpeaker: isAutospeaker || isCreator,
+              isSpeaker: true,
               isMuted: true,
               isVideoOff: true,
               raisedHand: false,
@@ -65,7 +70,7 @@ const init = (
             roomId,
             user: {
               ...user,
-              isSpeaker: isAutospeaker || isCreator,
+              isSpeaker: true,
               isMuted: true,
               isVideoOff: true,
               raisedHand: false,
@@ -81,7 +86,7 @@ const init = (
         };
 
         broadcastExcludeSender(io, joinEvent);
-        broadcastExcludeSender(io, joinEventNonRenderer);
+        // broadcastExcludeSender(io, joinEventNonRenderer);
       } catch (error) {
         throw error;
       }
@@ -174,20 +179,65 @@ const init = (
     io.to(d.roomId).emit("item-update", d);
   });
 
+  socket.on("action:hand_raise", ({ userId, roomId }: SocketDTO) => {
+    console.log("hand raised", { userId, roomId });
+    try {
+      io.to(roomId).emit("hand-raised", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on("action:hand_down", ({ userId, roomId }: SocketDTO) => {
+    console.log("hand down", { userId, roomId });
+    try {
+      io.to(roomId).emit("hand-down", { userId, roomId });
+    } catch (error) {
+      throw error;
+    }
+  });
+
+  socket.on(
+    "action:screen_share",
+    async ({ roomId, userId, proximityList }) => {
+      console.log(
+        "SCREEN SHARE STARTED -----------------------------------------------------------------------"
+      );
+      console.log("screen share started", { userId, roomId, proximityList });
+      proximityList.forEach(async (theirUserId: string) => {
+        const peerId = await getPeerId(theirUserId);
+        console.log(
+          "This peer in proximity sending screen share event",
+          peerId,
+          theirUserId
+        );
+        try {
+          io.to(peerId as string).emit("screen-share-started", {
+            userId,
+            roomId,
+          });
+        } catch (error) {
+          throw error;
+        }
+      });
+    }
+  );
+
   socket.on("leave-room", async ({ roomId, userId }: SocketDTO) => {
     await wsQueue.add("clean_up", {
+      peerId: socket.id,
       userId: userId,
       roomId: roomId ?? "",
       timeStamp: Date.now(),
     });
 
+    socket.leave(roomId);
+
     io.to(roomId).emit(WS_MESSAGE.WS_PARTICIPANT_LEFT, {
       roomId,
       //@ts-ignore
-      participantId: user.userId,
+      participantId: userId,
     });
-
-    socket.leave(roomId);
 
     await sendQueue.add(RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER, {
       op: RTC_MESSAGE.RTC_MS_RECV_CLOSE_PEER,

@@ -5,6 +5,7 @@ export enum WS_MESSAGE {
   // Conn messages
   WS_DISCONNECTING = "disconnecting",
   WS_DISCONNECT = "disconnect",
+  WS_PING = "ping",
 
   // Chat messages
   WS_CHAT_GLOBAL_NEW_MESSAGE = "chat:global_new_message",
@@ -24,6 +25,8 @@ export enum WS_MESSAGE {
   RTC_WS_JOIN_ROOM = "rtc:join_room",
   RTC_WS_CONNECT_TRANSPORT = "rtc:connect_transport",
   RTC_WS_SEND_TRACK = "rtc:send_track",
+  RTC_WS_SEND_SCREEN = "rtc:send_screen",
+  RTC_WS_GET_RECV_SCREEN = "rtc:get_recv_screen",
   RTC_WS_GET_RECV_TRACKS = "rtc:get_recv_tracks",
   RTC_WS_ADD_SPEAKER = "rtc:add_speaker",
   RTC_WS_REMOVE_SPEAKER = "rtc:remove_speaker",
@@ -32,7 +35,7 @@ export enum WS_MESSAGE {
 export enum RTC_MESSAGE {
   // RECV MESSAGES
   RTC_MS_RECV_CREATE_ROOM = "create-room",
-  RTC_MS_RECV_JOIN_AS_SPEAKER = "join-as-speaker",
+  // RTC_MS_RECV_JOIN_AS_SPEAKER = "join-as-speaker",
   RTC_MS_RECV_JOIN_AS_NEW_PEER = "join-as-new-peer",
   RTC_MS_RECV_ADD_SPEAKER = "add-speaker",
   RTC_MS_RECV_REMOVE_SPEAKER = "remove-speaker",
@@ -41,18 +44,26 @@ export enum RTC_MESSAGE {
   RTC_MS_RECV_CONNECT_TRANSPORT = "connect-transport",
   RTC_MS_RECV_GET_RECV_TRACKS = "get-recv-tracks",
   RTC_MS_RECV_SEND_TRACK = "send-track",
+  RTC_MS_RECV_SEND_SCREEN = "send-screen",
+  RTC_MS_RECV_GET_RECV_SCREEN = "get-recv-screen",
+
   //SEND MESSAGES
   RTC_MS_SEND_ROOM_CREATED = "room-created",
-  RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER = "you-joined-as-a-speaker",
+  // RTC_MS_SEND_YOU_JOINED_AS_A_SPEAKER = "you-joined-as-a-speaker",
   RTC_MS_SEND_YOU_JOINED_AS_A_PEER = "you-joined-as-a-peer",
   RTC_MS_SEND_YOU_ARE_NOW_A_SPEAKER = "you-are-now-a-speaker",
   RTC_MS_SEND_USER_LEFT_ROOM = "user-left-room",
+  RTC_MS_SEND_GET_RECV_SCREEN_DONE = "@get-recv-screen-done",
   RTC_MS_SEND_GET_RECV_TRACKS_DONE = "@get-recv-tracks-done",
   RTC_MS_SEND_CLOSE_CONSUMER = "close-consumer",
   RTC_MS_SEND_NEW_PEER_SPEAKER = "new-peer-speaker",
+  RTC_MS_SEND_SEND_SCREEN_DONE = "@send-screen-done",
   RTC_MS_SEND_SEND_TRACK_DONE = "@send-track-done",
+  RTC_MS_SEND_CONNECT_TRANSPORT_SEND_DONE = "@connect-transport-send-done",
+  RTC_MS_SEND_CONNECT_TRANSPORT_RECV_DONE = "@connect-transport-recv-done",
   RTC_MS_SEND_ERROR = "error",
   RTC_MS_SEND_SUCCESS = "success",
+  RTC_MS_SEND_PROGRESS_STATUS = "progress-status",
 }
 
 export type MESSAGE = WS_MESSAGE | RTC_MESSAGE;

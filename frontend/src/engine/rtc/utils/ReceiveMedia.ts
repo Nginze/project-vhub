@@ -37,4 +37,11 @@ export const receiveMedia = (
     roomId,
     peerId: userId,
   });
+
+  conn.emit(WS_MESSAGE.RTC_WS_GET_RECV_SCREEN, {
+    rtpCapabilities: useMediaStore.getState().device!.rtpCapabilities,
+    roomId,
+    peerId: userId,
+  });
 };
+
