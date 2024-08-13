@@ -45,13 +45,13 @@
 
 Holoverse offers fully customizable and themed spaces, where users can interact using their avatars. These spaces are designed to mimic real-world scenarios, offering a seamless blend of visual and auditory interaction.
 
-![](https://raw.githubusercontent.com/Nginze/Anispace/master/uploads/RoomArea.png)
+![](https://res-console.cloudinary.com/hack-0/media_explorer_thumbnails/52a290043436ae713c1dbb4fd0927b01/detailed)
 
 ### Collaborative Tools
 
 The platform includes interactive elements like whiteboards, allowing users to brainstorm and collaborate effectively within the virtual environment.
 
-![](https://raw.githubusercontent.com/Nginze/Anispace/master/uploads/Feed2.png)
+![](https://res-console.cloudinary.com/hack-0/media_explorer_thumbnails/612795785b64c53563553d71de02f1b1/detailed)
 
 ## Deploy and Run
 
