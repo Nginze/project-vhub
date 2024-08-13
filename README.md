@@ -1,6 +1,6 @@
 
 <a href="https://holoverse.me">
-  <img alt="Holoverse - Immerse Yourself in Virtual Events" src="/frontend/public">
+  <img alt="Holoverse - Immerse Yourself in Virtual Events" src="https://github.com/Nginze/project-vhub/blob/master/frontend/public/holoverse_preview.png">
   <h1 align="center">Holoverse</h1>
 </a>
 
