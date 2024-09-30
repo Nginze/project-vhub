@@ -29,10 +29,7 @@ const f = format.combine(
   )
 );
 
-const transport =
-  process.env.NODE_ENV !== "production"
-    ? new transports.Console({ format: f })
-    : new transports.File({ filename: "server.log" });
+const transport = new transports.Console({ format: f });
 
 export const logger = createLogger({
   level: "debug",
